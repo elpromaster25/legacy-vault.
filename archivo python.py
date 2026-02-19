@@ -1,5 +1,5 @@
 import streamlit as st
-import pandas as pd
+import pandas as pd 
 
 # 1. Configuración de Lujo
 st.set_page_config(page_title="LEGACY VAULT VIP", page_icon="🗝️", layout="wide")
