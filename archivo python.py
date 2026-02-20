@@ -8,14 +8,12 @@ if 'autenticado' not in st.session_state:
 
 if not st.session_state.autenticado:
     st.set_page_config(page_title="ACCESO PRIVADO", page_icon="🔐")
-    st.markdown("<style>.stApp { background-color: #000000; } h1 { color: #d4af37; text-align: center; font-family: 'Times New Roman'; }</style>", unsafe_allow_html=True)
+    st.markdown("<style>.stApp { background-color: #000000; } h1 { color: #d4af37; text-align: center; }</style>", unsafe_allow_html=True)
     st.title("🔐 TERMINAL DE ACCESO PRIVADO")
     password = st.text_input("LLAVE MAESTRA:", type="password")
     if st.button("DESBLOQUEAR BÓVEDA"):
         if password == "LEGACY2026":
             with st.status("Iniciando Protocolos...", expanded=True) as status:
-                st.write("🔎 Escaneando firma digital única...")
-                time.sleep(1)
                 st.write("🟢 Identidad Verificada: Dylan García.")
                 status.update(label="Acceso Concedido", state="complete", expanded=False)
             st.session_state.autenticado = True
@@ -29,11 +27,9 @@ st.set_page_config(page_title="LEGACY VAULT", page_icon="🏛️", layout="wide"
 st.markdown("""
     <style>
     .stApp { background-color: #050505; border: 4px solid #d4af37; padding: 20px; }
-    h1, h2, h3 { color: #d4af37 !important; font-family: 'serif'; text-align: center; text-transform: uppercase; letter-spacing: 3px; }
-    [data-testid="stMetricValue"] { color: #d4af37 !important; font-size: 3.5rem !important; font-weight: bold; text-align: center; justify-content: center; }
-    [data-testid="stMetricLabel"] { color: #ffffff !important; font-size: 1.1rem !important; text-align: center; justify-content: center; }
-    [data-testid="stMetric"] { text-align: center; border: 1px solid rgba(212, 175, 55, 0.2); background-color: rgba(212, 175, 55, 0.05); padding: 10px; }
-    .stMarkdown p { color: #cccccc; text-align: center; }
+    h1, h2, h3 { color: #d4af37 !important; font-family: 'serif'; text-align: center; text-transform: uppercase; }
+    [data-testid="stMetricValue"] { color: #d4af37 !important; font-size: 3.5rem !important; font-weight: bold; text-align: center; }
+    [data-testid="stMetricLabel"] { color: #ffffff !important; font-size: 1.1rem !important; text-align: center; }
     div.stButton > button { background-color: #1a1a1a; color: #d4af37; border: 2px solid #d4af37; width: 100%; font-weight: bold; }
     </style>
     """, unsafe_allow_html=True)
@@ -50,9 +46,9 @@ m3.metric("RIESGO", "MÍNIMO", "SEGURO")
 
 st.markdown("---")
 
-# --- 5. SECTOR BITCOIN CENTRAL (LO QUE PIDIÓ EL CEO) ---
+# --- 5. SECTOR BITCOIN CENTRAL ---
 st.subheader("₿ MONITOR DE ACTIVOS DIGITALES")
-col_b1, col_b2, col_b3 = st.columns()
+col_b1, col_b2, col_b3 = st.columns([1,2,1]) # El 2 del centro le da más aire
 with col_b2:
     st.image("https://img.icons8.com", width=160)
     st.metric("PRECIO BITCOIN", "$98,450.00", "+2.5%")
@@ -64,6 +60,7 @@ st.markdown("---")
 col_izq, col_der = st.columns(2)
 with col_izq:
     st.subheader("📊 DISTRIBUCIÓN DE FORTUNA")
+    # GRÁFICO CORREGIDO (Aquí estaba el error de las letras rojas)
     df = pd.DataFrame({"Activo": ["Propiedades", "Stocks", "Crypto", "Arte"], "Valor": [60, 20, 10, 10]})
     st.bar_chart(df.set_index("Activo"))
 
@@ -73,9 +70,9 @@ with col_der:
     if pregunta:
         with st.spinner('Analizando...'):
             time.sleep(1)
-            st.write(f"🏛️ **IA:** Dylan García, para '{pregunta}' la orden es: MANTENER Y REBALANCIAR.")
+            st.write(f"🏛️ **IA:** Dylan García, la orden es: MANTENER Y REBALANCIAR.")
     st.write("---")
-    st.download_button("📥 DESCARGAR AUDITORÍA VIP", "CERTIFICADO: $12.45M USD", file_name="Legacy_Report.txt")
+    st.download_button("📥 DESCARGAR AUDITORÍA VIP", "CERTIFICADO: $12.45M USD", file_name="Reporte_Legacy.txt")
 
 if st.sidebar.button("🔒 CERRAR SESIÓN"):
     st.session_state.autenticado = False
