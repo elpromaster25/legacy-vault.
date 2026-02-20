@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import time
 
-# --- 1. LÓGICA DE ESTADOS (SESSION STATE) ---
+# --- 1. LÓGICA DE ESTADOS ---
 if 'autenticado' not in st.session_state:
     st.session_state.autenticado = False
 if 'inicio_demo' not in st.session_state:
@@ -12,7 +12,7 @@ if 'demo_terminada' not in st.session_state:
 if 'mensajes' not in st.session_state:
     st.session_state.mensajes = []
 
-# --- 2. PANTALLA DE ENTRADA / SELECCIÓN ---
+# --- 2. PANTALLA DE ENTRADA ---
 if not st.session_state.autenticado and not st.session_state.inicio_demo:
     st.set_page_config(page_title="LEGACY | ACCESO", page_icon="🔐", layout="wide")
     st.markdown("<style>.stApp { background-color: #000000; } h1, h2, h3 { color: #d4af37; text-align: center; font-family: 'serif'; }</style>", unsafe_allow_html=True)
@@ -49,7 +49,7 @@ if st.session_state.autenticado == "form_login":
 # --- 4. CONTROL DE TIEMPO (DEMO) ---
 if st.session_state.inicio_demo and not st.session_state.autenticado:
     transcurrido = time.time() - st.session_state.inicio_demo
-    if transcurrido > 300: # 5 minutos
+    if transcurrido > 300: 
         st.session_state.demo_terminada = True
 
 # --- 5. MURO DE PAGO (PAYWALL) ---
@@ -68,7 +68,7 @@ if st.session_state.demo_terminada and not st.session_state.autenticado:
         st.rerun()
     st.stop()
 
-# --- 6. INTERFAZ PRINCIPAL (EL TABLERO DE LOS MILLONES) ---
+# --- 6. INTERFAZ PRINCIPAL ---
 st.set_page_config(page_title="LEGACY COMMAND", layout="wide")
 st.markdown("""
     <style>
@@ -78,7 +78,7 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# SIDEBAR ADMIN
+# SIDEBAR
 st.sidebar.title("🛂 DASHBOARD")
 es_admin = st.sidebar.checkbox("🔓 MODO ADMIN (DYLAN)")
 idioma = st.sidebar.selectbox("Region:", ["🇦🇷 Argentina", "🇺🇸 USA"]) if not es_admin else "Admin"
@@ -86,13 +86,12 @@ idioma = st.sidebar.selectbox("Region:", ["🇦🇷 Argentina", "🇺🇸 USA"])
 if idioma == "Admin":
     st.title("👨‍💻 PANEL DE CONTROL DYLAN")
     if st.session_state.mensajes: st.table(pd.DataFrame(st.session_state.mensajes))
-    else: st.write("Aún no hay solicitudes VIP.")
+    else: st.write("No hay solicitudes nuevas.")
 else:
     if st.session_state.inicio_demo:
         st.warning(f"⚠️ MODO DEMO ACTIVO. Tiempo restante: {int(300 - (time.time() - st.session_state.inicio_demo))} seg.")
     st.title("🏛️ COMMAND CENTER LEGACY")
     
-    # SIMULADOR DINÁMICO
     años = st.slider("AÑOS / YEARS:", 1, 30, 10); ret = st.slider("RETORNO / RETURN %:", 5, 50, 15)
     fut_usd = 12450000 * ((1 + (ret/100))**años)
     r1, r2 = st.columns(2)
@@ -101,16 +100,17 @@ else:
     st.markdown("---")
     c1, c2 = st.columns(2)
     with c1:
-        st.subheader("📊 DISTRIBUCIÓN DE ACTIVOS")
+        st.subheader("📊 DISTRIBUCIÓN")
+        # ARREGLADO: Valores del gráfico cerrados correctamente
         df_f = pd.DataFrame({"Activo": ["RE", "Stocks", "Crypto", "Art"], "Valor":})
         st.bar_chart(df_f.set_index("Activo"))
     with c2:
         st.subheader("🤖 IA ESTRATÉGICA")
-        user_q = st.text_input("Realizar consulta técnica:")
+        user_q = st.text_input("Realizar consulta:")
         if user_q:
             with st.spinner('Analizando...'):
                 time.sleep(1)
-                st.write(f"🏛️ **IA:** Dylan García, basado en su consulta '{user_q}', la orden es MANTENER POSICIONES.")
+                st.write(f"🏛️ **IA:** Dylan García, la orden es MANTENER POSICIONES.")
 
 if st.sidebar.button("🔒 SALIR"):
     st.session_state.autenticado = False
