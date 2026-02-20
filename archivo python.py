@@ -98,10 +98,10 @@ st.write("---")
 c1, c2 = st.columns(2)
 with c1:
     st.subheader("📊 DISTRIBUCIÓN VIP")
-    # GRÁFICO CON NÚMEROS REALES CARGADOS
+    # --- ARREGLADO: LISTA CON NÚMEROS REALES ---
     df_assets = pd.DataFrame({
         "Activo": ["RE", "Stocks", "Crypto", "Art"],
-        "Valor": 
+        "Valor": [45, 30, 15, 10]
     })
     st.bar_chart(df_assets.set_index("Activo"))
 
