@@ -29,7 +29,6 @@ if not st.session_state.autenticado:
     
     st.title("🏛️ LEGACY QUANTUM VAULT")
     
-    # Login Central
     col_l, col_c, col_r = st.columns([1, 1.5, 1])
     with col_c:
         password = st.text_input("LLAVE MAESTRA / MASTER KEY:", type="password")
@@ -43,7 +42,6 @@ if not st.session_state.autenticado:
     st.write("---")
     st.subheader("📩 SOLICITUD DE ACCESO VIP / ACCESS REQUEST")
     
-    # FILA DE INFORMACIÓN GIGANTE
     c_izq, c_mid, c_der = st.columns([1.5, 2, 1.5])
     with c_izq:
         st.markdown("<div class='info-box'>🛡️ PROTECCIÓN TOTAL<br><br>Cifrado de grado militar AES-256. Sus activos bajo custodia digital absoluta.</div>", unsafe_allow_html=True)
@@ -71,7 +69,6 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# SIDEBAR ADMIN
 st.sidebar.title("🛂 DASHBOARD")
 es_admin = st.sidebar.checkbox("🔓 MODO ADMIN (DYLAN)")
 idioma = st.sidebar.selectbox("Region:", ["🇦🇷 Argentina", "🇺🇸 USA"]) if not es_admin else "Admin"
@@ -99,12 +96,9 @@ else:
     c1, c2 = st.columns(2)
     with c1:
         st.subheader("📊 DISTRIBUCIÓN")
-        # --- CORRECCIÓN FINAL DEL GRÁFICO ---
-        datos_graf = pd.DataFrame({
-            "Activo": ["Propiedades", "Stocks", "Crypto", "Art"],
-            "Valor": 
-        })
-        st.bar_chart(datos_graf.set_index("Activo"))
+        # ESTA ES LA LÍNEA QUE ARREGLA TODO:
+        datos_graficos = pd.DataFrame({"Activo": ["Propiedades", "Stocks", "Crypto", "Art"], "Valor": [40, 30, 20, 10]})
+        st.bar_chart(datos_graficos.set_index("Activo"))
     with c2:
         st.subheader("🤖 IA ADVISOR")
         st.write("ESTADO: ACTIVO. DYLAN GARCÍA: HOLD POSITIONS.")
