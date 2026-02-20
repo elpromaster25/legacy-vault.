@@ -2,94 +2,85 @@ import streamlit as st
 import pandas as pd
 import time
 
-# --- 1. SEGURIDAD Y PANTALLA DE ENTRADA (TU IDEA) ---
+# --- 1. MEMORIA DEL SISTEMA (Acá se guardan los mensajes) ---
+if 'mensajes' not in st.session_state:
+    st.session_state.mensajes = []
 if 'autenticado' not in st.session_state:
     st.session_state.autenticado = False
 
+# --- 2. PANTALLA DE ENTRADA ---
 if not st.session_state.autenticado:
-    st.set_page_config(page_title="LEGACY | LOGIN", page_icon="🔐")
-    st.markdown("<style>.stApp { background-color: #000000; } h1, h3 { color: #d4af37; text-align: center; font-family: 'serif'; }</style>", unsafe_allow_html=True)
-    st.title("🔐 ACCESO PRIVADO: LEGACY VAULT")
+    st.set_page_config(page_title="ACCESO PRIVADO", page_icon="🔐")
+    st.markdown("<style>.stApp { background-color: #000000; } h1, h3 { color: #d4af37; text-align: center; }</style>", unsafe_allow_html=True)
+    st.title("🔐 ACCESO RESTRINGIDO: LEGACY VAULT")
     
-    password = st.text_input("LLAVE MAESTRA / MASTER KEY:", type="password")
-    if st.button("DESBLOQUEAR BÓVEDA / UNLOCK"):
+    password = st.text_input("LLAVE MAESTRA:", type="password")
+    if st.button("DESBLOQUEAR BÓVEDA"):
         if password == "LEGACY2026":
             st.session_state.autenticado = True
             st.rerun()
-        else:
-            st.error("LLAVE INVÁLIDA / INVALID KEY.")
     
     st.write("---")
-    st.subheader("¿No tiene una llave? / No key?")
-    perfil = st.radio("Perfil Profesional:", ["💼 Soy Empresario / CEO", "🦈 Soy Inversor Independiente (High-Net-Worth)"])
-    email_solicitud = st.text_input("Email para contacto / Email for contact:")
-    
-    if st.button("ENVIAR SOLICITUD / SEND REQUEST"):
-        if email_solicitud:
-            with st.spinner("Procesando solicitud..."):
-                time.sleep(1.5)
-                st.success(f"NOTIFICACIÓN ENVIADA: El departamento de Legacy Vault revisará su perfil.")
-        else:
-            st.warning("Ingrese un email válido.")
+    st.subheader("📩 ¿No tiene una llave? Deje su contacto aquí:")
+    with st.form("contacto_vip"):
+        perfil = st.radio("Usted es:", ["Empresario / CEO", "Inversor Independiente"])
+        mail = st.text_input("Su Email:")
+        nota = st.text_area("Mensaje para el Founder:")
+        if st.form_submit_button("SOLICITAR ACCESO VIP"):
+            if mail:
+                # Se guarda en la lista secreta
+                st.session_state.mensajes.append({"perfil": perfil, "mail": mail, "nota": nota, "hora": time.strftime('%H:%M')})
+                st.success("✅ SOLICITUD ENVIADA. Un analista revisará su perfil.")
+            else:
+                st.warning("Por favor, ingrese su email.")
     st.stop()
 
-# --- 2. CONFIGURACIÓN POST-LOGIN ---
+# --- 3. CONFIGURACIÓN DE LUJO ---
 st.set_page_config(page_title="LEGACY VAULT", page_icon="🏛️", layout="wide")
 st.markdown("""
     <style>
     .stApp { background-color: #050505; border: 4px solid #d4af37; padding: 20px; }
-    h1, h2, h3 { color: #d4af37 !important; font-family: 'serif'; text-align: center; }
+    h1, h2, h3 { color: #d4af37 !important; text-align: center; }
     [data-testid="stMetricValue"] { color: #d4af37 !important; font-size: 2.2rem !important; font-weight: bold; }
-    .pay-banner { background-color: rgba(212, 175, 55, 0.1); border: 2px solid #d4af37; color: #d4af37; padding: 15px; text-align: center; font-weight: bold; border-radius: 10px; margin-bottom: 10px; }
+    .pay-banner { background-color: rgba(212, 175, 55, 0.1); border: 2px solid #d4af37; color: #d4af37; padding: 10px; text-align: center; font-weight: bold; border-radius: 10px; margin-bottom: 10px; }
     </style>
     """, unsafe_allow_html=True)
 
-# --- 3. PANEL DE CONTROL (IDIOMA) ---
+# --- 4. PANEL DE CONTROL (ADMIN & TRADUCTOR) ---
 st.sidebar.title("🛂 DASHBOARD")
 es_admin = st.sidebar.checkbox("🔓 MODO ADMIN (DYLAN)")
 idioma = st.sidebar.selectbox("Region:", ["🇦🇷 Argentina", "🇺🇸 USA / International"]) if not es_admin else "Admin"
 
-# Traducciones
-texts = {
-    "🇦🇷 Argentina": {"banner": "🇦🇷 Pago: 2 millones/mes.", "titulo": "🏛️ CENTRO DE MANDO", "res1": "PESOS (ARS)", "res2": "DÓLARES (USD)"},
-    "🇺🇸 USA / International": {"banner": "🇺🇸 Cost: 12 thousand/month.", "titulo": "🏛️ COMMAND CENTER", "res1": "DOLLARS (USD)", "res2": "PESOS (ARS)"},
-    "Admin": {"banner": "💎 ADMIN: 2M ARS / 12K USD", "titulo": "🏛️ MASTER TERMINAL", "res1": "USD TOTAL", "res2": "ARS TOTAL"}
-}
-t = texts[idioma]
-
-# --- 4. INTERFAZ ---
-st.markdown(f"<div class='pay-banner'>{t['banner']}</div>", unsafe_allow_html=True)
-st.title(t["titulo"])
-
-# SIMULADOR
-años = st.slider("AÑOS / YEARS:", 1, 30, 10)
-ret = st.slider("RETORNO / RETURN %:", 5, 50, 15)
-
-tc = 1500 # Dólar 2026
-fut_usd = 12450000 * ((1 + (ret/100))**años)
-fut_ars = fut_usd * tc 
-
-st.markdown("---")
-r1, r2 = st.columns(2)
-if "PESOS" in t["res1"] or "ARS" in t["res1"]:
-    r1.metric(t["res1"], f"${fut_ars:,.0f}")
-    r2.metric(t["res2"], f"${fut_usd:,.0f}")
+# --- 5. INTERFAZ DINÁMICA ---
+if idioma == "Admin":
+    st.title("👨‍💻 PANEL CENTRAL DE DYLAN")
+    st.subheader("📬 MENSAJES RECIBIDOS DE EMPRESARIOS")
+    if st.session_state.mensajes:
+        st.table(pd.DataFrame(st.session_state.mensajes))
+    else:
+        st.write("Aún no hay mensajes. ¡Mañana a las 11 AM llegarán!")
 else:
-    r1.metric(t["res1"], f"${fut_usd:,.0f}")
-    r2.metric(t["res2"], f"${fut_ars:,.0f}")
-
-st.markdown("---")
-# GRÁFICOS Y IA
-c1, c2 = st.columns(2)
-with c1:
+    # Versión para el cliente (la que ya teníamos)
+    banner = "🇦🇷 Pago: 2 millones/mes" if "Argentina" in idioma else "🇺🇸 Cost: 12k USD/month"
+    st.markdown(f"<div class='pay-banner'>{banner}</div>", unsafe_allow_html=True)
+    st.title("🏛️ CENTRO DE MANDO LEGACY")
+    
+    # Simulador y el resto de tu código pro...
+    años = st.slider("AÑOS / YEARS:", 1, 30, 10)
+    ret = st.slider("RETORNO / RETURN %:", 5, 50, 15)
+    fut_usd = 12450000 * ((1 + (ret/100))**años)
+    fut_ars = fut_usd * 1500 # TC 2026
+    
+    st.markdown("---")
+    r1, r2 = st.columns(2)
+    r1.metric("FORTUNA USD", f"${fut_usd:,.0f}")
+    r2.metric("FORTUNA ARS", f"${fut_ars:,.0f}")
+    
+    st.markdown("---")
     st.subheader("📊 DISTRIBUCIÓN")
-    df = pd.DataFrame({"Activo": ["RE", "Stocks", "Crypto", "Art"], "Valor": [40, 30, 20, 10]})
+    df = pd.DataFrame({"Activo": ["RE", "Stocks", "Crypto", "Art"], "Valor": [50, 25, 15, 10]})
     st.bar_chart(df.set_index("Activo"))
-with c2:
-    st.subheader("🤖 IA ADVISOR")
-    preg = st.text_input("Consulta / Query:")
-    if preg: st.write("🏛️ **IA:** Dylan García, la orden es MANTENER / HOLD.")
 
-if st.sidebar.button("🔒 LOGOUT"):
+if st.sidebar.button("🔒 CERRAR"):
     st.session_state.autenticado = False
     st.rerun()
