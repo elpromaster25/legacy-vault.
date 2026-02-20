@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import time
 
-# --- 1. SEGURIDAD Y LOGIN GIGANTE CON PRECIOS EN ORO ---
+# --- 1. SEGURIDAD Y PANTALLA DE ENTRADA CON PRECIOS EN ORO ---
 if 'autenticado' not in st.session_state:
     st.session_state.autenticado = False
 if 'mensajes' not in st.session_state:
@@ -13,7 +13,7 @@ if not st.session_state.autenticado:
     st.markdown("""
         <style>
         .stApp { background-color: #000000; }
-        h1 { color: #d4af37 !important; text-align: center; font-family: 'serif'; font-size: 4rem !important; margin-top: 50px; }
+        h1 { color: #d4af37 !important; text-align: center; font-family: 'serif'; font-size: 4rem !important; }
         .gold-price {
             color: #d4af37; font-size: 1.6rem; text-align: center; font-weight: bold;
             text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px; font-family: 'serif';
@@ -62,7 +62,7 @@ if not st.session_state.autenticado:
 
 # --- 2. INTERIOR DE LA BÓVEDA ---
 st.set_page_config(page_title="LEGACY COMMAND", page_icon="🏛️", layout="wide")
-st.markdown("<style>.stApp { background-color: #050505; border: 4px solid #d4af37; padding: 20px; } h1, h2, h3 { color: #d4af37 !important; text-align: center; } [data-testid='stMetricValue'] { color: #d4af37 !important; font-size: 2.5rem !important; font-weight: bold; }</style>", unsafe_allow_html=True)
+st.markdown("<style>.stApp { background-color: #050505; border: 4px solid #d4af37; padding: 20px; } h1, h2, h3 { color: #d4af37 !important; font-family: 'serif'; text-align: center; } [data-testid='stMetricValue'] { color: #d4af37 !important; font-size: 2.5rem !important; font-weight: bold; }</style>", unsafe_allow_html=True)
 
 st.sidebar.title("🛂 DASHBOARD")
 es_admin = st.sidebar.checkbox("🔓 MODO ADMIN (DYLAN)")
@@ -84,16 +84,20 @@ if idioma == "Admin":
         st.write("Sin solicitudes nuevas.")
 else:
     st.title("🏛️ COMMAND CENTER")
-    años = st.slider("AÑOS:", 1, 30, 10); ret = st.slider("RETORNO %:", 5, 50, 15)
+    años = st.slider("AÑOS / YEARS:", 1, 30, 10)
+    ret = st.slider("RETORNO / RETURN %:", 5, 50, 15)
     fut_usd = 12450000 * ((1 + (ret/100))**años)
+    
     col1, col2 = st.columns(2)
-    col1.metric("FORTUNA USD", f"${fut_usd:,.0f}"); col2.metric("FORTUNA ARS", f"${fut_usd * 1500:,.0f}")
+    col1.metric("FORTUNA USD", f"${fut_usd:,.0f}")
+    col2.metric("FORTUNA ARS", f"${fut_usd * 1500:,.0f}")
+    
     st.markdown("---")
     c1, c2 = st.columns(2)
     with c1:
         st.subheader("📊 DISTRIBUCIÓN")
-        # --- CORRECCIÓN FINAL DEL GRÁFICO ---
-        df_f = pd.DataFrame({"Activo": ["RE", "Stocks", "Crypto", "Art"], "Valor":})
+        # ARREGLADO: Valores del gráfico con números reales
+        df_f = pd.DataFrame({"Activo": ["RE", "Stocks", "Crypto", "Art"], "Valor": [40, 30, 20, 10]})
         st.bar_chart(df_f.set_index("Activo"))
     with c2:
         st.subheader("🤖 IA ADVISOR")
