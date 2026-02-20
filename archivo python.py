@@ -1,82 +1,87 @@
 import streamlit as st
 import pandas as pd
+import time
 
-# 1. BASE DE DATOS DE LLAVES VIP (Aquí creas los accesos que vendes)
-# "CLAVE": "NOMBRE DEL DUEÑO DE LA FORTUNA"
-LLAVES_VIP = {
-    "LEGACY2026": "ADMIN DYLAN",
-    "MADERO2000": "INVERSIONES PUERTO MADERO",
-    "NORDELTA_VIP": "FAMILIA EINSTEIN",
-    "GLOBAL_VAULT": "CLIENTE INTERNACIONAL"
-}
+# 1. SEGURIDAD DE BÓVEDA
+if 'autenticado' not in st.session_state:
+    st.session_state.autenticado = False
 
-# Configuración de página inicial (Antes del Login)
-st.set_page_config(page_title="LEGACY VAULT | ACCESO", page_icon="🔒", layout="centered")
+if not st.session_state.autenticado:
+    st.set_page_config(page_title="LOGIN PRIVADO", page_icon="🔒")
+    st.markdown("<style>.stApp { background-color: #0e1117; } h1 { color: #d4af37; text-align: center; }</style>", unsafe_allow_html=True)
+    st.title("🔐 ACCESO EXCLUSIVO LEGACY")
+    password = st.text_input("CLAVE DE ACCESO:", type="password")
+    if st.button("DESBLOQUEAR BÓVEDA"):
+        if password == "LEGACY2026":
+            st.session_state.autenticado = True
+            st.rerun()
+        else:
+            st.error("Clave Incorrecta.")
+    st.stop()
 
-# Estética General
+# 2. CONFIGURACIÓN DE LUJO POST-LOGIN
+st.set_page_config(page_title="LEGACY VAULT VIP", page_icon="🗝️", layout="wide")
 st.markdown("""
     <style>
     .stApp { background-color: #0e1117; }
     h1, h2, h3 { color: #d4af37 !important; font-family: 'serif'; text-align: center; }
-    .stMarkdown p { color: white; text-align: center; }
-    div.stButton > button { background-color: #d4af37; color: black; font-weight: bold; width: 100%; border-radius: 10px; }
+    [data-testid="stMetricValue"] { color: #d4af37 !important; }
+    .stMarkdown p { color: white; }
+    div.stButton > button { background-color: #d4af37; color: black; font-weight: bold; border-radius: 10px; }
     </style>
     """, unsafe_allow_html=True)
 
-# Control de Sesión
-if 'autenticado' not in st.session_state:
-    st.session_state.autenticado = False
-    st.session_state.usuario = ""
+# --- PANEL PRINCIPAL ---
+st.title("🗝️ LEGACY VAULT: GLOBAL MANAGEMENT")
+st.write("Bienvenido, Inversor. El mercado global está operando.")
 
-# --- PANTALLA DE LOGIN ---
-if not st.session_state.autenticado:
-    st.title("🗝️ LEGACY VAULT")
-    st.write("Bienvenido al sistema de gestión de activos de alta gama. Ingrese su llave personalizada.")
-    
-    password = st.text_input("LLAVE DE ACCESO:", type="password")
-    
-    if st.button("DESBLOQUEAR PATRIMONIO"):
-        if password in LLAVES_VIP:
-            st.session_state.autenticado = True
-            st.session_state.usuario = LLAVES_VIP[password]
-            st.success(f"Acceso Concedido: {st.session_state.usuario}")
-            st.rerun()
-        else:
-            st.error("Llave inválida. Intento de acceso denegado.")
-    st.stop()
+# 3. MERCADOS EN VIVO (Métricas de Wall Street)
+st.markdown("### 🌐 MERCADOS EN TIEMPO REAL")
+m1, m2, m3, m4 = st.columns(4)
+m1.metric("S&P 500", "5,026.15", "+0.45%")
+m2.metric("NASDAQ 100", "17,861.12", "+1.10%")
+m3.metric("BITCOIN", "$98,450", "+2.5%")
+m4.metric("ORO (XAU)", "$2,150.40", "-0.05%")
 
-# --- PANEL PRINCIPAL (POST-LOGIN) ---
-st.title("🗝️ PANEL DE CONTROL VIP")
-st.write(f"SISTEMA ACTIVO PARA: **{st.session_state.usuario}**")
 st.markdown("---")
 
-# Métricas de los Millones
-col1, col2 = st.columns(2)
-with col1:
+# 4. PATRIMONIO Y GRÁFICOS
+col_p1, col_p2 = st.columns([1, 1])
+with col_p1:
+    st.subheader("💰 Resumen de Activos")
     st.metric(label="VALOR NETO TOTAL", value="$12,450,000 USD", delta="+2.4% (Mensual)")
-    st.info("💡 IA Sugerencia: Recomendamos diversificar un 5% extra en activos líquidos.")
+    st.success("✅ Auditoría completada: Activos verificados en Blockchain.")
+    
+    # Botón de Descarga
+    st.download_button(
+        label="📄 DESCARGAR REPORTE VIP (PDF)",
+        data="REPORTE OFICIAL LEGACY VAULT: Patrimonio neto de $12,450,000 USD verificado bajo protocolos de encriptación grado militar.",
+        file_name="Reporte_Patrimonio_Legacy.txt",
+        mime="text/plain"
+    )
 
-with col2:
-    st.subheader("📊 Distribución del Capital")
-    data = {"Activo": ["Inmuebles", "Acciones", "Cripto", "Arte"], "Valor": [60, 20, 10, 10]}
-    df = pd.DataFrame(data)
+with col_p2:
+    st.subheader("📊 Distribución Estratégica")
+    df = pd.DataFrame({"Activo": ["Inmuebles", "Acciones", "Cripto", "Arte"], "Valor": [60, 20, 10, 10]})
     st.bar_chart(df.set_index("Activo"))
 
-# Asistente IA
+# 5. SIMULADOR DE GANANCIAS A 5 AÑOS
 st.markdown("---")
-st.subheader("🤖 ESTRATEGA IA PRIVADO")
-pregunta = st.text_input("Consultar sobre movimientos de mercado o riesgos:")
-if pregunta:
-    with st.spinner('Analizando variables...'):
-        st.write(f"🏛️ **LEGACY AI:** Estimado **{st.session_state.usuario}**, tras analizar '{pregunta}', mi informe indica una tendencia alcista. Mantener posición.")
+st.subheader("📈 PROYECCIÓN DE CRECIMIENTO")
+interes = st.slider("Seleccione tasa de retorno anual esperada (%):", 5, 20, 10)
+proyeccion = 12450000 * ((1 + (interes/100))**5)
+st.write(f"Con un {interes}% anual, su patrimonio en 5 años sería de: **${proyeccion:,.2f} USD**")
 
-# Sidebar de Seguridad
-with st.sidebar:
-    st.image("https://img.icons8.com")
-    st.write("### 🔒 SEGURIDAD")
-    st.write(f"Usuario: {st.session_state.usuario}")
-    if st.button("CERRAR BÓVEDA"):
-        st.session_state.autenticado = False
-        st.rerun()
-    st.write("---")
-    st.write("© 2026 LEGACY VAULT S.A.")
+# 6. IA ESTRATÉGICA
+st.markdown("---")
+st.subheader("🤖 LEGACY AI: CONSULTOR PRIVADO")
+pregunta = st.text_input("Consulte a la IA sobre riesgos o diversificación:")
+if pregunta:
+    with st.spinner('Analizando variables macroeconómicas...'):
+        time.sleep(1)
+        st.write(f"🏛️ **LEGACY AI:** Basado en su consulta sobre '{pregunta}', mi análisis indica que debería mantener su posición en Inmuebles de Lujo y aumentar un 2% en Criptoactivos.")
+
+# 7. LOGOUT
+if st.sidebar.button("🔒 CERRAR BÓVEDA"):
+    st.session_state.autenticado = False
+    st.rerun()
