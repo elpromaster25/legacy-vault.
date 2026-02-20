@@ -23,10 +23,10 @@ if not st.session_state.autenticado:
             st.session_state.autenticado = True
             st.rerun()
         else:
-            st.error("ACCESO DENEGADO. INTENTO REPORTADO.")
+            st.error("ACCESO DENEGADO.")
     st.stop()
 
-# --- 2. CONFIGURACIÓN DE ÉLITE (DISEÑO PENTÁGONO) ---
+# --- 2. CONFIGURACIÓN DE ÉLITE ---
 st.set_page_config(page_title="LEGACY COMMAND CENTER", page_icon="🏛️", layout="wide")
 st.markdown("""
     <style>
@@ -38,28 +38,26 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# --- 3. BARRA DE NOTICIAS Y RELOJES ---
-st.markdown("<marquee style='color: #d4af37; font-family: Courier New;'>● NY STOCK EXCHANGE: OPEN ● LONDRES: OPERANDO ● TOKYO: CLOSED ● BITCOIN: BULLISH TREND ●</marquee>", unsafe_allow_html=True)
-
+# --- 3. BARRA DE NOTICIAS ---
+st.markdown("<marquee style='color: #d4af37; font-family: Courier New;'>● NY STOCK EXCHANGE: OPEN ● LONDRES: OPERANDO ● BITCOIN: BULLISH TREND ●</marquee>", unsafe_allow_html=True)
 st.title("🏛️ LEGACY COMMAND CENTER")
 
-# --- 4. MÉTRICAS DE TIEMPO REAL ---
+# --- 4. MÉTRICAS DE MERCADO (LIMPIAS) ---
 t1, t2, t3, t4 = st.columns(4)
-t1.metric("STATUS", "ENCRIPTADO", "100%")
-t2.metric("S&P 500", "5,026", "+0.45%")
+t1.metric("STATUS", "SECURE", "100%")
+t2.metric("S&P 500", "5,026", "+0.4%")
 t3.metric("BITCOIN", "$98,450", "+2.5%")
 t4.metric("RIESGO", "BAJO", "SÓLIDO")
 
 st.markdown("---")
 
-# --- 5. SECTOR BITCOIN PRO ---
-col_b1, col_b2 = st.columns([1, 2])
-with col_b1:
-    st.image("https://img.icons8.com")
+# --- 5. SECTOR BITCOIN PRO (REDISEÑADO PARA QUE NO SE CRUCE) ---
+st.subheader("₿ BITCOIN CORE ASSET MONITOR")
+col_b1, col_b2, col_b3 = st.columns([1, 2, 1])
 with col_b2:
-    st.subheader("₿ BITCOIN CORE ASSET")
+    st.image("https://img.icons8.com", use_container_width=False)
     st.write("RED: **BLOCKCHAIN MAINNET** | NODO: **LEGACY-ALPHA-01**")
-    st.metric("VALOR ACTUAL", "$98,450.00", "+2.5% (HIGH VOLATILITY)")
+    st.metric("VALOR ACTUAL BTC/USD", "$98,450.00", "+2.5% (HIGH VOLATILITY)")
 
 st.markdown("---")
 
@@ -67,22 +65,20 @@ st.markdown("---")
 c1, c2 = st.columns(2)
 with c1:
     st.subheader("💰 PATRIMONIO NETO")
-    st.metric(label="EQUITY TOTAL", value="$12,450,000", delta="+$298,800 (30D)")
-    st.download_button("📄 EXPORTAR INFORME BANCARIO", "PATRIMONIO VERIFICADO: $12.45M USD", file_name="Legacy_Report.txt")
+    st.metric(label="EQUITY TOTAL", value="$12,450,000", delta="+$298,800")
+    st.download_button("📄 EXPORTAR INFORME", "PATRIMONIO: $12.45M USD", file_name="Legacy_Report.txt")
 
 with c2:
-    st.subheader("📊 DISTRIBUCIÓN DE ACTIVOS")
-    df = pd.DataFrame({"Activo": ["Propiedades", "Stocks", "Crypto", "Arte"], "Valor": [60, 20, 10, 10]})
+    st.subheader("📊 DISTRIBUCIÓN")
+    df = pd.DataFrame({"Activo": ["Propiedades", "Stocks", "Crypto", "Arte"], "Valor":})
     st.bar_chart(df.set_index("Activo"))
 
 # --- 7. IA Y CIERRE ---
 st.markdown("---")
-st.subheader("🤖 LEGACY IA: PROTOCOLO DE CONSULTA")
-pregunta = st.text_input("INGRESE CONSULTA PARA EL ANALISTA DE IA:")
+st.subheader("🤖 IA ESTRATÉGICA")
+pregunta = st.text_input("CONSULTA:")
 if pregunta:
-    with st.spinner('Procesando algoritmos...'):
-        time.sleep(1)
-        st.write(f"🕵️ **ANALISTA IA:** Dylan García, para '{pregunta}' la orden es: MANTENER Y REBALANCIAR.")
+    st.write(f"🕵️ **ANALISTA:** Dylan García, la recomendación es MANTENER.")
 
 with st.sidebar:
     if st.button("🔒 CERRAR TERMINAL"):
