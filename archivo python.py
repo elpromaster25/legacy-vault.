@@ -19,7 +19,7 @@ st.markdown("""
     .stApp { background-color: #000000; border: 5px solid #d4af37; }
     h1, h2, h3 { color: #d4af37 !important; text-align: center; font-family: 'serif'; }
     [data-testid='stMetricValue'] { color: #d4af37 !important; font-size: 3rem !important; font-weight: bold; }
-    .gold-box { border: 2px solid #d4af37; padding: 20px; border-radius: 10px; text-align: center; color: #d4af37; }
+    .gold-box { border: 2px solid #d4af37; padding: 20px; border-radius: 10px; text-align: center; color: #d4af37; margin-bottom: 20px; }
     </style>
     """, unsafe_allow_html=True)
 
@@ -27,72 +27,79 @@ st.markdown("""
 if not st.session_state.auth and not st.session_state.demo:
     st.title("🏛️ LEGACY QUANTUM VAULT")
     st.write("---")
+    
+    st.markdown("<div class='gold-box'>🇦🇷 ARGENTINA: 2.000.000 ARS / MES<br>🇺🇸 USA: 12.000 USD / MONTH</div>", unsafe_allow_html=True)
+    
     c1, c2 = st.columns(2)
     with c1:
-        if st.button("🔑 LLAVE MAESTRA (ADMIN/VIP)"):
-            st.session_state.auth = "login"
+        if st.button("🔑 INGRESAR CON LLAVE MAESTRA"):
+            st.session_state.auth = "login_form"
             st.rerun()
     with c2:
-        if st.button("🚀 DEMO GRATUITA (5 MINUTOS)"):
+        if st.button("🚀 INICIAR DEMO GRATUITA (5 MIN)"):
             st.session_state.demo = True
             st.session_state.start_time = time.time()
             st.rerun()
-    
-    st.write("---")
-    st.markdown("<div class='gold-box'>🇦🇷 ARGENTINA: 2.000.000 ARS / MES<br>🇺🇸 USA: 12.000 USD / MONTH</div>", unsafe_allow_html=True)
     st.stop()
 
-# --- 5. LOGIN ---
-if st.session_state.auth == "login":
-    st.subheader("🔐 INGRESE CREDENCIALES VIP")
+# --- 5. FORMULARIO DE LOGIN ---
+if st.session_state.auth == "login_form":
+    st.subheader("🔐 INGRESE LLAVE MAESTRA")
     password = st.text_input("PASSWORD:", type="password")
-    if st.button("DESBLOQUEAR"):
+    if st.button("DESBLOQUEAR BÓVEDA"):
         if password == "LEGACY2026":
             st.session_state.auth = True
             st.rerun()
         else:
-            st.error("DENEGADO")
+            st.error("ACCESO DENEGADO")
     st.stop()
 
 # --- 6. CONTROL DE TIEMPO DEMO ---
 if st.session_state.demo and not st.session_state.auth:
     elapsed = time.time() - st.session_state.start_time
-    if elapsed > 300:
-        st.title("⌛ TIEMPO EXPIRADO")
-        st.markdown("<div class='gold-box'>ADQUIERA SU LLAVE VIP PARA CONTINUAR<br>COSTO: 2 MILLONES ARS / 12K USD</div>", unsafe_allow_html=True)
-        if st.button("VOLVER"):
+    if elapsed > 300: # 5 minutos
+        st.title("⌛ TIEMPO DE DEMO EXPIRADO")
+        st.markdown("<div class='gold-box'>PARA CONTINUAR DEBE ADQUIRIR SU LLAVE VIP.<br>COSTO: 2.000.000 ARS / 12K USD</div>", unsafe_allow_html=True)
+        if st.button("VOLVER AL INICIO"):
             st.session_state.demo = False
             st.session_state.start_time = None
             st.rerun()
         st.stop()
 
-# --- 7. PANEL DE CONTROL (EL PRODUCTO) ---
+# --- 7. PANEL DE CONTROL (EL PRODUCTO FINAL) ---
 st.title("🏛️ COMMAND CENTER LEGACY")
 if st.session_state.demo:
-    st.warning(f"⚠️ MODO DEMO: {int(300 - (time.time() - st.session_state.start_time))}s restantes")
+    st.warning(f"⚠️ MODO DEMO ACTIVO: {int(300 - (time.time() - st.session_state.start_time))} segundos restantes")
 
-# SIMULADOR
-años = st.slider("PROYECCIÓN (AÑOS):", 1, 30, 10)
-ret = st.slider("RENTABILIDAD ANUAL (%):", 5, 50, 15)
-capital = 12450000
-futuro_usd = capital * ((1 + (ret/100))**años)
+# SIMULADOR DINÁMICO
+años = st.slider("PROYECCIÓN PATRIMONIAL (AÑOS):", 1, 30, 10)
+ret = st.slider("RENTABILIDAD ANUAL ESTIMADA (%):", 5, 50, 15)
+capital_base = 12450000
+futuro_usd = capital_base * ((1 + (ret/100))**años)
 
 st.write("---")
 m1, m2 = st.columns(2)
-m1.metric("FORTUNA USD", f"${futuro_usd:,.0f}")
-m2.metric("FORTUNA ARS", f"${(futuro_usd * 1500):,.0f}")
+m1.metric("VALOR PROYECTADO USD", f"${futuro_usd:,.0f}")
+m2.metric("VALOR PROYECTADO ARS", f"${(futuro_usd * 1500):,.0f}")
 
 st.write("---")
 c1, c2 = st.columns(2)
 with c1:
-    st.subheader("📊 ACTIVOS")
-    df = pd.DataFrame({"Activo": ["Propiedades", "Stocks", "Crypto", "Art"], "Valor":})
-    st.bar_chart(df.set_index("Activo"))
+    st.subheader("📊 DISTRIBUCIÓN DE ACTIVOS")
+    # GRÁFICO ARREGLADO CON NÚMEROS CARGADOS
+    datos_graficos = pd.DataFrame({
+        "Activo": ["Propiedades", "Stocks", "Crypto", "Arte"],
+        "Valor": 
+    })
+    st.bar_chart(datos_graficos.set_index("Activo"))
+
 with c2:
     st.subheader("🤖 ESTRATEGA IA")
-    q = st.text_input("CONSULTA TÉCNICA:")
-    if q:
-        st.write("🏛️ **IA:** Dylan García, la orden estratégica es MANTENER POSICIONES.")
+    pregunta = st.text_input("CONSULTA TÉCNICA A LA IA:")
+    if pregunta:
+        with st.spinner('Procesando datos...'):
+            time.sleep(1)
+            st.write(f"🏛️ **IA:** Dylan García, para la consulta '{pregunta}', el análisis sugiere MANTENER POSICIONES.")
 
 if st.sidebar.button("🔒 SALIR"):
     st.session_state.auth = False
