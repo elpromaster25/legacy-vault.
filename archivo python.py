@@ -60,7 +60,7 @@ if st.session_state.demo_terminada and not st.session_state.autenticado:
     st.write("---")
     c1, c2 = st.columns(2)
     with c1: st.markdown("<h3>🇦🇷 ARGENTINA:<br>2 MILLONES ARS / MES</h3>", unsafe_allow_html=True)
-    with col_r: st.markdown("<h3>🇺🇸 USA / INT:<br>12 THOUSAND USD / MONTH</h3>", unsafe_allow_html=True)
+    with c2: st.markdown("<h3>🇺🇸 USA / INT:<br>12 THOUSAND USD / MONTH</h3>", unsafe_allow_html=True)
     st.write("---")
     if st.button("⬅️ VOLVER AL INICIO"):
         st.session_state.inicio_demo = None
@@ -93,17 +93,9 @@ else:
     r1.metric("FORTUNA USD", f"${fut_usd:,.0f}"); r2.metric("FORTUNA ARS", f"${fut_usd * 1500:,.0f}")
     
     st.markdown("---")
-    # GRÁFICOS (ARREGLADO CON NÚMEROS REALES)
-    c1, c2 = st.columns(2)
-    with c1:
-        st.subheader("📊 DISTRIBUCIÓN")
-        # Números de activos puestos para evitar error
-        df_f = pd.DataFrame({"Activo": ["RE", "Stocks", "Crypto", "Art"], "Valor":})
-        st.bar_chart(df_f.set_index("Activo"))
-    with c2:
-        st.subheader("🤖 IA ADVISOR")
-        user_q = st.text_input("Consulta técnica:")
-        if user_q: st.write("🏛️ **IA:** Dylan García, la orden estratégica es MANTENER POSICIONES.")
+    st.subheader("🤖 IA ADVISOR")
+    user_q = st.text_input("Realizar consulta técnica:")
+    if user_q: st.write("🏛️ **IA:** Dylan García, la orden estratégica es MANTENER POSICIONES.")
 
 if st.sidebar.button("🔒 SALIR"):
     st.session_state.autenticado = False
