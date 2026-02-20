@@ -8,7 +8,7 @@ if 'demo' not in st.session_state: st.session_state.demo = False
 if 'start_time' not in st.session_state: st.session_state.start_time = None
 
 # --- 2. DISEÑO IMPERIAL ---
-st.set_page_config(page_title="LEGACY | CHECKOUT", layout="wide")
+st.set_page_config(page_title="LEGACY | VAULT", layout="wide")
 st.markdown("""
     <style>
     .stApp { background-color: #000000; border: 6px solid #d4af37; padding: 20px; }
@@ -19,28 +19,33 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# --- 3. PANTALLA DE ENTRADA ---
+# --- 3. PANTALLA DE ENTRADA (CORREGIDA) ---
 if not st.session_state.auth and not st.session_state.demo:
     st.title("🏛️ LEGACY QUANTUM VAULT")
     col_l, col_c, col_r = st.columns([1, 1.5, 1])
     with col_c:
-        region = st.selectbox("🌎 ELIJA SU REGIÓN / SELECT REGION:", ["🇦🇷 Argentina", "🇺🇸 USA"], key="reg_init")
+        # CAMBIO CLAVE: "SELECT VAULT" Y KEY ÚNICA PARA EVITAR ERRORES
+        vault_selection = st.selectbox("📂 SELECT VAULT / SELECCIONAR BÓVEDA:", ["🇦🇷 ARGENTINA VAULT", "🇺🇸 USA VAULT"], key="vault_id_99")
         st.write("---")
+        
         st.markdown("<div class='gold-card'>🚀 AUDITORÍA TÉCNICA GRATUITA (5 MIN)</div>", unsafe_allow_html=True)
         if st.button("🚀 INICIAR DEMO GRATIS"):
             st.session_state.demo = True
             st.session_state.start_time = time.time()
-            st.session_state.reg_final = region
+            st.session_state.reg_final = vault_selection
             st.rerun()
+            
         st.write("---")
         st.markdown("<div class='gold-card'>🔑 LLAVE MAESTRA PERMANENTE</div>", unsafe_allow_html=True)
-        pw = st.text_input("PASSWORD:", type="password", key="login_pw")
+        # CONTRASEÑA CON KEY TOTALMENTE DIFERENTE
+        pw = st.text_input("ENTER MASTER KEY:", type="password", key="master_key_secure_2026")
+        
         if st.button("🔓 DESBLOQUEAR ACCESO TOTAL"):
             if pw == "LEGACY2026":
                 st.session_state.auth = True
-                st.session_state.reg_final = region
+                st.session_state.reg_final = vault_selection
                 st.rerun()
-            else: st.error("DENEGADO")
+            else: st.error("DENEGADO / ACCESS DENIED")
     st.stop()
 
 # --- 4. MURO DE PAGO (CUANDO TERMINA LA DEMO) ---
@@ -51,16 +56,14 @@ if st.session_state.demo and not st.session_state.auth:
         st.title("⌛ TIEMPO DE DEMO FINALIZADO")
         st.subheader(f"Para continuar operando, active su suscripción VIP")
         
-        # MÉTODOS DE PAGO SEGÚN REGIÓN
         col1, col2 = st.columns(2)
-        
-        if st.session_state.reg_final == "🇦🇷 Argentina":
-            with col1: st.markdown("<div class='payment-box'>💳 <b>MERCADO PAGO</b><br>Transferencia inmediata</div>", unsafe_allow_html=True)
-            with col2: st.markdown("<div class='payment-box'>🏦 <b>CUENTA DNI</b><br>Pago QR / Clave DNI</div>", unsafe_allow_html=True)
+        if "ARGENTINA" in st.session_state.reg_final:
+            with col1: st.markdown("<div class='payment-box'>💳 <b>MERCADO PAGO</b></div>", unsafe_allow_html=True)
+            with col2: st.markdown("<div class='payment-box'>🏦 <b>CUENTA DNI</b></div>", unsafe_allow_html=True)
             st.markdown("<h3 style='margin-top:20px;'>TOTAL: $2.000.000 ARS / MES</h3>", unsafe_allow_html=True)
         else:
-            with col1: st.markdown("<div class='payment-box'>🔵 <b>PAYPAL</b><br>Credit Card / Global Balance</div>", unsafe_allow_html=True)
-            with col2: st.markdown("<div class='payment-box'>🛡️ <b>STRIPE</b><br>Secure Payment Gateway</div>", unsafe_allow_html=True)
+            with col1: st.markdown("<div class='payment-box'>🔵 <b>PAYPAL</b></div>", unsafe_allow_html=True)
+            with col2: st.markdown("<div class='payment-box'>🛡️ <b>STRIPE</b></div>", unsafe_allow_html=True)
             st.markdown("<h3 style='margin-top:20px;'>TOTAL: $12.000 USD / MONTH</h3>", unsafe_allow_html=True)
         
         st.write("---")
@@ -78,8 +81,9 @@ if st.session_state.demo and not st.session_state.auth:
 # --- 5. COMMAND CENTER (INTERIOR) ---
 st.title(f"🏛️ COMMAND CENTER - {st.session_state.reg_final}")
 st.write("---")
-# (Aquí sigue el resto de tu IA, Simulador y Exchange...)
 st.metric("USD VALUE", "$12,450,000")
+# (IA y Simulador aquí...)
+
 if st.sidebar.button("🔒 SALIR"):
     st.session_state.auth = False
     st.session_state.demo = False
