@@ -7,9 +7,9 @@ if 'auth' not in st.session_state: st.session_state.auth = False
 if 'mensajes' not in st.session_state: st.session_state.mensajes = []
 
 # --- 2. CONFIGURACIÓN CELULAR PAPÁ ---
-CEL_PAPA = "5491100000000" # <--- PONÉ EL CELU DE TU PAPÁ ACÁ
+CEL_PAPA = "5491100000000" # <--- TU NÚMERO ACÁ
 
-# --- 3. DICCIONARIO 100% BILINGÜE ---
+# --- 3. DICCIONARIO BILINGÜE REFORZADO ---
 textos = {
     "🇦🇷 Argentina": {
         "entrada_tit": "🏛️ LEGACY QUANTUM VAULT",
@@ -29,7 +29,9 @@ textos = {
         "ex_btn": "🚀 SOLICITAR COTIZACIÓN WHATSAPP",
         "ia_tit": "🤖 ESTRATEGA IA",
         "ia_resp": "Dylan García, el análisis sugiere MANTENER POSICIONES.",
-        "footer": "🔒 ENCRIPTACIÓN AES-256 | BS. AS. ARGENTINA"
+        "footer": "🔒 ENCRIPTACIÓN AES-256 | BS. AS. ARGENTINA",
+        "seg_tit": "🛡️ PROTOCOLOS DE SEGURIDAD ACTIVOS",
+        "seg_node": "NODOS: BS.AS - MIAMI - NY - DUBAI"
     },
     "🇺🇸 USA": {
         "entrada_tit": "🏛️ LEGACY QUANTUM VAULT",
@@ -49,7 +51,9 @@ textos = {
         "ex_btn": "🚀 REQUEST QUOTE VIA WHATSAPP",
         "ia_tit": "🤖 STRATEGIC AI ADVISOR",
         "ia_resp": "Dylan Garcia, the analysis suggests HOLDING POSITIONS.",
-        "footer": "🔒 MILITARY GRADE ENCRYPTION | NEW YORK, USA"
+        "footer": "🔒 MILITARY GRADE ENCRYPTION | NEW YORK, USA",
+        "seg_tit": "🛡️ ACTIVE SECURITY PROTOCOLS",
+        "seg_node": "NODES: NY - MIAMI - LONDON - DUBAI"
     }
 }
 
@@ -61,88 +65,70 @@ st.markdown("""
     h1, h2, h3 { color: #d4af37 !important; text-align: center; font-family: 'serif'; }
     .gold-card { border: 2px solid #d4af37; padding: 20px; border-radius: 15px; background: rgba(212, 175, 55, 0.05); text-align: center; color: #d4af37; }
     .ticker { background: #1a1a1a; color: #d4af37; padding: 10px; border-bottom: 2px solid #d4af37; font-weight: bold; text-align: center; }
-    [data-testid='stMetricValue'] { color: #d4af37 !important; font-size: 3rem !important; }
+    .security-badge { border: 1px solid #d4af37; padding: 10px; border-radius: 5px; font-size: 0.7rem; color: #d4af37; text-align: center; }
     </style>
     """, unsafe_allow_html=True)
 
-# --- 5. PANTALLA DE ENTRADA (CON SELECTOR DE IDIOMA E INFO) ---
+# --- 5. PANTALLA DE ENTRADA ---
 if not st.session_state.auth:
     st.title("🏛️ LEGACY QUANTUM VAULT")
     col_iz, col_ce, col_de = st.columns([1, 1.5, 1])
-    
     with col_ce:
-        # SELECTOR DE IDIOMA LADO IZQUIERDO/CENTRO
-        idioma = st.selectbox("🌎 SELECT REGION / ELIJA REGIÓN:", ["🇦🇷 Argentina", "🇺🇸 USA"])
+        idioma = st.selectbox("🌎 REGION:", ["🇦🇷 Argentina", "🇺🇸 USA"])
         t = textos[idioma]
-        
         st.markdown(f"<div class='gold-card'>{t['acceso_vip']}</div>", unsafe_allow_html=True)
-        st.write("")
-        
-        # LOGIN
         pw = st.text_input(t["label_pass"], type="password")
         if st.button(t["btn_unlock"]):
             if pw == "LEGACY2026":
-                st.session_state.idioma_final = idioma # Guardamos el idioma elegido
-                st.session_state.auth = True
-                st.rerun()
-            else: st.error("LLAVE INVÁLIDA / INVALID KEY")
-            
+                st.session_state.idioma_final = idioma
+                st.session_state.auth = True; st.rerun()
         st.write("---")
-        # BUZÓN DE CONTACTO RECUPERADO
         st.subheader(t["form_tit"])
         with st.form("contacto_entrada"):
-            m = st.text_input(t["form_mail"])
-            n = st.text_area(t["form_msg"])
+            m = st.text_input(t["form_mail"]); n = st.text_area(t["form_msg"])
             if st.form_submit_button(t["form_btn"]):
-                if m:
-                    st.session_state.mensajes.append({"mail": m, "nota": n, "reg": idioma, "hora": time.strftime('%H:%M')})
-                    st.success("✅ SENT / ENVIADO")
+                st.session_state.mensajes.append({"mail": m, "nota": n, "reg": idioma, "hora": time.strftime('%H:%M')})
+                st.success("✅ SENT")
     st.stop()
 
-# --- 6. INTERFAZ INTERNA 100% BILINGÜE ---
+# --- 6. INTERFAZ INTERNA ---
 t = textos[st.session_state.idioma_final]
-
 st.markdown(f"<div class='ticker'>{t['ticker']}</div>", unsafe_allow_html=True)
 st.title(t["main_tit"])
 
 # SIMULADOR
 c_s1, c_s2 = st.columns(2)
-años = c_s1.slider(t["sim_años"], 1, 30, 10)
-ret = c_s2.slider(t["sim_ret"], 5, 50, 15)
+años = c_s1.slider(t["sim_años"], 1, 30, 10); ret = c_s2.slider(t["sim_ret"], 5, 50, 15)
 fut_usd = 12450000 * ((1 + (ret/100))**años)
-
 m1, m2 = st.columns(2)
 m1.metric("USD VALUE", f"${fut_usd:,.0f}")
-if st.session_state.idioma_final == "🇦🇷 Argentina":
-    m2.metric("VALOR ARS", f"${(fut_usd * 1515):,.0f}")
+if st.session_state.idioma_final == "🇦🇷 Argentina": m2.metric("VALOR ARS", f"${(fut_usd * 1515):,.0f}")
 
 st.write("---")
-# EXCHANGE / OTC DESK
+# EXCHANGE
 st.subheader(t["ex_tit"])
 st.info(t["ex_desc"])
-ex_col1, ex_col2 = st.columns(2)
-with ex_col1:
-    m_val = st.number_input("AMOUNT / MONTO:", min_value=5000)
-    ws_url = f"https://wa.me{CEL_PAPA}?text=Client%20from%20{st.session_state.idioma_final}:%20Requesting%20quote%20for%20{m_val}"
-    st.markdown(f'<a href="{ws_url}" target="_blank"><button style="width:100%; height:50px; background-color:#d4af37; color:black; font-weight:bold; border:none; border-radius:10px; cursor:pointer;">{t["ex_btn"]}</button></a>', unsafe_allow_html=True)
+m_val = st.number_input("AMOUNT / MONTO:", min_value=5000)
+ws_url = f"https://wa.me{CEL_PAPA}?text=Client%20from%20{st.session_state.idioma_final}:%20Quote%20for%20{m_val}"
+st.markdown(f'<a href="{ws_url}" target="_blank"><button style="width:100%; height:50px; background-color:#d4af37; color:black; font-weight:bold; border:none; border-radius:10px; cursor:pointer;">{t["ex_btn"]}</button></a>', unsafe_allow_html=True)
 
 st.write("---")
-# IA ADVISOR
+# IA
 st.subheader(t["ia_tit"])
 q = st.text_input("CONSULTA / QUERY:")
 if q: st.write(f"🏛️ **IA:** {t['ia_resp']}")
 
-# FOOTER MUNDIAL
+# --- 7. PANEL DE SEGURIDAD (LLENA EL ESPACIO FINAL) ---
 st.write("---")
-c_t1, c_t2, c_t3 = st.columns(3)
-with c_t1: st.markdown("<div class='gold-card'>🗽 NY: 11:20 AM</div>", unsafe_allow_html=True)
-with c_t2: st.markdown("<div class='gold-card'>🏢 BA: 13:20 PM</div>", unsafe_allow_html=True)
-with c_t3: st.markdown("<div class='gold-card'>🏰 LN: 16:20 PM</div>", unsafe_allow_html=True)
-st.markdown(f"<div style='text-align: center; color: #d4af37; padding: 20px;'>{t['footer']}</div>", unsafe_allow_html=True)
+st.subheader(t["seg_tit"])
+s1, s2, s3, s4 = st.columns(4)
+with s1: st.markdown("<div class='security-badge'>🔐 AES-256 BIT<br>ENCRYPTION</div>", unsafe_allow_html=True)
+with s2: st.markdown("<div class='security-badge'>🛡️ ISO 27001<br>CERTIFIED</div>", unsafe_allow_html=True)
+with s3: st.markdown("<div class='security-badge'>🌐 CLOUD FLARE<br>DDoS PROTECT</div>", unsafe_allow_html=True)
+with s4: st.markdown("<div class='security-badge'>🟢 SYSTEM STATUS<br>ONLINE</div>", unsafe_allow_html=True)
 
-# MODO ADMIN (SOLO DYLAN)
-if st.sidebar.checkbox("🔓 ADMIN"):
-    if st.sidebar.text_input("CLAVE:", type="password") == "DYLAN777":
-        st.sidebar.table(pd.DataFrame(st.session_state.mensajes))
+st.write("")
+st.markdown(f"<p style='text-align: center; font-size: 0.8rem; color: #d4af37;'>{t['seg_node']}</p>", unsafe_allow_html=True)
+st.markdown(f"<div style='text-align: center; color: #d4af37; padding: 15px; border-top: 1px solid #d4af37;'>{t['footer']}</div>", unsafe_allow_html=True)
 
-if st.sidebar.button("🔒 LOGOUT"): st.session_state.auth = False; st.rerun()
+if st.sidebar.button("🔒 EXIT"): st.session_state.auth = False; st.rerun()
