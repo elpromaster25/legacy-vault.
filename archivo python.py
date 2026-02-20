@@ -93,11 +93,11 @@ else:
     r1.metric("FORTUNA USD", f"${fut_usd:,.0f}"); r2.metric("FORTUNA ARS", f"${fut_usd * 1500:,.0f}")
     
     st.markdown("---")
-    # GRÁFICO (CORREGIDO CON NÚMEROS)
+    # GRÁFICOS (CON NÚMEROS REALES)
     c1, c2 = st.columns(2)
     with c1:
         st.subheader("📊 DISTRIBUCIÓN")
-        df_f = pd.DataFrame({"Activo": ["RE", "Stocks", "Crypto", "Art"], "Valor":})
+        df_f = pd.DataFrame({"Activo": ["RE", "Stocks", "Crypto", "Art"], "Valor": [45, 25, 20, 10]})
         st.bar_chart(df_f.set_index("Activo"))
     with c2:
         st.subheader("🤖 IA ADVISOR")
