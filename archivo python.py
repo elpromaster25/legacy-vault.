@@ -5,7 +5,7 @@ import time
 # --- 1. CONFIGURACIÓN DE PÁGINA ---
 st.set_page_config(page_title="LEGACY QUANTUM VAULT", page_icon="🏛️", layout="wide")
 
-# --- 2. LÓGICA DE ACCESO (DEMO O LLAVE) ---
+# --- 2. LÓGICA DE ACCESO ---
 if 'auth' not in st.session_state:
     st.session_state.auth = False
 if 'demo' not in st.session_state:
@@ -27,9 +27,8 @@ st.markdown("""
 if not st.session_state.auth and not st.session_state.demo:
     st.title("🏛️ LEGACY QUANTUM VAULT")
     st.write("---")
-    
-    st.markdown("<div class='gold-box'>🇦🇷 ARGENTINA: 2.000.000 ARS / MES<br>🇺🇸 USA: 12.000 USD / MONTH</div>", unsafe_allow_html=True)
-    
+    st.markdown("<div class='gold-price' style='color: #d4af37; text-align: center; font-size: 1.5rem; font-weight: bold;'>🇦🇷 ARGENTINA: 2 MILLONES / MES<br>🇺🇸 USA: 12 THOUSAND USD / MONTH</div>", unsafe_allow_html=True)
+    st.write("")
     c1, c2 = st.columns(2)
     with c1:
         if st.button("🔑 INGRESAR CON LLAVE MAESTRA"):
@@ -57,7 +56,7 @@ if st.session_state.auth == "login_form":
 # --- 6. CONTROL DE TIEMPO DEMO ---
 if st.session_state.demo and not st.session_state.auth:
     elapsed = time.time() - st.session_state.start_time
-    if elapsed > 300: # 5 minutos
+    if elapsed > 300: 
         st.title("⌛ TIEMPO DE DEMO EXPIRADO")
         st.markdown("<div class='gold-box'>PARA CONTINUAR DEBE ADQUIRIR SU LLAVE VIP.<br>COSTO: 2.000.000 ARS / 12K USD</div>", unsafe_allow_html=True)
         if st.button("VOLVER AL INICIO"):
@@ -66,12 +65,11 @@ if st.session_state.demo and not st.session_state.auth:
             st.rerun()
         st.stop()
 
-# --- 7. PANEL DE CONTROL (EL PRODUCTO FINAL) ---
+# --- 7. PANEL DE CONTROL FINAL ---
 st.title("🏛️ COMMAND CENTER LEGACY")
 if st.session_state.demo:
     st.warning(f"⚠️ MODO DEMO ACTIVO: {int(300 - (time.time() - st.session_state.start_time))} segundos restantes")
 
-# SIMULADOR DINÁMICO
 años = st.slider("PROYECCIÓN PATRIMONIAL (AÑOS):", 1, 30, 10)
 ret = st.slider("RENTABILIDAD ANUAL ESTIMADA (%):", 5, 50, 15)
 capital_base = 12450000
@@ -86,10 +84,10 @@ st.write("---")
 c1, c2 = st.columns(2)
 with c1:
     st.subheader("📊 DISTRIBUCIÓN DE ACTIVOS")
-    # GRÁFICO ARREGLADO CON NÚMEROS CARGADOS
+    # --- AQUÍ ESTÁ EL ARREGLO DE LOS VALORES ---
     datos_graficos = pd.DataFrame({
         "Activo": ["Propiedades", "Stocks", "Crypto", "Arte"],
-        "Valor": 
+        "Valor": [45, 25, 20, 10]
     })
     st.bar_chart(datos_graficos.set_index("Activo"))
 
@@ -97,7 +95,7 @@ with c2:
     st.subheader("🤖 ESTRATEGA IA")
     pregunta = st.text_input("CONSULTA TÉCNICA A LA IA:")
     if pregunta:
-        with st.spinner('Procesando datos...'):
+        with st.spinner('Analizando...'):
             time.sleep(1)
             st.write(f"🏛️ **IA:** Dylan García, para la consulta '{pregunta}', el análisis sugiere MANTENER POSICIONES.")
 
