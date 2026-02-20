@@ -23,8 +23,7 @@ st.markdown("""
     <style>
     .stApp { background-color: #050505; border: 4px solid #d4af37; padding: 20px; }
     h1, h2, h3 { color: #d4af37 !important; font-family: 'serif'; text-align: center; }
-    [data-testid="stMetricValue"] { color: #d4af37 !important; font-size: 2.2rem !important; font-weight: bold; }
-    /* CARTEL DE VENTA EN EL FRONT */
+    [data-testid="stMetricValue"] { color: #d4af37 !important; font-size: 2rem !important; font-weight: bold; }
     .pay-banner {
         background-color: rgba(212, 175, 55, 0.15);
         border: 2px solid #d4af37;
@@ -39,10 +38,10 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# --- 3. EL CARTEL QUE PEDISTE (ARRIBA DE TODO) ---
+# --- 3. EL CARTEL DE VENTA (LO QUE PEDISTE) ---
 st.markdown("""
 <div class='pay-banner'>
-    🇦🇷 Para poder usar la app/pagina mas de 1 mes tenes que pagar 2 millones.<br><br>
+    🇦🇷 Para poder usar la app/pagina mas de 1 mes tenes que pagar 2 millones.<br>
     🇺🇸 To use this app/page for more than 1 month you have to pay 12 thousand dollars.
 </div>
 """, unsafe_allow_html=True)
@@ -53,30 +52,26 @@ st.title("🏛️ CENTRO DE MANDO LEGACY")
 años = st.slider("AÑOS DE INVERSIÓN:", 1, 30, 10)
 ret = st.slider("RENDIMIENTO ANUAL (%)", 5, 50, 15)
 
-# --- CÁLCULOS MATEMÁTICOS REALES ---
-tc = 1500  # 1 Dólar = 1500 Pesos
+# --- CÁLCULOS MATEMÁTICOS (CORRECTOS) ---
+tc = 1500  # 1 Dólar = 1500 Pesos (Aproximado 2026)
 capital_inicial_usd = 12450000
-
-# Proyección en Dólares
 futuro_usd = capital_inicial_usd * ((1 + (ret/100))**años)
-
-# Proyección en Pesos (MULTIPLICAMOS por el tipo de cambio)
-futuro_ars = futuro_usd * tc 
+futuro_ars = futuro_usd * tc # ACÁ ESTÁ LA MONTAÑA DE PESOS
 
 st.markdown("---")
 
-# 5. RESULTADOS (Con todos los números exactos)
+# 5. RESULTADOS
 res1, res2 = st.columns(2)
-res1.metric("PROYECCIÓN EN DÓLARES (USD)", f"${futuro_usd:,.0f}")
-res2.metric("PROYECCIÓN EN PESOS (ARS)", f"${futuro_ars:,.0f}")
+res1.metric("PROYECCIÓN DÓLARES (USD)", f"${futuro_usd:,.0f}")
+res2.metric("PROYECCIÓN PESOS (ARS)", f"${futuro_ars:,.0f}")
 
 st.markdown("---")
 
-# 6. GRÁFICOS Y IA (CORREGIDO)
+# 6. GRÁFICOS Y IA (YA NO DA ERROR)
 c1, c2 = st.columns(2)
 with c1:
     st.subheader("📊 DISTRIBUCIÓN")
-    df_data = pd.DataFrame({"Activo": ["Casas", "Bolsa", "Cripto", "Arte"], "Valor":})
+    df_data = pd.DataFrame({"Activo": ["Casas", "Bolsa", "Cripto", "Arte"], "Valor": [60, 20, 10, 10]})
     st.bar_chart(df_data.set_index("Activo"))
 with c2:
     st.subheader("🤖 ESTRATEGA IA")
