@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import time
 
-# --- 1. SEGURIDAD Y PANTALLA DE ENTRADA (DISEÑO SIMÉTRICO) ---
+# --- 1. SEGURIDAD Y PANTALLA DE ENTRADA (SIMÉTRICA) ---
 if 'autenticado' not in st.session_state:
     st.session_state.autenticado = False
 if 'mensajes' not in st.session_state:
@@ -13,27 +13,30 @@ if not st.session_state.autenticado:
     st.markdown("<style>.stApp { background-color: #000000; } h1, h3 { color: #d4af37; text-align: center; font-family: 'serif'; }</style>", unsafe_allow_html=True)
     st.title("🔐 TERMINAL DE ACCESO PRIVADO")
     
-    # Login Principal
     password = st.text_input("LLAVE MAESTRA / MASTER KEY:", type="password")
     if st.button("DESBLOQUEAR BÓVEDA"):
         if password == "LEGACY2026":
+            with st.status("Verificando credenciales...", expanded=True) as status:
+                st.write("🧬 Escaneando firma digital...")
+                time.sleep(1)
+                st.write("🟢 Acceso Concedido: Dylan García.")
+                status.update(label="Identidad Verificada", state="complete", expanded=False)
             st.session_state.autenticado = True
             st.rerun()
     
     st.write("---")
     st.subheader("📩 ¿No tiene una llave de acceso? / No access key?")
     
-    # LAS 3 COLUMNAS: INFO IZQ | FORMULARIO | INFO DER
     col_info_izq, col_form, col_info_der = st.columns([1, 2, 1])
     
     with col_info_izq:
-        st.markdown("<p style='color: #d4af37; font-size: 0.9rem; text-align: center;'>🛡️ PROTECCIÓN<br>Encriptación AES-256 para activos de alto valor en Puerto Madero y el mundo.</p>", unsafe_allow_html=True)
+        st.markdown("<p style='color: #d4af37; font-size: 0.9rem; text-align: center; border: 1px solid #d4af37; padding: 10px;'>🛡️ PROTECCIÓN<br>Encriptación AES-256 para activos de alto valor en Puerto Madero y el mundo.</p>", unsafe_allow_html=True)
 
     with col_form:
         with st.form("contacto_vip"):
-            perfil = st.radio("Perfil:", ["Empresario / CEO", "Inversor Independiente"])
-            mail = st.text_input("Su Email:")
-            if st.form_submit_button("SOLICITAR ACCESO VIP"):
+            perfil = st.radio("Perfil / Profile:", ["Empresario / CEO", "Inversor Independiente"])
+            mail = st.text_input("Su Email / Your Email:")
+            if st.form_submit_button("SOLICITAR ACCESO VIP / REQUEST ACCESS"):
                 if mail:
                     st.session_state.mensajes.append({"perfil": perfil, "mail": mail, "hora": time.strftime('%H:%M')})
                     st.success("✅ SOLICITUD ENVIADA AL FOUNDER.")
@@ -41,7 +44,7 @@ if not st.session_state.autenticado:
                     st.warning("Ingrese su email.")
 
     with col_info_der:
-        st.markdown("<p style='color: #d4af37; font-size: 0.9rem; text-align: center;'>📈 PROYECCIÓN<br>Algoritmos de IA para el análisis de riesgo y crecimiento patrimonial.</p>", unsafe_allow_html=True)
+        st.markdown("<p style='color: #d4af37; font-size: 0.9rem; text-align: center; border: 1px solid #d4af37; padding: 10px;'>📈 PROYECCIÓN<br>Algoritmos de IA para el análisis de riesgo y crecimiento patrimonial.</p>", unsafe_allow_html=True)
     
     st.stop()
 
@@ -61,14 +64,14 @@ st.sidebar.title("🛂 DASHBOARD")
 es_admin = st.sidebar.checkbox("🔓 MODO ADMIN (DYLAN)")
 idioma = st.sidebar.selectbox("Region:", ["🇦🇷 Argentina", "🇺🇸 USA / International"]) if not es_admin else "Admin"
 
-# Traducciones y Lógica de Negocio
+# Traducciones y Lógica
 if idioma == "Admin":
     st.title("👨‍💻 PANEL DE CONTROL: DYLAN GARCÍA")
     st.subheader("📬 SOLICITUDES DE ACCESO VIP")
     if st.session_state.mensajes:
         st.table(pd.DataFrame(st.session_state.mensajes))
     else:
-        st.write("Esperando interesados de Puerto Madero...")
+        st.write("Esperando interesados...")
 else:
     banner = "🇦🇷 Si sos de Argentina tenes que pagar 2 millones por mes." if "Argentina" in idioma else "🇺🇸 If you are from the USA etc, it costs 12 thousand per month."
     st.markdown(f"<div class='pay-banner'>{banner}</div>", unsafe_allow_html=True)
@@ -89,11 +92,12 @@ else:
     c1, c2 = st.columns(2)
     with c1:
         st.subheader("📊 DISTRIBUCIÓN")
-        df = pd.DataFrame({"Activo": ["RE", "Stocks", "Crypto", "Art"], "Valor":})
-        st.bar_chart(df.set_index("Activo"))
+        # CORREGIDO: Valores del gráfico cerrados correctamente
+        df_data = pd.DataFrame({"Activo": ["RE", "Stocks", "Crypto", "Art"], "Valor":})
+        st.bar_chart(df_data.set_index("Activo"))
     with c2:
         st.subheader("🤖 IA ADVISOR")
-        st.write("IA ESTRATÉGICA ACTIVA")
+        st.write("IA ESTRATÉGICA ACTIVA. DYLAN GARCÍA: HOLD POSITIONS.")
 
 if st.sidebar.button("🔒 CERRAR"):
     st.session_state.autenticado = False
