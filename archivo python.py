@@ -1,87 +1,93 @@
 import streamlit as st
 import pandas as pd
 import time
+import random
 
-# 1. SEGURIDAD DE BÓVEDA
+# --- 1. SEGURIDAD DE ACCESO ---
 if 'autenticado' not in st.session_state:
     st.session_state.autenticado = False
 
 if not st.session_state.autenticado:
-    st.set_page_config(page_title="LOGIN PRIVADO", page_icon="🔒")
-    st.markdown("<style>.stApp { background-color: #0e1117; } h1 { color: #d4af37; text-align: center; }</style>", unsafe_allow_html=True)
-    st.title("🔐 ACCESO EXCLUSIVO LEGACY")
-    password = st.text_input("CLAVE DE ACCESO:", type="password")
-    if st.button("DESBLOQUEAR BÓVEDA"):
+    st.set_page_config(page_title="IDENTIFICACIÓN REQUERIDA", page_icon="🔐")
+    st.markdown("<style>.stApp { background-color: #050505; } h1 { color: #d4af37; text-align: center; }</style>", unsafe_allow_html=True)
+    st.title("🔐 ACCESO RESTRINGIDO: LEGACY QUANTUM")
+    password = st.text_input("INGRESE LLAVE DE ENCRIPTACIÓN:", type="password")
+    if st.button("DESBLOQUEAR TERMINAL"):
         if password == "LEGACY2026":
             st.session_state.autenticado = True
             st.rerun()
         else:
-            st.error("Clave Incorrecta.")
+            st.error("ACCESO DENEGADO. IP RASTREADA.")
     st.stop()
 
-# 2. CONFIGURACIÓN DE LUJO POST-LOGIN
-st.set_page_config(page_title="LEGACY VAULT VIP", page_icon="🗝️", layout="wide")
+# --- 2. CONFIGURACIÓN DE ÉLITE ---
+st.set_page_config(page_title="LEGACY COMMAND CENTER", page_icon="🏛️", layout="wide")
 st.markdown("""
     <style>
-    .stApp { background-color: #0e1117; }
-    h1, h2, h3 { color: #d4af37 !important; font-family: 'serif'; text-align: center; }
-    [data-testid="stMetricValue"] { color: #d4af37 !important; }
-    .stMarkdown p { color: white; }
-    div.stButton > button { background-color: #d4af37; color: black; font-weight: bold; border-radius: 10px; }
+    .stApp { background-color: #050505; }
+    h1, h2, h3 { color: #d4af37 !important; font-family: 'Courier New'; text-align: center; letter-spacing: 2px; }
+    [data-testid="stMetricValue"] { color: #d4af37 !important; font-size: 2.5rem !important; }
+    .stMarkdown p { color: #888; font-family: 'Courier New'; }
+    div.stButton > button { background-color: #1a1a1a; color: #d4af37; border: 1px solid #d4af37; border-radius: 0px; height: 3em; width: 100%; }
+    div.stButton > button:hover { background-color: #d4af37; color: black; }
     </style>
     """, unsafe_allow_html=True)
 
-# --- PANEL PRINCIPAL ---
-st.title("🗝️ LEGACY VAULT: GLOBAL MANAGEMENT")
-st.write("Bienvenido, Inversor. El mercado global está operando.")
+# --- 3. BARRA DE ESTADO SATELITAL ---
+st.markdown(f"<p style='text-align: right; color: #00ff00; font-size: 0.7rem;'>● SERVIDOR ENCRIPTADO: ACTIVO | SEÑAL SATELITAL: 99% | FECHA: {time.strftime('%d/%m/%Y')}</p>", unsafe_allow_html=True)
 
-# 3. MERCADOS EN VIVO (Métricas de Wall Street)
-st.markdown("### 🌐 MERCADOS EN TIEMPO REAL")
+st.title("🏛️ LEGACY COMMAND CENTER")
+st.markdown("<p style='text-align: center;'>CENTRAL DE INTELIGENCIA FINANCIERA PARA ACTIVOS GLOBALES</p>", unsafe_allow_html=True)
+
+# --- 4. TERMINAL DE MERCADOS ---
 m1, m2, m3, m4 = st.columns(4)
-m1.metric("S&P 500", "5,026.15", "+0.45%")
-m2.metric("NASDAQ 100", "17,861.12", "+1.10%")
+m1.metric("S&P 500", "5,026", "+0.45%")
+m2.metric("NASDAQ", "17,861", "+1.1%")
 m3.metric("BITCOIN", "$98,450", "+2.5%")
-m4.metric("ORO (XAU)", "$2,150.40", "-0.05%")
+m4.metric("GOLD", "$2,150", "-0.05%")
 
 st.markdown("---")
 
-# 4. PATRIMONIO Y GRÁFICOS
-col_p1, col_p2 = st.columns([1, 1])
-with col_p1:
-    st.subheader("💰 Resumen de Activos")
-    st.metric(label="VALOR NETO TOTAL", value="$12,450,000 USD", delta="+2.4% (Mensual)")
-    st.success("✅ Auditoría completada: Activos verificados en Blockchain.")
-    
-    # Botón de Descarga
-    st.download_button(
-        label="📄 DESCARGAR REPORTE VIP (PDF)",
-        data="REPORTE OFICIAL LEGACY VAULT: Patrimonio neto de $12,450,000 USD verificado bajo protocolos de encriptación grado militar.",
-        file_name="Reporte_Patrimonio_Legacy.txt",
-        mime="text/plain"
-    )
+# --- 5. BÓVEDA PRINCIPAL ---
+c1, c2 = st.columns([1, 2])
+with c1:
+    st.subheader("💰 PATRIMONIO NETO")
+    st.metric(label="EQUITY TOTAL", value="$12,450,000", delta="+$298,800 (ESTE MES)")
+    st.info("ℹ️ Auditoría Real-Time: Sus activos están protegidos por el protocolo Legacy-Secure.")
+    st.download_button("📄 EXPORTAR INFORME BANCARIO", "PATRIMONIO VERIFICADO: $12.45M", file_name="Legacy_Report.txt")
 
-with col_p2:
-    st.subheader("📊 Distribución Estratégica")
-    df = pd.DataFrame({"Activo": ["Inmuebles", "Acciones", "Cripto", "Arte"], "Valor": [60, 20, 10, 10]})
-    st.bar_chart(df.set_index("Activo"))
+with c2:
+    st.subheader("📡 MAPA DE CALOR DE INVERSIONES")
+    # Gráfico de barras pro
+    chart_data = pd.DataFrame({"Activo": ["Propiedades", "Acciones", "Cripto", "Arte"], "Valor": [60, 20, 10, 10]})
+    st.bar_chart(chart_data.set_index("Activo"))
 
-# 5. SIMULADOR DE GANANCIAS A 5 AÑOS
+# --- 6. SIMULADOR DE ESCENARIOS ---
 st.markdown("---")
-st.subheader("📈 PROYECCIÓN DE CRECIMIENTO")
-interes = st.slider("Seleccione tasa de retorno anual esperada (%):", 5, 20, 10)
-proyeccion = 12450000 * ((1 + (interes/100))**5)
-st.write(f"Con un {interes}% anual, su patrimonio en 5 años sería de: **${proyeccion:,.2f} USD**")
+st.subheader("🚨 SIMULADOR DE ESCENARIOS DE RIESGO")
+col_s1, col_s2 = st.columns(2)
+with col_s1:
+    escenario = st.selectbox("ELEGIR ESCENARIO:", ["Mercado Estable", "Crisis de Inflación", "Boom Tecnológico"])
+with col_s2:
+    if st.button("EJECUTAR SIMULACIÓN"):
+        with st.spinner("PROCESANDO MODELO MATEMÁTICO..."):
+            time.sleep(2)
+            if escenario == "Mercado Estable":
+                st.write("🟢 **RESULTADO:** Crecimiento sostenido del 8% anual.")
+            elif escenario == "Crisis de Inflación":
+                st.write("🔴 **RESULTADO:** Pérdida del 12% en liquidez. Recomendación: Mover activos a ORO.")
+            else:
+                st.write("💎 **RESULTADO:** Su inversión en Cripto y Tech explotaría un 45%.")
 
-# 6. IA ESTRATÉGICA
+# --- 7. IA ESTRATÉGICA ---
 st.markdown("---")
-st.subheader("🤖 LEGACY AI: CONSULTOR PRIVADO")
-pregunta = st.text_input("Consulte a la IA sobre riesgos o diversificación:")
+st.subheader("🤖 LEGACY AI: PROTOCOLO DE CONSULTA")
+pregunta = st.text_input("INGRESE CONSULTA PARA EL ANALISTA DE IA:")
 if pregunta:
-    with st.spinner('Analizando variables macroeconómicas...'):
-        time.sleep(1)
-        st.write(f"🏛️ **LEGACY AI:** Basado en su consulta sobre '{pregunta}', mi análisis indica que debería mantener su posición en Inmuebles de Lujo y aumentar un 2% en Criptoactivos.")
+    st.write(f"🕵️ **ANALISTA IA:** Basado en su consulta sobre '{pregunta}', la orden es: MANTENER Y REBALANCIAR.")
 
-# 7. LOGOUT
-if st.sidebar.button("🔒 CERRAR BÓVEDA"):
+# --- 8. LOGOUT SEGURO ---
+if st.sidebar.button("🔒 CERRAR TERMINAL"):
     st.session_state.autenticado = False
     st.rerun()
+
