@@ -23,55 +23,63 @@ st.markdown("""
     <style>
     .stApp { background-color: #050505; border: 4px solid #d4af37; padding: 20px; }
     h1, h2, h3 { color: #d4af37 !important; font-family: 'serif'; text-align: center; }
-    [data-testid="stMetricValue"] { color: #d4af37 !important; font-size: 3rem !important; font-weight: bold; }
-    .pay-notice { color: #d4af37; font-weight: bold; border: 2px solid #d4af37; padding: 15px; border-radius: 10px; background-color: rgba(212, 175, 55, 0.1); text-align: center; margin-bottom: 20px; }
+    [data-testid="stMetricValue"] { color: #d4af37 !important; font-size: 2.2rem !important; font-weight: bold; }
+    /* CARTEL DE VENTA EN EL FRONT */
+    .pay-banner {
+        background-color: rgba(212, 175, 55, 0.15);
+        border: 2px solid #d4af37;
+        color: #d4af37;
+        padding: 20px;
+        text-align: center;
+        font-weight: bold;
+        border-radius: 10px;
+        margin-bottom: 30px;
+        font-size: 1.2rem;
+    }
     </style>
     """, unsafe_allow_html=True)
 
-# --- 3. EL CARTEL DE PAGO (LADO IZQUIERDO / SIDEBAR) ---
-with st.sidebar:
-    st.markdown("### 💎 MEMBRESÍA")
-    st.markdown("<div class='pay-notice'>🇦🇷 Para usar la app más de 1 mes tenés que pagar 2 millones.</div>", unsafe_allow_html=True)
-    st.markdown("<div class='pay-notice'>🇺🇸 To use this app for more than 1 month you have to pay 12 thousand dollars.</div>", unsafe_allow_html=True)
-    st.write("---")
-    if st.button("🔒 CERRAR"):
-        st.session_state.autenticado = False
-        st.rerun()
+# --- 3. EL CARTEL QUE PEDISTE (ARRIBA DE TODO) ---
+st.markdown("""
+<div class='pay-banner'>
+    🇦🇷 Para poder usar la app/pagina mas de 1 mes tenes que pagar 2 millones.<br><br>
+    🇺🇸 To use this app/page for more than 1 month you have to pay 12 thousand dollars.
+</div>
+""", unsafe_allow_html=True)
 
-# --- 4. PANEL DE CONTROL ---
 st.title("🏛️ CENTRO DE MANDO LEGACY")
 
-# SIMULADOR
-col_s1, col_s2 = st.columns(2)
-with col_s1:
-    años = st.slider("AÑOS DE INVERSIÓN:", 1, 30, 10)
-with col_s2:
-    ret = st.slider("RETORNO ANUAL (%)", 5, 50, 15)
+# 4. SIMULADOR
+años = st.slider("AÑOS DE INVERSIÓN:", 1, 30, 10)
+ret = st.slider("RENDIMIENTO ANUAL (%)", 5, 50, 15)
 
-# CÁLCULOS DINÁMICOS
-tc = 1500 
-capital_inicial = 12450000
-futuro_usd = capital_inicial * ((1 + (ret/100))**años)
-futuro_ars = futuro_usd * tc
+# --- CÁLCULOS MATEMÁTICOS REALES ---
+tc = 1500  # 1 Dólar = 1500 Pesos
+capital_inicial_usd = 12450000
 
-# FUNCIÓN PARA ACORTAR NÚMEROS (Para que no se vean 16 dígitos)
-def formato_moneda(numero):
-    if numero >= 1_000_000_000_000: return f"{numero/1_000_000_000_000:.2f} Billones"
-    if numero >= 1_000_000_000: return f"{numero/1_000_000_000:.2f} Mil Millones"
-    if numero >= 1_000_000: return f"{numero/1_000_000:.2f} Millones"
-    return f"{numero:,.0f}"
+# Proyección en Dólares
+futuro_usd = capital_inicial_usd * ((1 + (ret/100))**años)
+
+# Proyección en Pesos (MULTIPLICAMOS por el tipo de cambio)
+futuro_ars = futuro_usd * tc 
 
 st.markdown("---")
+
+# 5. RESULTADOS (Con todos los números exactos)
 res1, res2 = st.columns(2)
-res1.metric("PROYECCIÓN USD", formato_moneda(futuro_usd))
-res2.metric("PROYECCIÓN ARS", formato_moneda(futuro_ars))
+res1.metric("PROYECCIÓN EN DÓLARES (USD)", f"${futuro_usd:,.0f}")
+res2.metric("PROYECCIÓN EN PESOS (ARS)", f"${futuro_ars:,.0f}")
 
 st.markdown("---")
-# GRÁFICO (CON NÚMEROS FIJOS PARA EVITAR ERROR ROJO)
-df_data = pd.DataFrame({"Activo": ["Propiedades", "Acciones", "Cripto", "Arte"], "Valor": [60, 20, 10, 10]})
-st.bar_chart(df_data.set_index("Activo"))
 
-st.subheader("🤖 IA ESTRATÉGICA")
-pregunta = st.text_input("CONSULTA:")
-if pregunta:
-    st.write(f"🏛️ **IA:** Dylan García, para '{pregunta}' la orden es MANTENER.")
+# 6. GRÁFICOS Y IA (CORREGIDO)
+c1, c2 = st.columns(2)
+with c1:
+    st.subheader("📊 DISTRIBUCIÓN")
+    df_data = pd.DataFrame({"Activo": ["Casas", "Bolsa", "Cripto", "Arte"], "Valor":})
+    st.bar_chart(df_data.set_index("Activo"))
+with c2:
+    st.subheader("🤖 ESTRATEGA IA")
+    pregunta = st.text_input("CONSULTA TÉCNICA:")
+    if pregunta:
+        st.write(f"🏛️ **IA:** Dylan García, para '{pregunta}' la orden es MANTENER.")
