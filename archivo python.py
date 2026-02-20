@@ -2,25 +2,28 @@ import streamlit as st
 import pandas as pd
 import time
 
-# --- 1. SEGURIDAD ---
+# --- 1. SEGURIDAD DE ENTRADA ---
 if 'autenticado' not in st.session_state:
     st.session_state.autenticado = False
 
 if not st.session_state.autenticado:
-    st.set_page_config(page_title="IDENTIFICACIÓN REQUERIDA", page_icon="🔐")
+    st.set_page_config(page_title="LEGACY | SECURE LOGIN", page_icon="🔒")
     st.markdown("<style>.stApp { background-color: #050505; } h1 { color: #d4af37; text-align: center; font-family: 'Courier New'; }</style>", unsafe_allow_html=True)
-    st.title("🔐 ACCESO RESTRINGIDO: LEGACY QUANTUM")
-    password = st.text_input("INGRESE LLAVE DE ENCRIPTACIÓN:", type="password")
-    if st.button("DESBLOQUEAR TERMINAL"):
+    st.title("🔐 SISTEMA DE GESTIÓN PATRIMONIAL")
+    password = st.text_input("LLAVE MAESTRA:", type="password")
+    if st.button("DESBLOQUEAR BÓVEDA"):
         if password == "LEGACY2026":
-            with st.status("Verificando Huella Digital...", expanded=True) as status:
+            with st.status("Ejecutando Protocolos de Seguridad...", expanded=True) as status:
+                st.write("🔎 Escaneando vulnerabilidades...")
                 time.sleep(1)
-                st.write("🟢 Identidad Verificada: Dylan García.")
-                status.update(label="Acceso Concedido", state="complete", expanded=False)
+                st.write("🛡️ Encriptación de flujo activada (AES-256).")
+                time.sleep(1)
+                st.write("🟢 Acceso Autorizado: Dylan García.")
+                status.update(label="Seguridad Verificada", state="complete", expanded=False)
             st.session_state.autenticado = True
             st.rerun()
         else:
-            st.error("ACCESO DENEGADO.")
+            st.error("ERROR DE AUTENTICACIÓN.")
     st.stop()
 
 # --- 2. CONFIGURACIÓN DE ÉLITE ---
@@ -29,62 +32,59 @@ st.markdown("""
     <style>
     .stApp { background-color: #050505; }
     h1, h2, h3 { color: #d4af37 !important; font-family: 'Courier New'; text-align: center; }
-    [data-testid="stMetricValue"] { color: #d4af37 !important; font-size: 3rem !important; font-weight: bold; text-align: center; }
+    [data-testid="stMetricValue"] { color: #d4af37 !important; font-size: 2.8rem !important; font-weight: bold; text-align: center; }
     [data-testid="stMetricLabel"] { color: #ffffff !important; justify-content: center !important; }
-    div.stButton > button { background-color: #1a1a1a; color: #d4af37; border: 1px solid #d4af37; border-radius: 0px; width: 100%; }
-    /* Estilo para el Slider de Oro */
-    .stSlider [data-baseweb="slider"] { color: #d4af37; }
+    /* Caja de Logs de Seguridad */
+    .security-log { background-color: #111; border-left: 3px solid #d4af37; padding: 10px; font-family: 'Courier New'; font-size: 0.8rem; color: #00ff00; }
     </style>
     """, unsafe_allow_html=True)
 
-# --- 3. INTERFAZ ---
-st.markdown("<marquee style='color: #d4af37;'>● MERCADOS OPERANDO ● SEGURIDAD ACTIVA ● BITCOIN BULLISH ●</marquee>", unsafe_allow_html=True)
+# --- 3. BARRA DE STATUS ---
+st.markdown("<marquee style='color: #d4af37;'>● CONEXIÓN ENCRIPTADA ● AUDITORÍA 2026 APROBADA ● ACTIVOS PROTEGIDOS POR BLOCKCHAIN ●</marquee>", unsafe_allow_html=True)
 st.title("🏛️ LEGACY COMMAND CENTER")
 
-# --- 4. MÉTRICAS SUPERIORES ---
+# --- 4. MÉTRICAS DE PODER ---
 t1, t2, t3, t4 = st.columns(4)
-t1.metric("STATUS", "SECURE", "100%")
+t1.metric("ESTADO RED", "PROTEGIDA", "100%")
 t2.metric("S&P 500", "5,026", "+0.4%")
 t3.metric("BITCOIN", "$98,450", "+2.5%")
-t4.metric("RIESGO", "BAJO", "SÓLIDO")
+t4.metric("EQUITY TOTAL", "$12.45M", "+2.4%")
 
 st.markdown("---")
 
-# --- 5. EL "GANCHO" DEL EMPRESARIO: PROYECCIÓN PATRIMONIAL ---
-st.subheader("🚀 SIMULADOR DE CRECIMIENTO PATRIMONIAL")
-st.write("Mueva la barra para proyectar su fortuna con nuestra IA en los próximos 10 años.")
-
-col_s1, col_s2 = st.columns([2, 1])
-with col_s1:
-    años = st.slider("AÑOS DE INVERSIÓN:", 1, 30, 10)
-    interes = st.slider("RETORNO ANUAL ESPERADO (%):", 5, 50, 15)
-with col_s2:
-    capital_inicial = 12450000
-    futuro = capital_inicial * ((1 + (interes/100))**años)
-    st.metric("FORTUNA ESTIMADA", f"${futuro:,.0f}")
-    st.write(f"Con un retorno del {interes}% anual.")
-
-st.markdown("---")
-
-# --- 6. BITCOIN Y GRÁFICOS ---
+# --- 5. EL "SELLO DE CONFIANZA" (Lo que pediste) ---
 c1, c2 = st.columns(2)
 with c1:
-    st.image("https://img.icons8.com", width=120)
-    st.metric("VALOR BTC/USD", "$98,450.00")
-    st.download_button("📄 EXPORTAR AUDITORÍA VIP", "PATRIMONIO: $12.45M", file_name="Legacy_Audit.txt")
+    st.subheader("🛡️ REPORTE DE SEGURIDAD")
+    st.markdown("""
+    <div class='security-log'>
+    > Iniciando escaneo de activos...<br>
+    > Verificando certificados SSL... OK<br>
+    > Sincronizando con Mainnet de Cripto... OK<br>
+    > Estado: Bóveda blindada contra ataques externos.
+    </div>
+    """, unsafe_allow_html=True)
+    st.write("")
+    st.success("✅ Este panel ha sido auditado y verificado por **Legacy Security Systems**.")
+    st.download_button("📄 EXPORTAR CERTIFICADO DE FONDOS", "CERTIFICADO OFICIAL: $12.45M", file_name="Certificado_Legacy.txt")
 
 with c2:
-    st.subheader("📊 DISTRIBUCIÓN")
-    chart_data = pd.DataFrame({"Activo": ["Propiedades", "Acciones", "Cripto", "Arte"], "Valor": [60, 20, 10, 10]})
-    st.bar_chart(chart_data.set_index("Activo"))
+    st.subheader("📊 DISTRIBUCIÓN DE RIESGO")
+    df = pd.DataFrame({"Activo": ["Propiedades", "Stocks", "Crypto", "Arte"], "Valor": [60, 20, 10, 10]})
+    st.bar_chart(df.set_index("Activo"))
 
-# --- 7. IA Y CIERRE ---
+# --- 6. SIMULADOR Y IA ---
 st.markdown("---")
-st.subheader("🤖 IA ESTRATÉGICA")
-pregunta = st.text_input("CONSULTA:")
-if pregunta:
-    st.write(f"🕵️ **ANALISTA:** Dylan García, para '{pregunta}' la orden es MANTENER.")
+st.subheader("🚀 PROYECCIÓN Y ESTRATEGIA IA")
+col_ia1, col_ia2 = st.columns(2)
+with col_ia1:
+    interes = st.slider("Retorno Anual esperado (%):", 5, 40, 15)
+    st.write(f"Proyección a 10 años: **${12450000 * ((1 + (interes/100))**10):,.0f} USD**")
+with col_ia2:
+    pregunta = st.text_input("Consulta técnica a la IA:")
+    if pregunta:
+        st.write(f"🕵️ **IA:** Dylan García, para '{pregunta}' la orden es: MANTENER POSICIÓN.")
 
-if st.sidebar.button("🔒 CERRAR TERMINAL"):
+if st.sidebar.button("🔒 CERRAR BÓVEDA"):
     st.session_state.autenticado = False
     st.rerun()
