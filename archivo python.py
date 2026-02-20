@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import time
 
-# --- 1. SEGURIDAD ---
+# --- 1. SEGURIDAD DE BÓVEDA ---
 if 'autenticado' not in st.session_state:
     st.session_state.autenticado = False
 
@@ -28,58 +28,43 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# --- 3. PANEL DE CONTROL (TRADUCCIÓN) ---
-st.sidebar.title("🛂 PANEL / DASHBOARD")
-es_admin = st.sidebar.checkbox("🔓 MODO ADMIN (DYLAN)")
+# --- 3. PANEL DE CONTROL (ADMIN & TRADUCCIÓN) ---
+st.sidebar.title("🛂 DASHBOARD CONTROL")
+es_admin = st.sidebar.checkbox("🔓 MODO ADMIN (DYLAN GARCÍA)")
 
 if not es_admin:
-    idioma = st.sidebar.selectbox("Region:", ["🇦🇷 Argentina (Español)", "🇺🇸 USA / International (English)"])
+    idioma = st.sidebar.selectbox("Region / Region:", ["🇦🇷 Argentina (Español)", "🇺🇸 USA / International (English)"])
 else:
     idioma = "Admin"
 
-# --- 4. TEXTOS DINÁMICOS SEGÚN IDIOMA ---
+# --- 4. DICCIONARIO DE TEXTOS MAESTRO ---
 texts = {
     "🇦🇷 Argentina (Español)": {
         "banner": "🇦🇷 Si sos de Argentina tenes que pagar 2 millones por mes.",
         "titulo": "🏛️ CENTRO DE MANDO LEGACY",
-        "sim_titulo": "🚀 PROYECCIÓN DE FORTUNA",
-        "anios": "AÑOS DE INVERSIÓN:",
-        "retorno": "RETORNO ANUAL (%):",
         "res1": "PROYECCIÓN EN PESOS (ARS)",
         "res2": "EQUIVALENTE EN USD",
         "dist": "📊 DISTRIBUCIÓN DE ACTIVOS",
         "ia": "🤖 IA ESTRATÉGICA",
-        "pregunta": "CONSULTA TÉCNICA:",
-        "boton_aud": "📥 DESCARGAR AUDITORÍA",
-        "logout": "🔒 CERRAR"
+        "logout": "🔒 CERRAR SESIÓN"
     },
     "🇺🇸 USA / International (English)": {
         "banner": "🇺🇸 If you are from the United States etc, it costs 12 thousand per month.",
         "titulo": "🏛️ LEGACY COMMAND CENTER",
-        "sim_titulo": "🚀 WEALTH PROJECTION",
-        "anios": "INVESTMENT YEARS:",
-        "retorno": "ANNUAL RETURN (%):",
         "res1": "PROJECTION IN DOLLARS (USD)",
         "res2": "VALUE IN PESOS (ARS)",
         "dist": "📊 ASSET DISTRIBUTION",
         "ia": "🤖 STRATEGIC AI",
-        "pregunta": "TECHNICAL CONSULTATION:",
-        "boton_aud": "📥 DOWNLOAD AUDIT",
         "logout": "🔒 LOGOUT"
     },
     "Admin": {
-        "banner": "💎 GLOBAL ADMIN MODE: 2M ARS / 12K USD",
+        "banner": "💎 MODO ADMIN GLOBAL: 2M ARS / 12K USD",
         "titulo": "🏛️ LEGACY MASTER TERMINAL",
-        "sim_titulo": "🚀 GLOBAL PROJECTION CONTROL",
-        "anios": "YEARS:",
-        "retorno": "RETURN %:",
         "res1": "TOTAL USD",
         "res2": "TOTAL ARS",
         "dist": "📊 GLOBAL ASSETS",
-        "ia": "🤖 MASTER AI",
-        "pregunta": "ADMIN INPUT:",
-        "boton_aud": "📥 EXPORT MASTER DATA",
-        "logout": "🔒 EXIT"
+        "ia": "🤖 MASTER AI ADVISOR",
+        "logout": "🔒 EXIT TERMINAL"
     }
 }
 
@@ -90,38 +75,38 @@ st.markdown(f"<div class='pay-banner'>{t['banner']}</div>", unsafe_allow_html=Tr
 st.title(t["titulo"])
 
 # SIMULADOR
-st.subheader(t["sim_titulo"])
-col_s1, col_s2 = st.columns(2)
-with col_s1:
-    años = st.slider(t["anios"], 1, 30, 10)
-with col_s2:
-    ret = st.slider(t["retorno"], 5, 50, 15)
+años = st.slider("AÑOS / YEARS:", 1, 30, 10)
+ret = st.slider("RETORNO / RETURN %:", 5, 50, 15)
 
-# CÁLCULOS
-tc = 1500 
-futuro_usd = 12450000 * ((1 + (ret/100))**años)
+# CÁLCULOS MATEMÁTICOS
+tc = 1500 # Cotización estimada 2026
+cap_usd = 12450000
+futuro_usd = cap_usd * ((1 + (ret/100))**años)
 futuro_ars = futuro_usd * tc 
 
 st.markdown("---")
+
+# 6. RESULTADOS (Dólares o Pesos primero según región)
 res1, res2 = st.columns(2)
-res1.metric(t["res1"], f"${futuro_usd:,.0f}" if "USD" in t["res1"] else f"${futuro_ars:,.0f}")
-res2.metric(t["res2"], f"${futuro_ars:,.0f}" if "ARS" in t["res2"] else f"${futuro_usd:,.0f}")
+if idioma == "🇦🇷 Argentina (Español)":
+    res1.metric(t["res1"], f"${futuro_ars:,.0f}")
+    res2.metric(t["res2"], f"${futuro_usd:,.0f}")
+else:
+    res1.metric(t["res1"], f"${futuro_usd:,.0f}")
+    res2.metric(t["res2"], f"${futuro_ars:,.0f}")
 
 st.markdown("---")
 
-# 6. GRÁFICOS Y IA
+# 7. GRÁFICOS Y IA (CON NÚMEROS FIJOS PARA EVITAR ERRORES)
 c1, c2 = st.columns(2)
 with c1:
     st.subheader(t["dist"])
-    df_data = pd.DataFrame({"Activo": ["Propiedades", "Stocks", "Crypto", "Arte"], "Valor":})
+    df_data = pd.DataFrame({"Activo": ["RE", "Stocks", "Crypto", "Art"], "Valor":})
     st.bar_chart(df_data.set_index("Activo"))
+
 with c2:
     st.subheader(t["ia"])
-    preg = st.text_input(t["pregunta"])
-    if preg:
-        st.write(f"🏛️ **AI:** Dylan García, recommendation for '{preg}': HOLD.")
-    st.download_button(t["boton_aud"], f"VALUE: {futuro_usd} USD", file_name="Legacy_Audit.txt")
-
-if st.sidebar.button(t["logout"]):
-    st.session_state.autenticado = False
-    st.rerun()
+    st.write(f"🏛️ {t['ia']}: Active")
+    if st.sidebar.button(t["logout"]):
+        st.session_state.autenticado = False
+        st.rerun()
