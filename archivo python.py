@@ -2,111 +2,84 @@ import streamlit as st
 import pandas as pd
 import time
 
-# --- 1. SEGURIDAD Y PANTALLA DE ENTRADA CON PRECIOS EN ORO ---
+# --- 1. CONFIGURACIÓN DE CRONÓMETRO (DEMO) ---
+if 'inicio_demo' not in st.session_state:
+    st.session_state.inicio_demo = None
+if 'demo_terminada' not in st.session_state:
+    st.session_state.demo_terminada = False
 if 'autenticado' not in st.session_state:
     st.session_state.autenticado = False
-if 'mensajes' not in st.session_state:
-    st.session_state.mensajes = []
 
-if not st.session_state.autenticado:
-    st.set_page_config(page_title="LEGACY | LOGIN", page_icon="🔐", layout="wide")
-    st.markdown("""
-        <style>
-        .stApp { background-color: #000000; }
-        h1 { color: #d4af37 !important; text-align: center; font-family: 'serif'; font-size: 4rem !important; }
-        .gold-price {
-            color: #d4af37; font-size: 1.6rem; text-align: center; font-weight: bold;
-            text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px; font-family: 'serif';
-        }
-        .info-box {
-            color: #d4af37; font-size: 1.2rem; text-align: center; border: 1px solid #d4af37;
-            padding: 20px; border-radius: 15px; background-color: rgba(212, 175, 55, 0.05);
-            min-height: 250px; display: flex; align-items: center; justify-content: center; flex-direction: column;
-        }
-        div.stButton > button {
-            background-color: #1a1a1a; color: #d4af37; border: 2px solid #d4af37; width: 100%; font-weight: bold; height: 3em;
-        }
-        </style>
-        """, unsafe_allow_html=True)
-    
+# --- 2. PANTALLA DE ENTRADA (EL FILTRO) ---
+if not st.session_state.autenticado and not st.session_state.inicio_demo:
+    st.set_page_config(page_title="LEGACY | ACCESO", page_icon="🔐", layout="wide")
+    st.markdown("<style>.stApp { background-color: #000000; } h1, h2 { color: #d4af37; text-align: center; }</style>", unsafe_allow_html=True)
     st.title("🏛️ LEGACY QUANTUM VAULT")
     
-    col_l, col_c, col_r = st.columns([1, 1.5, 1])
+    col_l, col_c, col_r = st.columns([1, 2, 1])
     with col_c:
-        st.markdown("<div class='gold-price'>🇦🇷 ARGENTINA: 2 MILLONES / MES</div>", unsafe_allow_html=True)
-        st.markdown("<div class='gold-price'>🇺🇸 USA: 12 THOUSAND USD / MONTH</div>", unsafe_allow_html=True)
-        st.write("")
-        password = st.text_input("LLAVE MAESTRA / MASTER KEY:", type="password")
-        if st.button("DESBLOQUEAR TERMINAL"):
-            if password == "LEGACY2026":
-                st.session_state.autenticado = True
-                st.rerun()
-            else:
-                st.error("ACCESO DENEGADO")
-    
-    st.write("---")
-    st.subheader("📩 SOLICITUD DE ACCESO VIP")
-    
-    c_izq, c_mid, c_der = st.columns([1.5, 2, 1.5])
-    with c_izq: st.markdown("<div class='info-box'>🛡️ PROTECCIÓN<br><br>Cifrado AES-256. Activos bajo custodia digital absoluta.</div>", unsafe_allow_html=True)
-    with c_mid:
-        with st.form("contacto_vip"):
-            perfil = st.radio("Perfil:", ["💼 Empresario", "🦈 Inversor"])
-            mail = st.text_input("Email:")
-            if st.form_submit_button("ENVIAR SOLICITUD"):
-                if mail:
-                    st.session_state.mensajes.append({"perfil": perfil, "mail": mail, "hora": time.strftime('%H:%M')})
-                    st.success("✅ SOLICITUD ENVIADA.")
-    with c_der: st.markdown("<div class='info-box'>📈 CRECIMIENTO<br><br>IA de predicción macroeconómica en tiempo real.</div>", unsafe_allow_html=True)
+        st.subheader("Seleccione su vía de acceso:")
+        if st.button("🔑 INGRESAR CON LLAVE MAESTRA"):
+            st.session_state.autenticado = "login_form"
+            st.rerun()
+        
+        st.write("---")
+        if st.button("🚀 INICIAR DEMO GRATUITA (5 MIN)"):
+            st.session_state.inicio_demo = time.time()
+            st.rerun()
     st.stop()
 
-# --- 2. INTERIOR DE LA BÓVEDA ---
-st.set_page_config(page_title="LEGACY COMMAND", page_icon="🏛️", layout="wide")
-st.markdown("<style>.stApp { background-color: #050505; border: 4px solid #d4af37; padding: 20px; } h1, h2, h3 { color: #d4af37 !important; font-family: 'serif'; text-align: center; } [data-testid='stMetricValue'] { color: #d4af37 !important; font-size: 2.5rem !important; font-weight: bold; }</style>", unsafe_allow_html=True)
+# --- 3. LÓGICA DE BLOQUEO POR TIEMPO ---
+if st.session_state.inicio_demo and not st.session_state.autenticado:
+    tiempo_transcurrido = time.time() - st.session_state.inicio_demo
+    if tiempo_transcurrido > 300: # 300 segundos = 5 minutos
+        st.session_state.demo_terminada = True
 
-st.sidebar.title("🛂 DASHBOARD")
-es_admin = st.sidebar.checkbox("🔓 MODO ADMIN (DYLAN)")
-idioma = st.sidebar.selectbox("Region:", ["🇦🇷 Argentina", "🇺🇸 USA"]) if not es_admin else "Admin"
-
-# TRADUCCIONES IA
-ia_conf = {
-    "🇦🇷 Argentina": {"preg": "CONSULTA PARA LA IA:", "resp": "IA: Dylan García, la orden estratégica es MANTENER POSICIONES."},
-    "🇺🇸 USA": {"preg": "QUERY FOR AI:", "resp": "AI: Dylan Garcia, the strategic order is to HOLD POSITIONS."},
-    "Admin": {"preg": "SYSTEM COMMAND:", "resp": "MASTER IA: Systems online. Capital secured."}
-}
-iat = ia_conf[idioma]
-
-if idioma == "Admin":
-    st.title("👨‍💻 PANEL CENTRAL")
-    if st.session_state.mensajes:
-        st.table(pd.DataFrame(st.session_state.mensajes))
-    else:
-        st.write("Sin solicitudes nuevas.")
-else:
-    st.title("🏛️ COMMAND CENTER")
-    años = st.slider("AÑOS / YEARS:", 1, 30, 10)
-    ret = st.slider("RETORNO / RETURN %:", 5, 50, 15)
-    fut_usd = 12450000 * ((1 + (ret/100))**años)
+# --- 4. MURO DE PAGO (CUANDO SE ACABA EL TIEMPO) ---
+if st.session_state.demo_terminada and not st.session_state.autenticado:
+    st.set_page_config(page_title="TIEMPO EXPIRADO", page_icon="🚫")
+    st.markdown("<style>.stApp { background-color: #000000; } h1, h3 { color: #d4af37; text-align: center; }</style>", unsafe_allow_html=True)
+    st.title("⌛ SU TIEMPO DE DEMO HA EXPIRADO")
     
+    # DETECTOR DE PAÍS PARA EL PAGO
     col1, col2 = st.columns(2)
-    col1.metric("FORTUNA USD", f"${fut_usd:,.0f}")
-    col2.metric("FORTUNA ARS", f"${fut_usd * 1500:,.0f}")
+    with col1:
+        st.markdown("<div style='border: 2px solid #d4af37; padding: 20px; text-align: center;'>🇦🇷 ARGENTINA<br><h3>Pagar 2 Millones ARS/mes</h3></div>", unsafe_allow_html=True)
+    with col2:
+        st.markdown("<div style='border: 2px solid #d4af37; padding: 20px; text-align: center;'>🇺🇸 USA / INT<br><h3>Pay 12 Thousand USD/month</h3></div>", unsafe_allow_html=True)
     
-    st.markdown("---")
-    c1, c2 = st.columns(2)
-    with c1:
-        st.subheader("📊 DISTRIBUCIÓN")
-        # ARREGLADO: Valores del gráfico con números reales
-        df_f = pd.DataFrame({"Activo": ["RE", "Stocks", "Crypto", "Art"], "Valor": [40, 30, 20, 10]})
-        st.bar_chart(df_f.set_index("Activo"))
-    with c2:
-        st.subheader("🤖 IA ADVISOR")
-        pregunta_ia = st.text_input(iat["preg"])
-        if pregunta_ia:
-            with st.spinner('Analizando...'):
-                time.sleep(1)
-                st.write(f"🏛️ **{iat['resp']}**")
+    st.write("---")
+    if st.button("⬅️ VOLVER AL INICIO E INICIAR SESIÓN"):
+        st.session_state.inicio_demo = None
+        st.session_state.demo_terminada = False
+        st.rerun()
+    st.stop()
 
-if st.sidebar.button("🔒 CERRAR"):
+# --- 5. FORMULARIO DE LOGIN (SI ELIGE LLAVE) ---
+if st.session_state.autenticado == "login_form":
+    password = st.text_input("INGRESE LLAVE MAESTRA:", type="password")
+    if st.button("DESBLOQUEAR"):
+        if password == "LEGACY2026":
+            st.session_state.autenticado = True
+            st.rerun()
+        else:
+            st.error("LLAVE INVÁLIDA")
+    st.stop()
+
+# --- 6. INTERFAZ PRINCIPAL (EL PRODUCTO) ---
+st.set_page_config(page_title="LEGACY COMMAND", layout="wide")
+st.markdown("<style>.stApp { background-color: #050505; border: 4px solid #d4af37; padding: 20px; }</style>", unsafe_allow_html=True)
+
+if st.session_state.inicio_demo:
+    st.warning(f"⚠️ MODO DEMO ACTIVO. Tiempo restante: {int(300 - (time.time() - st.session_state.inicio_demo))} segundos.")
+
+st.title("🏛️ COMMAND CENTER LEGACY")
+# (Aquí sigue tu simulador de billones, IA y gráficos...)
+st.write("PATRIMONIO TOTAL: $12.450.000 USD")
+df = pd.DataFrame({"Activo": ["RE", "Stocks", "Crypto", "Art"], "Valor":})
+st.bar_chart(df.set_index("Activo"))
+
+if st.sidebar.button("🔒 SALIR"):
     st.session_state.autenticado = False
+    st.session_state.inicio_demo = None
     st.rerun()
