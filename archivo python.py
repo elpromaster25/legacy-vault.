@@ -35,10 +35,6 @@ if not st.session_state.autenticado:
         password = st.text_input("LLAVE MAESTRA / MASTER KEY:", type="password")
         if st.button("DESBLOQUEAR TERMINAL"):
             if password == "LEGACY2026":
-                with st.status("Verificando firma digital...", expanded=True) as status:
-                    time.sleep(1)
-                    st.write("🟢 Acceso Concedido: Dylan García.")
-                    status.update(label="Identidad Verificada", state="complete", expanded=False)
                 st.session_state.autenticado = True
                 st.rerun()
             else:
@@ -103,9 +99,12 @@ else:
     c1, c2 = st.columns(2)
     with c1:
         st.subheader("📊 DISTRIBUCIÓN")
-        # CORREGIDO: Valores del gráfico cerrados perfectamente
-        df_f = pd.DataFrame({"Activo": ["Propiedades", "Stocks", "Crypto", "Art"], "Valor":})
-        st.bar_chart(df_f.set_index("Activo"))
+        # --- CORRECCIÓN FINAL DEL GRÁFICO ---
+        datos_graf = pd.DataFrame({
+            "Activo": ["Propiedades", "Stocks", "Crypto", "Art"],
+            "Valor": 
+        })
+        st.bar_chart(datos_graf.set_index("Activo"))
     with c2:
         st.subheader("🤖 IA ADVISOR")
         st.write("ESTADO: ACTIVO. DYLAN GARCÍA: HOLD POSITIONS.")
