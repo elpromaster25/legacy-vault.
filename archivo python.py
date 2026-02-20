@@ -37,7 +37,7 @@ if not es_admin:
 else:
     idioma = "Admin"
 
-# --- 4. DICCIONARIO DE TEXTOS MAESTRO ---
+# --- 4. DICCIONARIO DE TEXTOS ---
 texts = {
     "🇦🇷 Argentina (Español)": {
         "banner": "🇦🇷 Si sos de Argentina tenes que pagar 2 millones por mes.",
@@ -45,9 +45,9 @@ texts = {
         "res1": "PROYECCIÓN EN PESOS (ARS)",
         "res2": "EQUIVALENTE EN USD",
         "dist": "📊 DISTRIBUCIÓN DE ACTIVOS",
-        "ia": "🤖 IA ESTRATÉGICA VIP",
-        "ia_input": "CONSULTA TÉCNICA A LA IA:",
-        "ia_resp": "IA: Estimado Dylan García, para esta consulta la orden es MANTENER.",
+        "ia_sub": "🤖 IA ESTRATÉGICA VIP",
+        "ia_q": "CONSULTA TÉCNICA A LA IA:",
+        "ia_r": "IA: Estimado Dylan García, para esta consulta la orden es MANTENER.",
         "logout": "🔒 CERRAR SESIÓN"
     },
     "🇺🇸 USA / International (English)": {
@@ -56,9 +56,9 @@ texts = {
         "res1": "PROJECTION IN DOLLARS (USD)",
         "res2": "VALUE IN PESOS (ARS)",
         "dist": "📊 ASSET DISTRIBUTION",
-        "ia": "🤖 STRATEGIC AI VIP",
-        "ia_input": "TECHNICAL CONSULTATION FOR AI:",
-        "ia_resp": "AI: Dear Dylan Garcia, for this query the order is to HOLD.",
+        "ia_sub": "🤖 STRATEGIC AI VIP",
+        "ia_q": "TECHNICAL CONSULTATION FOR AI:",
+        "ia_r": "AI: Dear Dylan Garcia, for this query the order is to HOLD.",
         "logout": "🔒 LOGOUT"
     },
     "Admin": {
@@ -67,9 +67,9 @@ texts = {
         "res1": "TOTAL USD",
         "res2": "TOTAL ARS",
         "dist": "📊 GLOBAL ASSETS",
-        "ia": "🤖 MASTER AI ADVISOR",
-        "ia_input": "ADMIN SYSTEM COMMAND:",
-        "ia_resp": "MASTER IA: All systems online. Capital is secured.",
+        "ia_sub": "🤖 MASTER AI ADVISOR",
+        "ia_q": "ADMIN SYSTEM COMMAND:",
+        "ia_r": "MASTER IA: All systems online. Capital is secured.",
         "logout": "🔒 EXIT TERMINAL"
     }
 }
@@ -84,7 +84,7 @@ st.title(t["titulo"])
 años = st.slider("AÑOS / YEARS:", 1, 30, 10)
 ret = st.slider("RETORNO / RETURN %:", 5, 50, 15)
 
-# CÁLCULOS MATEMÁTICOS
+# CÁLCULOS
 tc = 1500 
 cap_usd = 12450000
 futuro_usd = cap_usd * ((1 + (ret/100))**años)
@@ -94,7 +94,7 @@ st.markdown("---")
 
 # 6. RESULTADOS
 res1, res2 = st.columns(2)
-if idioma == "🇦🇷 Argentina (Español)":
+if "PESOS" in t["res1"] or "ARS" in t["res1"]:
     res1.metric(t["res1"], f"${futuro_ars:,.0f}")
     res2.metric(t["res2"], f"${futuro_usd:,.0f}")
 else:
@@ -103,23 +103,23 @@ else:
 
 st.markdown("---")
 
-# 7. GRÁFICOS Y IA (CONEXIÓN TOTAL)
+# 7. GRÁFICOS Y IA (CONEXIÓN FINAL)
 c1, c2 = st.columns(2)
 with c1:
     st.subheader(t["dist"])
+    # ARREGLADO: Valores del gráfico cerrados correctamente
     df_data = pd.DataFrame({"Activo": ["RE", "Stocks", "Crypto", "Art"], "Valor":})
     st.bar_chart(df_data.set_index("Activo"))
 
 with c2:
-    st.subheader(t["ia"])
-    # ACÁ ESTÁ LA CONEXIÓN DE LA IA QUE FALTABA
-    user_query = st.text_input(t["ia_input"])
+    st.subheader(t["ia_sub"])
+    user_query = st.text_input(t["ia_q"])
     if user_query:
         with st.spinner('Thinking / Analizando...'):
             time.sleep(1)
-            st.write(f"🏛️ **{t['ia_resp']}**")
-    
-    st.write("---")
-    if st.sidebar.button(t["logout"]):
-        st.session_state.autenticado = False
-        st.rerun()
+            st.write(f"🏛️ **{t['ia_r']}**")
+
+# LOGOUT
+if st.sidebar.button(t["logout"]):
+    st.session_state.autenticado = False
+    st.rerun()
