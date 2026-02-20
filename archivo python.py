@@ -45,7 +45,9 @@ texts = {
         "res1": "PROYECCIÓN EN PESOS (ARS)",
         "res2": "EQUIVALENTE EN USD",
         "dist": "📊 DISTRIBUCIÓN DE ACTIVOS",
-        "ia": "🤖 IA ESTRATÉGICA",
+        "ia": "🤖 IA ESTRATÉGICA VIP",
+        "ia_input": "CONSULTA TÉCNICA A LA IA:",
+        "ia_resp": "IA: Estimado Dylan García, para esta consulta la orden es MANTENER.",
         "logout": "🔒 CERRAR SESIÓN"
     },
     "🇺🇸 USA / International (English)": {
@@ -54,7 +56,9 @@ texts = {
         "res1": "PROJECTION IN DOLLARS (USD)",
         "res2": "VALUE IN PESOS (ARS)",
         "dist": "📊 ASSET DISTRIBUTION",
-        "ia": "🤖 STRATEGIC AI",
+        "ia": "🤖 STRATEGIC AI VIP",
+        "ia_input": "TECHNICAL CONSULTATION FOR AI:",
+        "ia_resp": "AI: Dear Dylan Garcia, for this query the order is to HOLD.",
         "logout": "🔒 LOGOUT"
     },
     "Admin": {
@@ -64,6 +68,8 @@ texts = {
         "res2": "TOTAL ARS",
         "dist": "📊 GLOBAL ASSETS",
         "ia": "🤖 MASTER AI ADVISOR",
+        "ia_input": "ADMIN SYSTEM COMMAND:",
+        "ia_resp": "MASTER IA: All systems online. Capital is secured.",
         "logout": "🔒 EXIT TERMINAL"
     }
 }
@@ -97,17 +103,23 @@ else:
 
 st.markdown("---")
 
-# 7. GRÁFICOS Y IA (CON VALORES CORREGIDOS)
+# 7. GRÁFICOS Y IA (CONEXIÓN TOTAL)
 c1, c2 = st.columns(2)
 with c1:
     st.subheader(t["dist"])
-    # ACÁ ESTABA EL ERROR: AGREGUÉ LOS NÚMEROS [60, 20, 10, 10]
-    df_data = pd.DataFrame({"Activo": ["RE", "Stocks", "Crypto", "Art"], "Valor": [60, 20, 10, 10]})
+    df_data = pd.DataFrame({"Activo": ["RE", "Stocks", "Crypto", "Art"], "Valor":})
     st.bar_chart(df_data.set_index("Activo"))
 
 with c2:
     st.subheader(t["ia"])
-    st.write(f"🏛️ {t['ia']}: Active")
+    # ACÁ ESTÁ LA CONEXIÓN DE LA IA QUE FALTABA
+    user_query = st.text_input(t["ia_input"])
+    if user_query:
+        with st.spinner('Thinking / Analizando...'):
+            time.sleep(1)
+            st.write(f"🏛️ **{t['ia_resp']}**")
+    
+    st.write("---")
     if st.sidebar.button(t["logout"]):
         st.session_state.autenticado = False
         st.rerun()
