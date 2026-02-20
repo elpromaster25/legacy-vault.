@@ -2,77 +2,101 @@ import streamlit as st
 import pandas as pd
 import time
 
-# --- 1. ACCESO BIOMÉTRICO (James Bond Style) ---
+# --- 1. ACCESO BIOMÉTRICO (James Bond en Español) ---
 if 'autenticado' not in st.session_state:
     st.session_state.autenticado = False
 
 if not st.session_state.autenticado:
-    st.set_page_config(page_title="LEGACY | SECURITY", page_icon="🔐")
-    st.markdown("<style>.stApp { background-color: #000000; } h1 { color: #d4af37; text-align: center; font-family: 'Courier New'; }</style>", unsafe_allow_html=True)
-    st.title("🔐 ENCRYPTED TERMINAL")
-    password = st.text_input("MASTER KEY:", type="password")
-    if st.button("AUTHORIZE"):
+    st.set_page_config(page_title="LEGACY | SEGURIDAD", page_icon="🔐")
+    st.markdown("<style>.stApp { background-color: #000000; } h1 { color: #d4af37; text-align: center; font-family: 'Times New Roman'; }</style>", unsafe_allow_html=True)
+    st.title("🔐 TERMINAL DE ACCESO PRIVADO")
+    password = st.text_input("LLAVE MAESTRA:", type="password")
+    if st.button("DESBLOQUEAR BÓVEDA"):
         if password == "LEGACY2026":
-            with st.status("Initializing Quantum Tunnel...", expanded=True) as status:
-                st.write("🔎 Verifying RSA-4096 signature...")
+            with st.status("Iniciando Protocolos de Seguridad...", expanded=True) as status:
+                st.write("🔎 Escaneando firma digital única...")
                 time.sleep(1)
-                st.write("🛰️ Satellite uplink established.")
-                status.update(label="Access Granted", state="complete", expanded=False)
+                st.write("🛰️ Sincronizando con satélites financieros...")
+                time.sleep(1)
+                st.write("🟢 Identidad Verificada: Dylan García.")
+                status.update(label="Acceso Concedido", state="complete", expanded=False)
             st.session_state.autenticado = True
             st.rerun()
         else:
-            st.error("ACCESS DENIED.")
+            st.error("ACCESO DENEGADO.")
     st.stop()
 
-# --- 2. CONFIGURACIÓN DE COMANDO ---
+# --- 2. CONFIGURACIÓN DE ÉLITE (DISEÑO DORADO Y NEGRO) ---
 st.set_page_config(page_title="LEGACY COMMAND", page_icon="🏛️", layout="wide")
 st.markdown("""
     <style>
-    .stApp { background-color: #050505; border: 2px solid #d4af37; padding: 10px; }
-    h1, h2, h3 { color: #d4af37 !important; font-family: 'Courier New', monospace; text-align: center; }
-    [data-testid="stMetricValue"] { color: #d4af37 !important; font-size: 3rem !important; font-weight: bold; text-align: center; }
-    [data-testid="stMetricLabel"] { color: #ffffff !important; justify-content: center !important; }
-    .stMarkdown p { color: #888; font-family: 'Courier New'; text-align: center; }
-    div.stButton > button { background-color: #1a1a1a; color: #d4af37; border: 1px solid #d4af37; border-radius: 0px; width: 100%; }
+    .stApp { 
+        background-color: #050505; 
+        border: 4px solid #d4af37; 
+        padding: 20px; 
+    }
+    h1, h2, h3 { color: #d4af37 !important; font-family: 'serif'; text-align: center; text-transform: uppercase; letter-spacing: 3px; }
+    
+    /* MÉTRICAS GIGANTES Y DORADAS */
+    [data-testid="stMetricValue"] { 
+        color: #d4af37 !important; 
+        font-size: 4rem !important; 
+        font-weight: bold !important; 
+        text-align: center !important;
+        justify-content: center !important;
+    }
+    [data-testid="stMetricLabel"] { 
+        color: #ffffff !important; 
+        font-size: 1.2rem !important;
+        text-align: center !important;
+        justify-content: center !important;
+    }
+    [data-testid="stMetric"] {
+        text-align: center;
+        border: 1px solid rgba(212, 175, 55, 0.3);
+        padding: 20px;
+        background-color: rgba(212, 175, 55, 0.05);
+    }
+    
+    .stMarkdown p { color: #cccccc; text-align: center; font-size: 1.1rem; }
+    div.stButton > button { background-color: #1a1a1a; color: #d4af37; border: 2px solid #d4af37; font-weight: bold; width: 100%; height: 3em; }
     </style>
     """, unsafe_allow_html=True)
 
-# --- 3. BARRA DE NOTICIAS ---
-st.markdown("<marquee style='color: #d4af37; font-family: Courier New;'>● MERCADOS GLOBALES OPERANDO ● SEGURIDAD ACTIVA ● BITCOIN BULLISH TREND ●</marquee>", unsafe_allow_html=True)
-st.title("🏛️ LEGACY COMMAND CENTER v2.0")
+# --- 3. INTERFAZ PRINCIPAL ---
+st.markdown("<marquee style='color: #d4af37; font-size: 1.2rem;'>● MERCADOS GLOBALES OPERANDO ● SEGURIDAD ACTIVA ● BITCOIN EN TENDENCIA ALCISTA ● ACTIVOS AUDITADOS ●</marquee>", unsafe_allow_html=True)
+st.title("🏛️ CENTRO DE MANDO LEGACY")
+st.markdown(f"<p style='color: #00ff00;'>● SISTEMA ENCRIPTADO | NIVEL DE SEGURIDAD: MÁXIMO | {time.strftime('%H:%M:%S')}</p>", unsafe_allow_html=True)
 
-# 4. MONITOR DE ACTIVOS
-m1, m2, m3, m4 = st.columns(4)
-m1.metric("STATUS", "SECURE", "100%")
-m2.metric("S&P 500", "5,026", "+0.4%")
-m3.metric("BITCOIN", "$98,450", "+2.5%")
-m4.metric("EQUITY TOTAL", "$12.45M", "+2.4%")
+# 4. MONITOR DE CAPITAL (GIGANTE)
+m1, m2, m3 = st.columns(3)
+m1.metric("VALOR NETO", "$12.45M", "+2.4%")
+m2.metric("BITCOIN", "$98,450", "+2.5%")
+m3.metric("RIESGO", "BAJO", "PROTEGIDO")
 
 st.markdown("---")
 
-# 5. CONSOLA TÉCNICA Y GRÁFICOS
-col_c1, col_c2 = st.columns(2)
-with col_c1:
-    st.subheader("🛡️ SECURITY LOGS")
-    st.code("> TRACE: ACTIVE\n> ENCRYPTION: AES-256\n> AUDIT: VERIFIED", language="bash")
-    st.image("https://img.icons8.com", width=80)
-    st.download_button("📥 DOWNLOAD AUDIT", "CERTIFIED: $12.45M USD", file_name="Audit_Legacy.txt")
-
-with col_c2:
-    st.subheader("📊 ASSET DISTRIBUTION")
-    # GRÁFICO CORREGIDO
-    df = pd.DataFrame({"Activo": ["Propiedades", "Stocks", "Crypto", "Arte"], "Valor": [60, 20, 10, 10]})
+# 5. CONSOLA Y GRÁFICOS
+col_izq, col_der = st.columns(2)
+with col_izq:
+    st.subheader("🛡️ REGISTRO DE SEGURIDAD")
+    st.code("> RASTREO: ACTIVO\n> CIFRADO: AES-256\n> AUDITORÍA: VERIFICADA", language="bash")
+    st.write("---")
+    st.subheader("📊 DISTRIBUCIÓN DE ACTIVOS")
+    df = pd.DataFrame({"Activo": ["Propiedades", "Acciones", "Cripto", "Arte"], "Valor": [60, 20, 10, 10]})
     st.bar_chart(df.set_index("Activo"))
 
-# 6. IA ESTRATEGA
-st.markdown("---")
-st.subheader("🤖 STRATEGIC IA ADVISOR")
-pregunta = st.text_input("COMMAND INPUT:")
-if pregunta:
-    with st.spinner('Analyzing...'):
-        time.sleep(1)
-        st.write(f"🕵️ **ANALISTA:** CEO Dylan Garcia, analysis for '{pregunta}': MANTENER POSICIÓN.")
+with col_der:
+    st.subheader("🤖 ESTRATEGA IA VIP")
+    st.image("https://img.icons8.com", width=100)
+    pregunta = st.text_input("CONSULTA TÉCNICA PARA LA IA:")
+    if pregunta:
+        with st.spinner('Analizando variables...'):
+            time.sleep(1)
+            st.write(f"🏛️ **IA:** Estimado Dylan García, basado en su consulta sobre '{pregunta}', la orden es: MANTENER POSICIÓN Y DIVERSIFICAR.")
+    st.write("---")
+    st.download_button("📥 DESCARGAR REPORTE DE AUDITORÍA", "CERTIFICADO DE ACTIVOS: $12.45M USD", file_name="Reporte_Legacy.txt")
 
-if st.sidebar.button("🔒 LOGOUT"):
+if st.sidebar.button("🔒 CERRAR BÓVEDA"):
     st.session_state.autenticado = False
     st.rerun()
