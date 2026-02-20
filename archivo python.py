@@ -80,7 +80,7 @@ idioma = st.sidebar.selectbox("Region:", ["🇦🇷 Argentina", "🇺🇸 USA"])
 if idioma == "Admin":
     st.title("👨‍💻 PANEL DE DYLAN")
     if st.session_state.mensajes: st.table(pd.DataFrame(st.session_state.mensajes))
-    else: st.write("Sin mensajes.")
+    else: st.write("Sin mensajes nuevos.")
 else:
     if st.session_state.inicio_demo:
         st.warning(f"⚠️ MODO DEMO ACTIVO. Tiempo restante: {int(300 - (time.time() - st.session_state.inicio_demo))} seg.")
@@ -93,7 +93,7 @@ else:
     r1.metric("FORTUNA USD", f"${fut_usd:,.0f}"); r2.metric("FORTUNA ARS", f"${fut_usd * 1500:,.0f}")
     
     st.markdown("---")
-    # GRÁFICO (SIN ERRORES)
+    # GRÁFICO (CORREGIDO CON NÚMEROS)
     c1, c2 = st.columns(2)
     with c1:
         st.subheader("📊 DISTRIBUCIÓN")
@@ -101,8 +101,8 @@ else:
         st.bar_chart(df_f.set_index("Activo"))
     with c2:
         st.subheader("🤖 IA ADVISOR")
-        user_q = st.text_input("Consulta:")
-        if user_q: st.write("🏛️ **IA:** Dylan García, la orden es HOLD.")
+        user_q = st.text_input("Consulta técnica:")
+        if user_q: st.write("🏛️ **IA:** Dylan García, la orden estratégica es MANTENER.")
 
 if st.sidebar.button("🔒 SALIR"):
     st.session_state.autenticado = False
