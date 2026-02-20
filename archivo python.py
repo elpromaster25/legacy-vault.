@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import time
 
-# --- 1. SEGURIDAD BIOMÉTRICA ---
+# --- 1. SEGURIDAD ---
 if 'autenticado' not in st.session_state:
     st.session_state.autenticado = False
 
@@ -33,52 +33,52 @@ st.markdown("""
 
 st.title("🏛️ CENTRO DE MANDO LEGACY")
 
-# --- 3. SENSOR DE DÓLARES (USD) ---
-st.subheader("🇺🇸 ACTIVOS EN DÓLARES (USD)")
-u1, u2, u3 = st.columns(3)
-u1.metric("VALOR NETO USD", "$12,450,000", "+2.4%")
-u2.metric("BITCOIN USD", "$98,450", "+2.5%")
-u3.metric("RENTABILIDAD USD", "$298.8K", "ESTABLE")
+# --- 3. SENSORES DE CAPITAL ---
+tc = 1500 # Cotización estimada 2026
+capital_usd = 12450000
+btc_usd = 98450
 
-# --- 4. SENSOR DE PESOS (ARS) ---
-tc = 1500 # Tipo de cambio estimado para Feb 2026
-st.subheader("🇦🇷 ACTIVOS EN PESOS (ARS)")
-a1, a2, a3 = st.columns(3)
-a1.metric("VALOR NETO ARS", f"${12450000 * tc:,.0f}")
-a2.metric("BITCOIN ARS", f"${98450 * tc:,.0f}")
-a3.metric("LIQUIDEZ ARS", f"${300000 * tc:,.0f}")
+col_usd, col_ars = st.columns(2)
 
-st.markdown("---")
+with col_usd:
+    st.subheader("🇺🇸 ACTIVOS (USD)")
+    st.metric("VALOR NETO", f"${capital_usd:,.0f}", "+2.4%")
+    st.metric("BITCOIN", f"${btc_usd:,.0f}", "+2.5%")
 
-# --- 5. BITCOIN Y SIMULADOR ---
-col_b1, col_b2, col_b3 = st.columns()
-with col_b2:
-    st.image("https://img.icons8.com", width=100)
-    st.subheader("🚀 PROYECCIÓN DE FORTUNA")
-    años = st.slider("AÑOS:", 1, 30, 10)
-    ret = st.slider("RETORNO (%):", 5, 50, 15)
-    capital = 12450000
-    futuro = capital * ((1 + (ret/100))**años)
-    st.metric("VALOR FUTURO (USD)", f"${futuro:,.0f}")
+with col_ars:
+    st.subheader("🇦🇷 ACTIVOS (ARS)")
+    st.metric("VALOR NETO", f"${(capital_usd * tc):,.0f}", "MEP/BLUE")
+    st.metric("BITCOIN", f"${(btc_usd * tc):,.0f}", "BLOCKCHAIN")
 
 st.markdown("---")
 
-# --- 6. GRÁFICO Y IA (CORREGIDO) ---
+# --- 4. BITCOIN Y SIMULADOR ---
+st.image("https://img.icons8.com", width=100)
+st.subheader("🚀 PROYECCIÓN DE FORTUNA (USD)")
+años = st.slider("AÑOS DE INVERSIÓN:", 1, 30, 10)
+ret = st.slider("RETORNO ANUAL (%):", 5, 50, 15)
+futuro = capital_usd * ((1 + (ret/100))**años)
+st.metric("VALOR ESTIMADO FUTURO", f"${futuro:,.0f} USD")
+
+st.markdown("---")
+
+# --- 5. GRÁFICO Y IA (CORREGIDO Y SEGURO) ---
 c1, c2 = st.columns(2)
 with c1:
     st.subheader("📊 DISTRIBUCIÓN")
+    # Datos fijos para evitar errores
     df_data = pd.DataFrame({
-        "Activo": ["Propiedades", "Stocks", "Crypto", "Arte"],
-        "Valor": 
+        "Activo": ["Inmuebles", "Stocks", "Crypto", "Arte"],
+        "Valor": [60, 20, 10, 10]
     })
     st.bar_chart(df_data.set_index("Activo"))
 
 with c2:
-    st.subheader("🤖 ESTRATEGA IA")
+    st.subheader("🤖 IA ESTRATÉGICA")
     pregunta = st.text_input("CONSULTA TÉCNICA:")
     if pregunta:
-        st.write(f"🏛️ **IA:** Dylan García, para '{pregunta}' la orden es: MANTENER.")
-    st.download_button("📥 DESCARGAR AUDITORÍA", "VALOR: $12.45M USD", file_name="Reporte_Legacy.txt")
+        st.write(f"🏛️ **IA:** Dylan García, para '{pregunta}' la orden es MANTENER.")
+    st.download_button("📥 DESCARGAR AUDITORÍA", "CERTIFICADO: $12.45M USD", file_name="Reporte_Legacy.txt")
 
 if st.sidebar.button("🔒 CERRAR"):
     st.session_state.autenticado = False
