@@ -15,15 +15,14 @@ if not st.session_state.autenticado:
         .stApp { background-color: #000000; }
         h1 { color: #d4af37 !important; text-align: center; font-family: 'serif'; font-size: 4rem !important; }
         
-        /* PRECIOS EN ORO ARRIBA DE LA CONTRASEÑA */
         .gold-price {
             color: #d4af37;
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             text-align: center;
             font-weight: bold;
             text-transform: uppercase;
             letter-spacing: 2px;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
             font-family: 'serif';
         }
         
@@ -33,7 +32,7 @@ if not st.session_state.autenticado:
             min-height: 250px; display: flex; align-items: center; justify-content: center; flex-direction: column;
         }
         div.stButton > button {
-            background-color: #1a1a1a; color: #d4af37; border: 2px solid #d4af37; width: 100%; font-weight: bold;
+            background-color: #1a1a1a; color: #d4af37; border: 2px solid #d4af37; width: 100%; font-weight: bold; height: 3em;
         }
         </style>
         """, unsafe_allow_html=True)
@@ -43,10 +42,9 @@ if not st.session_state.autenticado:
     # SECCIÓN DE PRECIOS Y LOGIN
     col_l, col_c, col_r = st.columns([1, 1.5, 1])
     with col_c:
-        # LOS CARTELES EN ORO QUE PEDISTE
         st.markdown("<div class='gold-price'>🇦🇷 ARGENTINA: 2 MILLONES / MES</div>", unsafe_allow_html=True)
         st.markdown("<div class='gold-price'>🇺🇸 USA: 12 THOUSAND USD / MONTH</div>", unsafe_allow_html=True)
-        
+        st.write("")
         password = st.text_input("LLAVE MAESTRA / MASTER KEY:", type="password")
         if st.button("DESBLOQUEAR TERMINAL"):
             if password == "LEGACY2026":
@@ -67,45 +65,59 @@ if not st.session_state.autenticado:
             if st.form_submit_button("ENVIAR SOLICITUD"):
                 if mail:
                     st.session_state.mensajes.append({"perfil": perfil, "mail": mail, "hora": time.strftime('%H:%M')})
-                    st.success("✅ ENVIADO.")
+                    st.success("✅ SOLICITUD ENVIADA.")
+                else:
+                    st.warning("Ingrese su email.")
     with c_der: st.markdown("<div class='info-box'>📈 CRECIMIENTO<br><br>IA de predicción macroeconómica en tiempo real.</div>", unsafe_allow_html=True)
     st.stop()
 
 # --- 2. INTERIOR DE LA BÓVEDA ---
 st.set_page_config(page_title="LEGACY COMMAND", page_icon="🏛️", layout="wide")
-st.markdown("<style>.stApp { background-color: #050505; border: 4px solid #d4af37; padding: 20px; } h1, h2, h3 { color: #d4af37 !important; text-align: center; } [data-testid='stMetricValue'] { color: #d4af37 !important; font-size: 2.5rem !important; font-weight: bold; }</style>", unsafe_allow_html=True)
+st.markdown("""
+    <style>
+    .stApp { background-color: #050505; border: 4px solid #d4af37; padding: 20px; }
+    h1, h2, h3 { color: #d4af37 !important; text-align: center; }
+    [data-testid="stMetricValue"] { color: #d4af37 !important; font-size: 2.5rem !important; font-weight: bold; }
+    </style>
+    """, unsafe_allow_html=True)
 
+# SIDEBAR ADMIN
 st.sidebar.title("🛂 DASHBOARD")
 es_admin = st.sidebar.checkbox("🔓 MODO ADMIN (DYLAN)")
 idioma = st.sidebar.selectbox("Region:", ["🇦🇷 Argentina", "🇺🇸 USA"]) if not es_admin else "Admin"
 
 # TRADUCCIONES IA
 ia_conf = {
-    "🇦🇷 Argentina": {"preg": "CONSULTA PARA LA IA:", "resp": "IA: Dylan García, analizando... La orden es MANTENER."},
-    "🇺🇸 USA": {"preg": "QUERY FOR AI:", "resp": "AI: Dylan Garcia, analyzing... The order is to HOLD."},
+    "🇦🇷 Argentina": {"preg": "CONSULTA PARA LA IA:", "resp": "IA: Dylan García, la orden estratégica es MANTENER POSICIONES."},
+    "🇺🇸 USA": {"preg": "QUERY FOR AI:", "resp": "AI: Dylan Garcia, the strategic order is to HOLD POSITIONS."},
     "Admin": {"preg": "SYSTEM COMMAND:", "resp": "MASTER IA: Systems online. Capital secured."}
 }
 iat = ia_conf[idioma]
 
 if idioma == "Admin":
     st.title("👨‍💻 PANEL CENTRAL")
-    if st.session_state.mensajes: st.table(pd.DataFrame(st.session_state.mensajes))
-    else: st.write("Sin solicitudes.")
+    if st.session_state.mensajes:
+        st.table(pd.DataFrame(st.session_state.mensajes))
+    else:
+        st.write("Sin solicitudes nuevas.")
 else:
     st.title("🏛️ COMMAND CENTER")
     años = st.slider("AÑOS:", 1, 30, 10); ret = st.slider("RETORNO %:", 5, 50, 15)
     fut_usd = 12450000 * ((1 + (ret/100))**años)
+    
     col1, col2 = st.columns(2)
-    col1.metric("FORTUNA USD", f"${fut_usd:,.0f}"); col2.metric("FORTUNA ARS", f"${fut_usd * 1500:,.0f}")
+    col1.metric("FORTUNA USD", f"${fut_usd:,.0f}")
+    col2.metric("FORTUNA ARS", f"${fut_usd * 1500:,.0f}")
+    
     st.markdown("---")
     c1, c2 = st.columns(2)
     with c1:
         st.subheader("📊 DISTRIBUCIÓN")
+        # ARREGLADO: Valores del gráfico cerrados correctamente
         df_f = pd.DataFrame({"Activo": ["RE", "Stocks", "Crypto", "Art"], "Valor":})
         st.bar_chart(df_f.set_index("Activo"))
     with c2:
         st.subheader("🤖 IA ADVISOR")
-        # --- IA FUNCIONANDO ---
         pregunta_ia = st.text_input(iat["preg"])
         if pregunta_ia:
             with st.spinner('Analizando...'):
