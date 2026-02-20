@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import time
 
-# --- 1. SEGURIDAD DE ACCESO ---
+# --- 1. SEGURIDAD ---
 if 'autenticado' not in st.session_state:
     st.session_state.autenticado = False
 
@@ -10,8 +10,6 @@ if not st.session_state.autenticado:
     st.set_page_config(page_title="ACCESO PRIVADO", page_icon="🔐")
     st.markdown("<style>.stApp { background-color: #000000; } h1 { color: #d4af37; text-align: center; }</style>", unsafe_allow_html=True)
     st.title("🔐 TERMINAL DE ACCESO PRIVADO")
-    
-    # LOGIN ÚNICO
     password = st.text_input("LLAVE MAESTRA:", type="password")
     if st.button("DESBLOQUEAR BÓVEDA"):
         if password == "LEGACY2026":
@@ -26,43 +24,78 @@ st.markdown("""
     .stApp { background-color: #050505; border: 4px solid #d4af37; padding: 20px; }
     h1, h2, h3 { color: #d4af37 !important; font-family: 'serif'; text-align: center; }
     [data-testid="stMetricValue"] { color: #d4af37 !important; font-size: 2.2rem !important; font-weight: bold; }
-    .pay-banner {
-        background-color: rgba(212, 175, 55, 0.1);
-        border: 2px solid #d4af37;
-        color: #d4af37;
-        padding: 15px;
-        text-align: center;
-        font-weight: bold;
-        border-radius: 10px;
-        margin-bottom: 10px;
-    }
+    .pay-banner { background-color: rgba(212, 175, 55, 0.1); border: 2px solid #d4af37; color: #d4af37; padding: 15px; text-align: center; font-weight: bold; border-radius: 10px; margin-bottom: 10px; }
     </style>
     """, unsafe_allow_html=True)
 
-# --- 3. MODO ADMINISTRADOR (SIDEBAR) ---
-st.sidebar.title("🛂 PANEL DE CONTROL")
-es_admin = st.sidebar.checkbox("🔓 MODO ADMIN (DYLAN GARCÍA)")
+# --- 3. PANEL DE CONTROL (TRADUCCIÓN) ---
+st.sidebar.title("🛂 PANEL / DASHBOARD")
+es_admin = st.sidebar.checkbox("🔓 MODO ADMIN (DYLAN)")
 
 if not es_admin:
-    region = st.sidebar.selectbox("Ubicación del Inversor:", ["🇦🇷 Argentina", "🇺🇸 United States / International"])
+    idioma = st.sidebar.selectbox("Region:", ["🇦🇷 Argentina (Español)", "🇺🇸 USA / International (English)"])
 else:
-    st.sidebar.success("MODO MONITOR GLOBAL ACTIVO")
+    idioma = "Admin"
 
-# --- 4. CARTELES DINÁMICOS (O TODOS SI ES ADMIN) ---
-if es_admin:
-    st.markdown("<div class='pay-banner'>🇦🇷 MODO ADMIN: Precio Arg 2M / Precio USA 12K USD</div>", unsafe_allow_html=True)
-    st.markdown("<div class='pay-banner'>🇺🇸 ADMIN VIEW: All regions visible</div>", unsafe_allow_html=True)
-else:
-    if region == "🇦🇷 Argentina":
-        st.markdown("<div class='pay-banner'>🇦🇷 Si sos de Argentina tenes que pagar 2 millones por mes.</div>", unsafe_allow_html=True)
-    else:
-        st.markdown("<div class='pay-banner'>🇺🇸 If you are from the United States etc, it costs 12 thousand per month.</div>", unsafe_allow_html=True)
+# --- 4. TEXTOS DINÁMICOS SEGÚN IDIOMA ---
+texts = {
+    "🇦🇷 Argentina (Español)": {
+        "banner": "🇦🇷 Si sos de Argentina tenes que pagar 2 millones por mes.",
+        "titulo": "🏛️ CENTRO DE MANDO LEGACY",
+        "sim_titulo": "🚀 PROYECCIÓN DE FORTUNA",
+        "anios": "AÑOS DE INVERSIÓN:",
+        "retorno": "RETORNO ANUAL (%):",
+        "res1": "PROYECCIÓN EN PESOS (ARS)",
+        "res2": "EQUIVALENTE EN USD",
+        "dist": "📊 DISTRIBUCIÓN DE ACTIVOS",
+        "ia": "🤖 IA ESTRATÉGICA",
+        "pregunta": "CONSULTA TÉCNICA:",
+        "boton_aud": "📥 DESCARGAR AUDITORÍA",
+        "logout": "🔒 CERRAR"
+    },
+    "🇺🇸 USA / International (English)": {
+        "banner": "🇺🇸 If you are from the United States etc, it costs 12 thousand per month.",
+        "titulo": "🏛️ LEGACY COMMAND CENTER",
+        "sim_titulo": "🚀 WEALTH PROJECTION",
+        "anios": "INVESTMENT YEARS:",
+        "retorno": "ANNUAL RETURN (%):",
+        "res1": "PROJECTION IN DOLLARS (USD)",
+        "res2": "VALUE IN PESOS (ARS)",
+        "dist": "📊 ASSET DISTRIBUTION",
+        "ia": "🤖 STRATEGIC AI",
+        "pregunta": "TECHNICAL CONSULTATION:",
+        "boton_aud": "📥 DOWNLOAD AUDIT",
+        "logout": "🔒 LOGOUT"
+    },
+    "Admin": {
+        "banner": "💎 GLOBAL ADMIN MODE: 2M ARS / 12K USD",
+        "titulo": "🏛️ LEGACY MASTER TERMINAL",
+        "sim_titulo": "🚀 GLOBAL PROJECTION CONTROL",
+        "anios": "YEARS:",
+        "retorno": "RETURN %:",
+        "res1": "TOTAL USD",
+        "res2": "TOTAL ARS",
+        "dist": "📊 GLOBAL ASSETS",
+        "ia": "🤖 MASTER AI",
+        "pregunta": "ADMIN INPUT:",
+        "boton_aud": "📥 EXPORT MASTER DATA",
+        "logout": "🔒 EXIT"
+    }
+}
 
-st.title("🏛️ CENTRO DE MANDO LEGACY")
+t = texts[idioma]
 
-# 5. SIMULADOR
-años = st.slider("AÑOS DE INVERSIÓN:", 1, 30, 10)
-ret = st.slider("RENDIMIENTO ANUAL (%)", 5, 50, 15)
+# --- 5. INTERFAZ DINÁMICA ---
+st.markdown(f"<div class='pay-banner'>{t['banner']}</div>", unsafe_allow_html=True)
+st.title(t["titulo"])
+
+# SIMULADOR
+st.subheader(t["sim_titulo"])
+col_s1, col_s2 = st.columns(2)
+with col_s1:
+    años = st.slider(t["anios"], 1, 30, 10)
+with col_s2:
+    ret = st.slider(t["retorno"], 5, 50, 15)
 
 # CÁLCULOS
 tc = 1500 
@@ -70,35 +103,25 @@ futuro_usd = 12450000 * ((1 + (ret/100))**años)
 futuro_ars = futuro_usd * tc 
 
 st.markdown("---")
-
-# 6. RESULTADOS (Doble si es Admin)
-if es_admin:
-    r1, r2 = st.columns(2)
-    r1.metric("GLOBAL USD", f"${futuro_usd:,.0f}")
-    r2.metric("GLOBAL ARS", f"${futuro_ars:,.0f}")
-else:
-    res1, res2 = st.columns(2)
-    if region == "🇦🇷 Argentina":
-        res1.metric("PROYECCIÓN EN PESOS (ARS)", f"${futuro_ars:,.0f}")
-        res2.metric("EQUIVALENTE EN DÓLARES (USD)", f"${futuro_usd:,.0f}")
-    else:
-        res1.metric("PROYECCIÓN EN DÓLARES (USD)", f"${futuro_usd:,.0f}")
-        res2.metric("VALOR EN PESOS (ARS)", f"${futuro_ars:,.0f}")
+res1, res2 = st.columns(2)
+res1.metric(t["res1"], f"${futuro_usd:,.0f}" if "USD" in t["res1"] else f"${futuro_ars:,.0f}")
+res2.metric(t["res2"], f"${futuro_ars:,.0f}" if "ARS" in t["res2"] else f"${futuro_usd:,.0f}")
 
 st.markdown("---")
 
-# 7. GRÁFICOS Y IA (CORREGIDO)
+# 6. GRÁFICOS Y IA
 c1, c2 = st.columns(2)
 with c1:
-    st.subheader("📊 DISTRIBUCIÓN")
-    df_data = pd.DataFrame({"Activo": ["Casas", "Bolsa", "Cripto", "Arte"], "Valor": [60, 20, 10, 10]})
+    st.subheader(t["dist"])
+    df_data = pd.DataFrame({"Activo": ["Propiedades", "Stocks", "Crypto", "Arte"], "Valor":})
     st.bar_chart(df_data.set_index("Activo"))
 with c2:
-    st.subheader("🤖 IA ESTRATÉGICA")
-    pregunta = st.text_input("CONSULTA TÉCNICA:")
-    if pregunta:
-        st.write(f"🏛️ **IA:** Dylan García, para '{pregunta}' la orden es MANTENER.")
+    st.subheader(t["ia"])
+    preg = st.text_input(t["pregunta"])
+    if preg:
+        st.write(f"🏛️ **AI:** Dylan García, recommendation for '{preg}': HOLD.")
+    st.download_button(t["boton_aud"], f"VALUE: {futuro_usd} USD", file_name="Legacy_Audit.txt")
 
-if st.sidebar.button("🔒 CERRAR"):
+if st.sidebar.button(t["logout"]):
     st.session_state.autenticado = False
     st.rerun()
