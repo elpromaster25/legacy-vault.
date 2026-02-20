@@ -45,7 +45,6 @@ texts = {
         "res1": "PROYECCIÓN EN PESOS (ARS)",
         "res2": "EQUIVALENTE EN USD",
         "dist": "📊 DISTRIBUCIÓN DE ACTIVOS",
-        "ia_sub": "🤖 IA ESTRATÉGICA VIP",
         "ia_q": "CONSULTA TÉCNICA A LA IA:",
         "ia_r": "IA: Estimado Dylan García, para esta consulta la orden es MANTENER.",
         "logout": "🔒 CERRAR SESIÓN"
@@ -56,7 +55,6 @@ texts = {
         "res1": "PROJECTION IN DOLLARS (USD)",
         "res2": "VALUE IN PESOS (ARS)",
         "dist": "📊 ASSET DISTRIBUTION",
-        "ia_sub": "🤖 STRATEGIC AI VIP",
         "ia_q": "TECHNICAL CONSULTATION FOR AI:",
         "ia_r": "AI: Dear Dylan Garcia, for this query the order is to HOLD.",
         "logout": "🔒 LOGOUT"
@@ -67,7 +65,6 @@ texts = {
         "res1": "TOTAL USD",
         "res2": "TOTAL ARS",
         "dist": "📊 GLOBAL ASSETS",
-        "ia_sub": "🤖 MASTER AI ADVISOR",
         "ia_q": "ADMIN SYSTEM COMMAND:",
         "ia_r": "MASTER IA: All systems online. Capital is secured.",
         "logout": "🔒 EXIT TERMINAL"
@@ -103,23 +100,23 @@ else:
 
 st.markdown("---")
 
-# 7. GRÁFICOS Y IA (CONEXIÓN FINAL)
+# 7. GRÁFICOS Y IA (CON VALORES CARGADOS)
 c1, c2 = st.columns(2)
 with c1:
     st.subheader(t["dist"])
-    # ARREGLADO: Valores del gráfico cerrados correctamente
-    df_data = pd.DataFrame({"Activo": ["RE", "Stocks", "Crypto", "Art"], "Valor":})
+    # ACÁ ESTABA EL ERROR: AGREGUÉ LOS NÚMEROS [60, 20, 15, 5]
+    df_data = pd.DataFrame({"Activo": ["RE", "Stocks", "Crypto", "Art"], "Valor": [60, 20, 15, 5]})
     st.bar_chart(df_data.set_index("Activo"))
 
 with c2:
-    st.subheader(t["ia_sub"])
+    st.subheader("🤖 AI STRATEGIST")
     user_query = st.text_input(t["ia_q"])
     if user_query:
-        with st.spinner('Thinking / Analizando...'):
+        with st.spinner('Analizando...'):
             time.sleep(1)
             st.write(f"🏛️ **{t['ia_r']}**")
 
-# LOGOUT
+# BOTÓN DE SALIDA EN EL SIDEBAR
 if st.sidebar.button(t["logout"]):
     st.session_state.autenticado = False
     st.rerun()
