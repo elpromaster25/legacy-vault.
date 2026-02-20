@@ -79,14 +79,14 @@ años = st.slider("AÑOS / YEARS:", 1, 30, 10)
 ret = st.slider("RETORNO / RETURN %:", 5, 50, 15)
 
 # CÁLCULOS MATEMÁTICOS
-tc = 1500 # Cotización estimada 2026
+tc = 1500 
 cap_usd = 12450000
 futuro_usd = cap_usd * ((1 + (ret/100))**años)
 futuro_ars = futuro_usd * tc 
 
 st.markdown("---")
 
-# 6. RESULTADOS (Dólares o Pesos primero según región)
+# 6. RESULTADOS
 res1, res2 = st.columns(2)
 if idioma == "🇦🇷 Argentina (Español)":
     res1.metric(t["res1"], f"${futuro_ars:,.0f}")
@@ -97,11 +97,12 @@ else:
 
 st.markdown("---")
 
-# 7. GRÁFICOS Y IA (CON NÚMEROS FIJOS PARA EVITAR ERRORES)
+# 7. GRÁFICOS Y IA (CON VALORES CORREGIDOS)
 c1, c2 = st.columns(2)
 with c1:
     st.subheader(t["dist"])
-    df_data = pd.DataFrame({"Activo": ["RE", "Stocks", "Crypto", "Art"], "Valor":})
+    # ACÁ ESTABA EL ERROR: AGREGUÉ LOS NÚMEROS [60, 20, 10, 10]
+    df_data = pd.DataFrame({"Activo": ["RE", "Stocks", "Crypto", "Art"], "Valor": [60, 20, 10, 10]})
     st.bar_chart(df_data.set_index("Activo"))
 
 with c2:
