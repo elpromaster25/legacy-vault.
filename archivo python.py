@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import time
 
-# --- 1. SEGURIDAD Y PANTALLA DE ENTRADA (MÁXIMO TAMAÑO) ---
+# --- 1. SEGURIDAD Y PANTALLA DE ENTRADA GIGANTE ---
 if 'autenticado' not in st.session_state:
     st.session_state.autenticado = False
 if 'mensajes' not in st.session_state:
@@ -13,28 +13,26 @@ if not st.session_state.autenticado:
     st.markdown("""
         <style>
         .stApp { background-color: #000000; }
-        h1 { color: #d4af37 !important; text-align: center; font-family: 'serif'; font-size: 4rem !important; margin-bottom: 50px; }
+        h1 { color: #d4af37 !important; text-align: center; font-family: 'serif'; font-size: 4.5rem !important; margin-top: 50px; }
         h3 { color: #d4af37 !important; text-align: center; font-size: 2rem !important; }
         
-        /* CAJAS DE INFORMACIÓN GRANDES */
         .info-box {
             color: #d4af37;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             text-align: center;
             border: 2px solid #d4af37;
-            padding: 40px;
+            padding: 30px;
             border-radius: 15px;
             background-color: rgba(212, 175, 55, 0.05);
-            height: 400px;
+            min-height: 350px;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-direction: column;
         }
         
-        /* BOTÓN DE DESBLOQUEO GIGANTE */
         div.stButton > button {
-            height: 4em;
+            height: 3.5em;
             font-size: 1.2rem !important;
             font-weight: bold;
             background-color: #1a1a1a;
@@ -47,18 +45,22 @@ if not st.session_state.autenticado:
     st.title("🏛️ LEGACY QUANTUM VAULT")
     
     # Login Central
-    col_l, col_c, col_r = st.columns([1,2,1])
+    col_l, col_c, col_r = st.columns([1, 2, 1])
     with col_c:
         password = st.text_input("LLAVE MAESTRA / MASTER KEY:", type="password")
         if st.button("DESBLOQUEAR TERMINAL"):
             if password == "LEGACY2026":
+                with st.status("Verificando firma digital...", expanded=True) as status:
+                    time.sleep(1)
+                    st.write("🟢 Acceso Concedido: Dylan García.")
+                    status.update(label="Identidad Verificada", state="complete", expanded=False)
                 st.session_state.autenticado = True
                 st.rerun()
     
     st.write("---")
     st.subheader("📩 SOLICITUD DE ACCESO VIP / ACCESS REQUEST")
     
-    # FILA DE INFORMACIÓN GIGANTE
+    # FILA DE INFORMACIÓN SIMÉTRICA Y GRANDE
     c_izq, c_mid, c_der = st.columns([1.5, 2, 1.5])
     
     with c_izq:
@@ -71,7 +73,6 @@ if not st.session_state.autenticado:
         with st.form("contacto_vip"):
             perfil = st.radio("Perfil / Profile:", ["💼 Empresario / CEO", "🦈 Inversor Independiente"])
             mail = st.text_input("Email de Contacto:")
-            nota = st.text_area("Mensaje:")
             if st.form_submit_button("ENVIAR SOLICITUD / SEND"):
                 if mail:
                     st.session_state.mensajes.append({"perfil": perfil, "mail": mail, "hora": time.strftime('%H:%M')})
@@ -87,13 +88,13 @@ if not st.session_state.autenticado:
     
     st.stop()
 
-# --- 2. INTERIOR DE LA BÓVEDA (RESTO DEL CÓDIGO) ---
+# --- 2. INTERIOR DE LA BÓVEDA ---
 st.set_page_config(page_title="LEGACY COMMAND", page_icon="🏛️", layout="wide")
 st.markdown("""
     <style>
     .stApp { background-color: #050505; border: 4px solid #d4af37; padding: 20px; }
     h1, h2, h3 { color: #d4af37 !important; font-family: 'serif'; text-align: center; }
-    [data-testid="stMetricValue"] { color: #d4af37 !important; font-size: 3rem !important; font-weight: bold; }
+    [data-testid="stMetricValue"] { color: #d4af37 !important; font-size: 2.5rem !important; font-weight: bold; }
     </style>
     """, unsafe_allow_html=True)
 
@@ -110,18 +111,30 @@ if idioma == "Admin":
         st.write("Sin solicitudes nuevas.")
 else:
     banner = "🇦🇷 2 Millones ARS/mes" if "Argentina" in idioma else "🇺🇸 12k USD/month"
-    st.markdown(f"<h3 style='border: 2px solid #d4af37; padding: 10px;'>{banner}</h3>", unsafe_allow_html=True)
+    st.markdown(f"<h3 style='border: 2px solid #d4af37; padding: 15px;'>{banner}</h3>", unsafe_allow_html=True)
     st.title("🏛️ COMMAND CENTER")
     
-    # Simulador y Gráfico (Corregido)
-    años = st.slider("AÑOS:", 1, 30, 10)
-    ret = st.slider("RETORNO %:", 5, 50, 15)
+    # Simulador y Gráfico (Corregido con números)
+    años = st.slider("AÑOS / YEARS:", 1, 30, 10)
+    ret = st.slider("RETORNO / RETURN %:", 5, 50, 15)
     fut_usd = 12450000 * ((1 + (ret/100))**años)
+    fut_ars = fut_usd * 1500
     
-    st.metric("FORTUNA PROYECTADA USD", f"${fut_usd:,.0f}")
+    col1, col2 = st.columns(2)
+    col1.metric("FORTUNA USD", f"${fut_usd:,.0f}")
+    col2.metric("FORTUNA ARS", f"${fut_ars:,.0f}")
     
-    df_f = pd.DataFrame({"Activo": ["Propiedades", "Stocks", "Crypto", "Art"], "Valor":})
-    st.bar_chart(df_f.set_index("Activo"))
+    st.markdown("---")
+    
+    c1, c2 = st.columns(2)
+    with c1:
+        st.subheader("📊 DISTRIBUCIÓN")
+        # CORREGIDO: Valores del gráfico cerrados correctamente
+        df_f = pd.DataFrame({"Activo": ["Propiedades", "Stocks", "Crypto", "Art"], "Valor":})
+        st.bar_chart(df_f.set_index("Activo"))
+    with c2:
+        st.subheader("🤖 IA ADVISOR")
+        st.write("ESTADO: ACTIVO. DYLAN GARCÍA: HOLD POSITIONS.")
 
 if st.sidebar.button("🔒 CERRAR"):
     st.session_state.autenticado = False
