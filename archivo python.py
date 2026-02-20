@@ -17,64 +17,67 @@ if not st.session_state.autenticado:
             st.rerun()
     st.stop()
 
-# --- 2. CONFIGURACIÓN DE LUJO ---
+# --- 2. CONFIGURACIÓN DE ÉLITE ---
 st.set_page_config(page_title="LEGACY VAULT", page_icon="🏛️", layout="wide")
 st.markdown("""
     <style>
     .stApp { background-color: #050505; border: 4px solid #d4af37; padding: 20px; }
     h1, h2, h3 { color: #d4af37 !important; font-family: 'serif'; text-align: center; }
-    [data-testid="stMetricValue"] { color: #d4af37 !important; font-size: 2rem !important; font-weight: bold; }
+    [data-testid="stMetricValue"] { color: #d4af37 !important; font-size: 2.5rem !important; font-weight: bold; }
     .pay-banner {
-        background-color: rgba(212, 175, 55, 0.15);
+        background-color: rgba(212, 175, 55, 0.1);
         border: 2px solid #d4af37;
         color: #d4af37;
         padding: 20px;
         text-align: center;
         font-weight: bold;
         border-radius: 10px;
-        margin-bottom: 30px;
-        font-size: 1.2rem;
+        margin-bottom: 20px;
+        font-size: 1.4rem;
     }
     </style>
     """, unsafe_allow_html=True)
 
-# --- 3. EL CARTEL DE VENTA (LO QUE PEDISTE) ---
-st.markdown("""
-<div class='pay-banner'>
-    🇦🇷 Para poder usar la app/pagina mas de 1 mes tenes que pagar 2 millones.<br>
-    🇺🇸 To use this app/page for more than 1 month you have to pay 12 thousand dollars.
-</div>
-""", unsafe_allow_html=True)
+# --- 3. SELECTOR DE REGIÓN (INTELIGENCIA ARTIFICIAL) ---
+st.sidebar.title("🌐 REGIÓN / REGION")
+region = st.sidebar.selectbox("Seleccione su ubicación:", ["🇦🇷 Argentina", "🇺🇸 United States / International"])
+
+# --- 4. CARTELES DINÁMICOS SEGÚN PAÍS ---
+if region == "🇦🇷 Argentina":
+    st.markdown("<div class='pay-banner'>🇦🇷 Si sos de Argentina tenes que pagar 2 millones por mes.</div>", unsafe_allow_html=True)
+else:
+    st.markdown("<div class='pay-banner'>🇺🇸 If you are from the United States etc, it costs 12 thousand per month.</div>", unsafe_allow_html=True)
 
 st.title("🏛️ CENTRO DE MANDO LEGACY")
 
-# 4. SIMULADOR
+# 5. SIMULADOR
 años = st.slider("AÑOS DE INVERSIÓN:", 1, 30, 10)
-ret = st.slider("RENDIMIENTO ANUAL (%)", 5, 50, 15)
+ret = st.slider("RETORNO ANUAL (%)", 5, 50, 15)
 
-# --- CÁLCULOS MATEMÁTICOS (CORRECTOS) ---
-tc = 1500  # 1 Dólar = 1500 Pesos (Aproximado 2026)
+# CÁLCULOS
+tc = 1500 
 capital_inicial_usd = 12450000
 futuro_usd = capital_inicial_usd * ((1 + (ret/100))**años)
-futuro_ars = futuro_usd * tc # ACÁ ESTÁ LA MONTAÑA DE PESOS
+futuro_ars = futuro_usd * tc 
 
 st.markdown("---")
 
-# 5. RESULTADOS
+# 6. RESULTADOS SEGÚN PAÍS
 res1, res2 = st.columns(2)
-res1.metric("PROYECCIÓN DÓLARES (USD)", f"${futuro_usd:,.0f}")
-res2.metric("PROYECCIÓN PESOS (ARS)", f"${futuro_ars:,.0f}")
+if region == "🇦🇷 Argentina":
+    res1.metric("PROYECCIÓN EN PESOS (ARS)", f"${futuro_ars:,.0f}")
+    res2.metric("EQUIVALENTE EN USD", f"${futuro_usd:,.0f}")
+else:
+    res1.metric("PROYECCIÓN EN DÓLARES (USD)", f"${futuro_usd:,.0f}")
+    res2.metric("PROYECCIÓN EN PESOS (ARS)", f"${futuro_ars:,.0f}")
 
 st.markdown("---")
 
-# 6. GRÁFICOS Y IA (YA NO DA ERROR)
-c1, c2 = st.columns(2)
-with c1:
-    st.subheader("📊 DISTRIBUCIÓN")
-    df_data = pd.DataFrame({"Activo": ["Casas", "Bolsa", "Cripto", "Arte"], "Valor": [60, 20, 10, 10]})
-    st.bar_chart(df_data.set_index("Activo"))
-with c2:
-    st.subheader("🤖 ESTRATEGA IA")
-    pregunta = st.text_input("CONSULTA TÉCNICA:")
-    if pregunta:
-        st.write(f"🏛️ **IA:** Dylan García, para '{pregunta}' la orden es MANTENER.")
+# 7. GRÁFICOS Y IA
+df_data = pd.DataFrame({"Activo": ["Casas", "Bolsa", "Cripto", "Arte"], "Valor":})
+st.bar_chart(df_data.set_index("Activo"))
+
+st.subheader("🤖 IA ESTRATÉGICA")
+pregunta = st.text_input("CONSULTA TÉCNICA:")
+if pregunta:
+    st.write(f"🏛️ **IA:** Dylan García, para '{pregunta}' la orden es MANTENER.")
