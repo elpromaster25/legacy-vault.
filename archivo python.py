@@ -4,11 +4,12 @@ import time
 
 # --- 1. CONFIGURACIÓN DE SEGURIDAD ---
 if 'auth' not in st.session_state: st.session_state.auth = False
+if 'idioma_final' not in st.session_state: st.session_state.idioma_final = "🇦🇷 Argentina"
 
 # --- 2. TU EMAIL DE CONTROL ---
 MI_EMAIL = "dylanelpromaster25@gmail.com" 
 
-# --- 3. DICCIONARIO BILINGÜE PROFESIONAL ---
+# --- 3. DICCIONARIO BILINGÜE ---
 textos = {
     "🇦🇷 Argentina": {
         "acceso_vip": "💎 ACCESO VIP RESTRINGIDO | 2.000.000 ARS",
@@ -16,10 +17,10 @@ textos = {
         "ticker": "🏦 MERCADO EN VIVO | USDT/ARS: 1.515 | BTC/USD: 96.850",
         "main_tit": "🏛️ COMMAND CENTER & EXCHANGE VIP",
         "ex_tit": "💹 MESA DE CAMBIO VIP (LIQUIDACIÓN P2P)",
-        "ex_desc": "Solicite cotización oficial. Recibirá instrucciones en su email de seguridad.",
+        "ex_desc": "Solicite cotización oficial. Recibirá instrucciones en su email.",
         "ex_btn": "📩 SOLICITAR COTIZACIÓN POR EMAIL",
         "ia_tit": "🤖 ESTRATEGA IA ADVISOR",
-        "ia_resp": "Dylan García, el análisis sugiere MANTENER POSICIONES Y LIQUIDAR VÍA MESA VIP.",
+        "ia_resp": "Dylan García, el análisis sugiere MANTENER POSICIONES.",
         "footer": "🔒 ENCRIPTACIÓN AES-256 | SEGURIDAD BANCARIA | BS. AS."
     },
     "🇺🇸 USA": {
@@ -28,10 +29,10 @@ textos = {
         "ticker": "🏦 LIVE MARKET | BTC/USD: 96.850 | PROTOCOL: SECURED",
         "main_tit": "🏛️ COMMAND CENTER & OTC DESK",
         "ex_tit": "💹 GLOBAL OTC DESK (INSTITUTIONAL LIQUIDITY)",
-        "ex_desc": "Request institutional quote. You will receive instructions via secure email.",
+        "ex_desc": "Request institutional quote. You will receive instructions via email.",
         "ex_btn": "📩 REQUEST QUOTE VIA EMAIL",
         "ia_tit": "🤖 STRATEGIC AI ADVISOR",
-        "ia_resp": "Dylan Garcia, the analysis suggests HOLDING POSITIONS AND LIQUIDATING VIA OTC.",
+        "ia_resp": "Dylan Garcia, the analysis suggests HOLDING POSITIONS.",
         "footer": "🔒 MILITARY GRADE ENCRYPTION | NEW YORK, USA"
     }
 }
@@ -43,28 +44,34 @@ st.markdown("""
     .stApp { background-color: #000000; border: 6px solid #d4af37; padding: 25px; }
     h1, h2, h3 { color: #d4af37 !important; text-align: center; font-family: 'serif'; }
     .gold-card { border: 2px solid #d4af37; padding: 20px; border-radius: 15px; background: rgba(212, 175, 55, 0.05); text-align: center; color: #d4af37; }
-    .stMetric { background: rgba(212, 175, 55, 0.1); padding: 15px; border-radius: 10px; border: 1px solid #d4af37; }
     [data-testid='stMetricValue'] { color: #d4af37 !important; font-size: 2.5rem !important; }
     </style>
     """, unsafe_allow_html=True)
 
-# --- 5. PANTALLA DE ENTRADA ---
+# --- 5. PANTALLA DE ENTRADA (ARREGLADA) ---
 if not st.session_state.auth:
     st.title("🏛️ LEGACY QUANTUM VAULT")
     col_iz, col_ce, col_de = st.columns([1, 1.5, 1])
     with col_ce:
-        idioma = st.selectbox("🌎 REGION / REGION:", ["🇦🇷 Argentina", "🇺🇸 USA"])
-        t = textos[idioma]
+        # AGREGAMOS KEY UNICA PARA QUE NO SE MEZCLE
+        region_elegida = st.selectbox("🌎 REGION / REGIÓN:", ["🇦🇷 Argentina", "🇺🇸 USA"], key="region_select")
+        t = textos[region_elegida]
+        
         st.markdown(f"<div class='gold-card'>{t['acceso_vip']}</div>", unsafe_allow_html=True)
-        pw = st.text_input("PASSWORD:", type="password")
+        
+        # CONTRASEÑA CON KEY UNICA
+        pw = st.text_input("PASSWORD:", type="password", key="pass_input")
+        
         if st.button(t["btn_unlock"]):
             if pw == "LEGACY2026":
-                st.session_state.idioma_final = idioma
-                st.session_state.auth = True; st.rerun()
-            else: st.error("DENEGADO / DENIED")
+                st.session_state.idioma_final = region_elegida
+                st.session_state.auth = True
+                st.rerun()
+            else:
+                st.error("DENEGADO / DENIED")
     st.stop()
 
-# --- 6. INTERFAZ COMANDO ---
+# --- 6. INTERFAZ INTERNA ---
 t = textos[st.session_state.idioma_final]
 st.markdown(f"<div style='background: #1a1a1a; color: #d4af37; padding: 10px; border-bottom: 2px solid #d4af37; font-weight: bold; text-align: center;'>{t['ticker']}</div>", unsafe_allow_html=True)
 
@@ -74,8 +81,9 @@ st.title(t["main_tit"])
 años = st.slider("HORIZONTE / HORIZON:", 1, 30, 10); ret = st.slider("RETORNO / RETURN %:", 5, 50, 15)
 fut_usd = 12450000 * ((1 + (ret/100))**años)
 m1, m2 = st.columns(2)
-m1.metric("VALOR USD", f"${fut_usd:,.0f}")
-if st.session_state.idioma_final == "🇦🇷 Argentina": m2.metric("VALOR ARS", f"${(fut_usd * 1515):,.0f}")
+m1.metric("USD VALUE", f"${fut_usd:,.0f}")
+if st.session_state.idioma_final == "🇦🇷 Argentina":
+    m2.metric("VALOR ARS", f"${(fut_usd * 1515):,.0f}")
 
 st.write("---")
 # EXCHANGE SEGURO POR EMAIL
@@ -100,7 +108,6 @@ with ex2:
     st.markdown(f'<a href="{mail_url_btc}"><button style="width:100%; height:50px; background-color:#d4af37; color:black; font-weight:bold; border:none; border-radius:10px; cursor:pointer;">{t["ex_btn"]}</button></a>', unsafe_allow_html=True)
 
 st.write("---")
-# IA
 st.subheader(t["ia_tit"])
 q = st.text_input("CONSULTA / QUERY:")
 if q: st.write(f"🏛️ **IA:** {t['ia_resp']}")
