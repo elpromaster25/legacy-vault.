@@ -28,38 +28,40 @@ if not st.session_state.autenticado:
 st.set_page_config(page_title="LEGACY COMMAND", page_icon="🏛️", layout="wide")
 st.markdown("""
     <style>
-    .stApp { background-color: #050505; border: 2px solid #d4af37; margin: 5px; }
-    h1, h2, h3 { color: #d4af37 !important; font-family: 'Courier New', monospace; text-align: left; }
-    [data-testid="stMetricValue"] { color: #d4af37 !important; font-size: 3.5rem !important; font-weight: bold; }
-    .stMarkdown p { color: #00ff00; font-family: 'Courier New'; }
-    div.stButton > button { background: none; color: #d4af37; border: 1px solid #d4af37; border-radius: 0px; }
+    .stApp { background-color: #050505; border: 2px solid #d4af37; padding: 10px; }
+    h1, h2, h3 { color: #d4af37 !important; font-family: 'Courier New', monospace; text-align: center; }
+    [data-testid="stMetricValue"] { color: #d4af37 !important; font-size: 3rem !important; font-weight: bold; text-align: center; }
+    [data-testid="stMetricLabel"] { color: #ffffff !important; justify-content: center !important; }
+    .stMarkdown p { color: #888; font-family: 'Courier New'; text-align: center; }
+    div.stButton > button { background-color: #1a1a1a; color: #d4af37; border: 1px solid #d4af37; border-radius: 0px; width: 100%; }
     </style>
     """, unsafe_allow_html=True)
 
-# --- 3. DASHBOARD DE OPERACIONES ---
+# --- 3. BARRA DE NOTICIAS ---
+st.markdown("<marquee style='color: #d4af37; font-family: Courier New;'>● MERCADOS GLOBALES OPERANDO ● SEGURIDAD ACTIVA ● BITCOIN BULLISH TREND ●</marquee>", unsafe_allow_html=True)
 st.title("🏛️ LEGACY COMMAND CENTER v2.0")
-st.markdown("<p style='color: #d4af37;'>STATUS: OPERATION CENTER ONLINE | ENCRYPTION: AES-256</p>", unsafe_allow_html=True)
 
-# 4. MONITOR DE ACTIVOS (GIGANTE)
-m1, m2, m3 = st.columns(3)
-m1.metric("EQUITY TOTAL", "$12.45M", "+2.4%")
-m2.metric("NET PROFIT (30D)", "$298.8K", "SECURE")
-m3.metric("BTC POSITION", "$98,450", "BULLISH")
+# 4. MONITOR DE ACTIVOS
+m1, m2, m3, m4 = st.columns(4)
+m1.metric("STATUS", "SECURE", "100%")
+m2.metric("S&P 500", "5,026", "+0.4%")
+m3.metric("BITCOIN", "$98,450", "+2.5%")
+m4.metric("EQUITY TOTAL", "$12.45M", "+2.4%")
 
 st.markdown("---")
 
-# 5. CONSOLA TÉCNICA (Lo que pediste)
-col_c1, col_c2 = st.columns([1, 2])
+# 5. CONSOLA TÉCNICA Y GRÁFICOS
+col_c1, col_c2 = st.columns(2)
 with col_c1:
     st.subheader("🛡️ SECURITY LOGS")
-    for i in range(3):
-        st.code(f"> TRACE: {time.time()}\n> NODE: {i+45}\n> STATUS: VERIFIED", language="bash")
-    st.success("Auditoría: Legacy-Secure v.26")
-    st.download_button("📥 DOWNLOAD AUDIT", "CERTIFIED: $12.45M", file_name="Audit_Legacy.txt")
+    st.code("> TRACE: ACTIVE\n> ENCRYPTION: AES-256\n> AUDIT: VERIFIED", language="bash")
+    st.image("https://img.icons8.com", width=80)
+    st.download_button("📥 DOWNLOAD AUDIT", "CERTIFIED: $12.45M USD", file_name="Audit_Legacy.txt")
 
 with col_c2:
-    st.subheader("📡 ASSET DISTRIBUTION MAP")
-    df = pd.DataFrame({"Activo": ["RE", "Stocks", "Crypto", "Art"], "Valor":})
+    st.subheader("📊 ASSET DISTRIBUTION")
+    # GRÁFICO CORREGIDO
+    df = pd.DataFrame({"Activo": ["Propiedades", "Stocks", "Crypto", "Arte"], "Valor": [60, 20, 10, 10]})
     st.bar_chart(df.set_index("Activo"))
 
 # 6. IA ESTRATEGA
@@ -67,8 +69,9 @@ st.markdown("---")
 st.subheader("🤖 STRATEGIC IA ADVISOR")
 pregunta = st.text_input("COMMAND INPUT:")
 if pregunta:
-    with st.chat_message("assistant"):
-        st.write(f"CEO Dylan Garcia, analysis for '{pregunta}': Proceed with Diversification. Risk is under 1.2%.")
+    with st.spinner('Analyzing...'):
+        time.sleep(1)
+        st.write(f"🕵️ **ANALISTA:** CEO Dylan Garcia, analysis for '{pregunta}': MANTENER POSICIÓN.")
 
 if st.sidebar.button("🔒 LOGOUT"):
     st.session_state.autenticado = False
