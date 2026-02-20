@@ -6,97 +6,97 @@ import time
 if 'auth' not in st.session_state: st.session_state.auth = False
 if 'mensajes' not in st.session_state: st.session_state.mensajes = []
 
-# --- 2. DISEÑO IMPERIAL (CSS) ---
-st.set_page_config(page_title="LEGACY | EMPIRE CENTER", layout="wide")
-st.markdown("""
-    <style>
-    .stApp { background-color: #000000; border: 6px solid #d4af37; padding: 25px; }
-    h1, h2, h3 { color: #d4af37 !important; text-align: center; font-family: 'serif'; }
-    [data-testid='stMetricValue'] { color: #d4af37 !important; font-size: 3rem !important; font-weight: bold; }
-    .gold-card { border: 2px solid #d4af37; padding: 20px; border-radius: 15px; background: rgba(212, 175, 55, 0.05); text-align: center; color: #d4af37; }
-    .ticker { background: #1a1a1a; color: #d4af37; padding: 10px; border-bottom: 2px solid #d4af37; font-weight: bold; text-align: center; }
-    .footer-vip { border-top: 1px solid #d4af37; padding-top: 30px; text-align: center; color: #d4af37; font-size: 0.8rem; letter-spacing: 2px; }
-    </style>
-    """, unsafe_allow_html=True)
+# --- 2. CONFIGURACIÓN CELULAR PAPÁ (PONELO ACÁ) ---
+CEL_PAPA = "5491100000000" # <--- CAMBIÁ ESTO POR EL NÚMERO DE ÉL
 
-# --- 3. TICKER DE MERCADO EN VIVO ---
-st.markdown("<div class='ticker'>🏦 MERCADO EN VIVO | USDT/ARS: 1.515 | BTC/USD: 96.850 | PROTOCOLO AES-256: ACTIVO</div>", unsafe_allow_html=True)
+# --- 3. DICCIONARIO BILINGÜE (EL CEREBRO) ---
+textos = {
+    "🇦🇷 Argentina": {
+        "ticker": "🏦 MERCADO EN VIVO | USDT/ARS: 1.515 | BTC/USD: 96.850",
+        "entrada": "💎 ACCESO VIP RESTRINGIDO | 2.000.000 ARS",
+        "sim_tit": "🏛️ COMMAND CENTER & EXCHANGE",
+        "sim_años": "PROYECCIÓN (AÑOS):",
+        "sim_ret": "RENTABILIDAD (%):",
+        "ex_tit": "💹 MESA DE CAMBIO VIP (P2P)",
+        "ex_desc": "Un operador se contactará telefónicamente para la liquidación.",
+        "ex_btn": "🚀 SOLICITAR COTIZACIÓN WHATSAPP",
+        "ia_tit": "🤖 ESTRATEGA IA",
+        "ia_resp": "Dylan García, el análisis sugiere MANTENER POSICIONES.",
+        "footer": "🔒 ENCRIPTACIÓN AES-256 | BS. AS. ARGENTINA"
+    },
+    "🇺🇸 USA": {
+        "ticker": "🏦 LIVE MARKET | BTC/USD: 96.850 | PROTOCOL: SECURED",
+        "entrada": "💎 VIP ACCESS RESTRICTED | 12.000 USD",
+        "sim_tit": "🏛️ COMMAND CENTER & OTC DESK",
+        "sim_años": "PROJECTION (YEARS):",
+        "sim_ret": "ANNUAL RETURN (%):",
+        "ex_tit": "💹 GLOBAL OTC DESK (LIQUIDITY)",
+        "ex_desc": "Direct settlement for Wire/ACH transfers. An operator will contact you.",
+        "ex_btn": "🚀 REQUEST QUOTE VIA WHATSAPP",
+        "ia_tit": "🤖 STRATEGIC AI ADVISOR",
+        "ia_resp": "Dylan Garcia, the analysis suggests HOLDING POSITIONS.",
+        "footer": "🔒 MILITARY GRADE ENCRYPTION | NEW YORK, USA"
+    }
+}
 
-# --- 4. ACCESO (LOGIN O CONTACTO) ---
+# --- 4. DISEÑO IMPERIAL ---
+st.set_page_config(page_title="LEGACY GLOBAL", layout="wide")
+st.markdown("<style>.stApp { background-color: #000000; border: 6px solid #d4af37; padding: 25px; } h1, h2, h3 { color: #d4af37 !important; text-align: center; } .gold-card { border: 2px solid #d4af37; padding: 20px; border-radius: 15px; background: rgba(212, 175, 55, 0.05); text-align: center; color: #d4af37; }</style>", unsafe_allow_html=True)
+
+# --- 5. SELECTOR DE REGIÓN (SIDEBAR) ---
+st.sidebar.title("🛂 REGION")
+idioma = st.sidebar.selectbox("Select Country:", ["🇦🇷 Argentina", "🇺🇸 USA"])
+t = textos[idioma]
+
+# --- 6. TICKER ---
+st.markdown(f"<div style='background: #1a1a1a; color: #d4af37; padding: 10px; border-bottom: 2px solid #d4af37; font-weight: bold; text-align: center;'>{t['ticker']}</div>", unsafe_allow_html=True)
+
+# --- 7. ACCESO ---
 if not st.session_state.auth:
     st.title("🏛️ LEGACY QUANTUM VAULT")
     col_iz, col_ce, col_de = st.columns([1, 1.5, 1])
     with col_ce:
-        st.markdown("<div class='gold-card'>💎 ACCESO VIP RESTRINGIDO<br>COSTO: 2.000.000 ARS / 12K USD</div>", unsafe_allow_html=True)
-        st.write("")
+        st.markdown(f"<div class='gold-card'>{t['entrada']}</div>", unsafe_allow_html=True)
         pw = st.text_input("PASSWORD:", type="password")
-        if st.button("DESBLOQUEAR BÓVEDA"):
-            if pw == "LEGACY2026":
-                with st.status("Iniciando Bóveda...", expanded=True) as status:
-                    st.write("🧬 Verificando firma biométrica..."); time.sleep(1)
-                    st.write("📡 Sincronizando con Wall Street..."); time.sleep(1)
-                    status.update(label="Acceso VIP Concedido", state="complete")
-                st.session_state.auth = True; st.rerun()
-        st.write("---")
-        st.subheader("📩 CONTACTO DIRECTO CON EL FOUNDER")
-        with st.form("contacto_form"):
-            mail = st.text_input("Su Email:"); nota = st.text_area("Mensaje:")
-            if st.form_submit_button("ENVIAR AL FOUNDER"):
-                st.session_state.mensajes.append({"mail": mail, "nota": nota, "hora": time.strftime('%H:%M')})
-                st.success("✅ Mensaje encriptado y enviado a Dylan García.")
+        if st.button("UNLOCK"):
+            if pw == "LEGACY2026": st.session_state.auth = True; st.rerun()
     st.stop()
 
-# --- 5. COMMAND CENTER & EXCHANGE (EL IMPERIO) ---
-st.markdown("<div style='background: #d4af37; color: black; padding: 10px; text-align: center; font-weight: bold; border-radius: 5px;'>💎 ESTADO VIP: ACTIVO | BIENVENIDO DYLAN GARCÍA</div>", unsafe_allow_html=True)
-st.title("🏛️ COMMAND CENTER & EXCHANGE VIP")
+# --- 8. COMMAND CENTER BILINGÜE ---
+st.title(t["sim_tit"])
 
-# SECCIÓN 1: SIMULADOR DE BILLONES
-años = st.slider("PROYECCIÓN (AÑOS):", 1, 30, 10); ret = st.slider("RENTABILIDAD (%):", 5, 50, 15)
+# SIMULADOR
+c_s1, c_s2 = st.columns(2)
+años = c_s1.slider(t["sim_años"], 1, 30, 10)
+ret = c_s2.slider(t["sim_ret"], 5, 50, 15)
 fut_usd = 12450000 * ((1 + (ret/100))**años)
 m1, m2 = st.columns(2)
-m1.metric("FORTUNA USD", f"${fut_usd:,.0f}"); m2.metric("FORTUNA ARS", f"${(fut_usd * 1515):,.0f}")
+m1.metric("USD VALUE", f"${fut_usd:,.0f}")
+if idioma == "🇦🇷 Argentina":
+    m2.metric("ARS VALUE", f"${(fut_usd * 1515):,.0f}")
 
 st.write("---")
-# SECCIÓN 2: MESA DE CAMBIO (LO DE TU PAPÁ)
-st.subheader("💹 MESA DE CAMBIO VIP (LIQUIDACIÓN P2P)")
-st.info("Un operador de nuestra mesa se contactará telefónicamente para coordinar la liquidación.")
+# EXCHANGE
+st.subheader(t["ex_tit"])
+st.info(t["ex_desc"])
 ex1, ex2 = st.columns(2)
 with ex1:
-    st.markdown("<div class='gold-card'>💰 PESOS POR DÓLARES (USDT)</div>", unsafe_allow_html=True)
-    m_ars = st.number_input("Monto en ARS:", min_value=1000000, value=5000000, step=500000)
-    st.write(f"Recibe: **{(m_ars/1515):,.2f} USDT**")
-    if st.button("🚀 SOLICITAR COTIZACIÓN ARS"):
-        st.session_state.mensajes.append({"mail": "CLIENTE VIP", "nota": f"VENTA DE {m_ars} ARS", "hora": time.strftime('%H:%M')})
-        st.success("✅ Solicitud enviada a la mesa de operaciones.")
-with ex2:
-    st.markdown("<div class='gold-card'>₿ BITCOIN POR PESOS (ARS)</div>", unsafe_allow_html=True)
-    m_btc = st.number_input("Monto en BTC:", min_value=0.01, value=0.1, step=0.01)
-    st.write(f"Recibe: **${(m_btc * 96850 * 1515):,.0f} ARS**")
-    if st.button("🚀 SOLICITAR COTIZACIÓN BTC"):
-        st.session_state.mensajes.append({"mail": "CLIENTE VIP", "nota": f"VENTA DE {m_btc} BTC", "hora": time.strftime('%H:%M')})
-        st.success("✅ Solicitud enviada a la mesa de operaciones.")
+    m_val = st.number_input("CASH AMOUNT:", min_value=5000)
+    ws_msg = f"https://wa.me{CEL_PAPA}?text=Client%20from%20{idioma}:%20Requesting%20quote%20for%20{m_val}"
+    st.markdown(f'<a href="{ws_msg}" target="_blank"><button style="width:100%; height:50px; background-color:#d4af37; color:black; font-weight:bold; border:none; border-radius:10px; cursor:pointer;">{t["ex_btn"]}</button></a>', unsafe_allow_html=True)
 
 st.write("---")
-# SECCIÓN 3: IA ADVISOR
-st.subheader("🤖 ESTRATEGA IA: WALL STREET ADVISOR")
-q = st.text_input("CONSULTA TÉCNICA:")
-if q:
-    with st.spinner('Analizando...'):
-        time.sleep(1)
-        st.write(f"🏛️ **IA:** Dylan García, la orden para '{q}' es MANTENER POSICIONES.")
+# IA
+st.subheader(t["ia_tit"])
+q = st.text_input("CONSULTA / QUERY:")
+if q: st.write(f"🏛️ **IA:** {t['ia_resp']}")
 
+# FOOTER
 st.write("---")
-# SECCIÓN 4: PIE DE PÁGINA GLOBAL
 c_t1, c_t2, c_t3 = st.columns(3)
-with c_t1: st.markdown("<div class='gold-card'>🗽 NY (NYSE)<br><b>11:01 AM</b></div>", unsafe_allow_html=True)
-with c_t2: st.markdown("<div class='gold-card'>🏢 BS.AS. (BYMA)<br><b>13:01 PM</b></div>", unsafe_allow_html=True)
-with c_t3: st.markdown("<div class='gold-card'>🏰 LONDON (LSE)<br><b>16:01 PM</b></div>", unsafe_allow_html=True)
+with c_t1: st.markdown("<div class='gold-card'>🗽 NY: 11:14 AM</div>", unsafe_allow_html=True)
+with c_t2: st.markdown("<div class='gold-card'>🏢 BA: 13:14 PM</div>", unsafe_allow_html=True)
+with c_t3: st.markdown("<div class='gold-card'>🏰 LN: 16:14 PM</div>", unsafe_allow_html=True)
+st.markdown(f"<div style='text-align: center; color: #d4af37; padding: 20px;'>{t['footer']}</div>", unsafe_allow_html=True)
 
-st.markdown("<div class='footer-vip'>🔒 ENCRIPTACIÓN AES-256 | LEGACY VAULT © 2026 | PUERTO MADERO, ARGENTINA</div>", unsafe_allow_html=True)
-
-# MODO ADMIN (SIDEBAR)
-if st.sidebar.checkbox("🔓 MODO ADMIN"):
-    if st.sidebar.text_input("CLAVE ESPÍA:", type="password") == "DYLAN777":
-        st.sidebar.table(pd.DataFrame(st.session_state.mensajes))
-
-if st.sidebar.button("🔒 SALIR"): st.session_state.auth = False; st.rerun()
+if st.sidebar.button("🔒 EXIT"): st.session_state.auth = False; st.rerun()
