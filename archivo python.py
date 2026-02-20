@@ -28,10 +28,9 @@ st.markdown("""
     <style>
     .stApp { background-color: #050505; border: 4px solid #d4af37; padding: 20px; }
     h1, h2, h3 { color: #d4af37 !important; font-family: 'serif'; text-align: center; text-transform: uppercase; }
-    [data-testid="stMetricValue"] { color: #d4af37 !important; font-size: 3.2rem !important; font-weight: bold; text-align: center; }
-    [data-testid="stMetricLabel"] { color: #ffffff !important; font-size: 1.1rem !important; text-align: center; }
+    [data-testid="stMetricValue"] { color: #d4af37 !important; font-size: 3rem !important; font-weight: bold; text-align: center; }
+    [data-testid="stMetricLabel"] { color: #ffffff !important; font-size: 1rem !important; text-align: center; }
     div.stButton > button { background-color: #1a1a1a; color: #d4af37; border: 2px solid #d4af37; width: 100%; font-weight: bold; }
-    .stSlider [data-baseweb="slider"] { color: #d4af37; }
     </style>
     """, unsafe_allow_html=True)
 
@@ -47,13 +46,13 @@ m3.metric("RIESGO", "MÍNIMO", "SEGURO")
 
 st.markdown("---")
 
-# --- 5. SECTOR BITCOIN Y SIMULADOR (EL REGRESO) ---
-col_b1, col_b2, col_b3 = st.columns()
+# --- 5. SECTOR BITCOIN Y SIMULADOR ---
+col_b1, col_b2, col_b3 = st.columns([1,2,1])
 with col_b2:
-    st.image("https://img.icons8.com", width=120)
+    st.image("https://img.icons8.com", width=100)
     st.subheader("🚀 PROYECCIÓN DE FORTUNA")
     años = st.slider("AÑOS DE INVERSIÓN:", 1, 30, 10)
-    retorno = st.slider("RENDIMIENTO ANUAL ESPERADO (%):", 5, 50, 15)
+    retorno = st.slider("RENDIMIENTO ANUAL (%)", 5, 50, 15)
     
     capital = 12450000
     futuro = capital * ((1 + (retorno/100))**años)
@@ -61,12 +60,15 @@ with col_b2:
 
 st.markdown("---")
 
-# 6. GRÁFICOS Y IA
+# 6. GRÁFICOS Y IA (AQUÍ ESTABA EL ERROR ARREGLADO)
 col_izq, col_der = st.columns(2)
 with col_izq:
     st.subheader("📊 DISTRIBUCIÓN DE ACTIVOS")
-    df = pd.DataFrame({"Activo": ["Inmuebles", "Stocks", "Crypto", "Arte"], "Valor": [60, 20, 10, 10]})
-    st.bar_chart(df.set_index("Activo"))
+    datos_grafico = pd.DataFrame({
+        "Activo": ["Propiedades", "Stocks", "Crypto", "Arte"],
+        "Valor": [60, 20, 10, 10]
+    })
+    st.bar_chart(datos_grafico.set_index("Activo"))
 
 with col_der:
     st.subheader("🤖 ESTRATEGA IA")
@@ -74,9 +76,9 @@ with col_der:
     if pregunta:
         with st.spinner('Analizando...'):
             time.sleep(1)
-            st.write(f"🏛️ **IA:** Dylan García, para '{pregunta}' la orden es: MANTENER Y REBALANCIAR.")
+            st.write(f"🏛️ **IA:** Dylan García, para '{pregunta}' la orden es: MANTENER POSICIÓN.")
     st.write("---")
-    st.download_button("📥 DESCARGAR AUDITORÍA VIP", "CERTIFICADO: $12.45M USD", file_name="Reporte_Legacy.txt")
+    st.download_button("📥 DESCARGAR AUDITORÍA VIP", "CERTIFICADO: $12.45M USD", file_name="Legacy_Report.txt")
 
 if st.sidebar.button("🔒 CERRAR SESIÓN"):
     st.session_state.autenticado = False
