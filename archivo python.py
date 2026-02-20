@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import time
 
-# --- 1. LÓGICA DE SESIÓN (SESSION STATE) ---
+# --- 1. LÓGICA DE SESIÓN ---
 if 'auth' not in st.session_state:
     st.session_state.auth = False
 if 'demo' not in st.session_state:
@@ -10,7 +10,7 @@ if 'demo' not in st.session_state:
 if 'start_time' not in st.session_state:
     st.session_state.start_time = None
 
-# --- 2. DISEÑO IMPERIAL (CSS PERSONALIZADO) ---
+# --- 2. DISEÑO IMPERIAL (CSS) ---
 st.set_page_config(page_title="LEGACY QUANTUM VAULT", layout="wide")
 st.markdown("""
     <style>
@@ -18,7 +18,6 @@ st.markdown("""
     h1, h2, h3 { color: #d4af37 !important; text-align: center; font-family: 'serif'; font-weight: bold; }
     [data-testid='stMetricValue'] { color: #d4af37 !important; font-size: 3.5rem !important; font-weight: bold; }
     
-    /* CARTEL VIP DORADO DINÁMICO */
     .vip-banner { 
         background: linear-gradient(90deg, #b8860b, #d4af37, #f7e08b, #d4af37, #b8860b); 
         color: black !important; padding: 20px; text-align: center; 
@@ -29,19 +28,17 @@ st.markdown("""
     
     .gold-border { border: 2px solid #d4af37; padding: 25px; border-radius: 20px; text-align: center; color: #d4af37; background-color: rgba(212, 175, 55, 0.05); }
     
-    /* BOTONES DE ÉLITE */
     div.stButton > button {
         background-color: #1a1a1a; color: #d4af37; border: 2px solid #d4af37; 
         width: 100%; font-weight: bold; height: 3.5em; font-size: 1.1rem;
     }
-    div.stButton > button:hover { border: 2px solid #ffffff; color: #ffffff; }
     </style>
     """, unsafe_allow_html=True)
 
-# --- 3. PANTALLA DE ENTRADA (EL FILTRO) ---
+# --- 3. PANTALLA DE ENTRADA ---
 if not st.session_state.auth and not st.session_state.demo:
     st.title("🏛️ LEGACY QUANTUM VAULT")
-    st.markdown("<div class='gold-border'>💎 ACCESO VIP RESTRINGIDO<br>COSTO: 2.000.000 ARS / 12.000 USD ANUAL</div>", unsafe_allow_html=True)
+    st.markdown("<div class='gold-border'>💎 ACCESO VIP RESTRINGIDO<br>COSTO: 2.000.000 ARS / 12.000 USD</div>", unsafe_allow_html=True)
     st.write("")
     c1, c2 = st.columns(2)
     with c1:
@@ -57,71 +54,66 @@ if not st.session_state.auth and not st.session_state.demo:
 
 # --- 4. LOGIN VIP ---
 if st.session_state.auth == "login_form":
-    st.subheader("🔐 VALIDACIÓN DE CREDENCIALES DE ALTO PATRIMONIO")
+    st.subheader("🔐 VALIDACIÓN VIP")
     password = st.text_input("LLAVE MAESTRA:", type="password")
     if st.button("DESBLOQUEAR BÓVEDA"):
         if password == "LEGACY2026":
             st.session_state.auth = True
             st.rerun()
         else:
-            st.error("ACCESO DENEGADO: CREDENCIALES INVÁLIDAS")
-    if st.button("CANCELAR"):
-        st.session_state.auth = False
-        st.rerun()
+            st.error("DENEGADO")
     st.stop()
 
-# --- 5. CONTROL TIEMPO DEMO ---
+# --- 5. CONTROL DEMO ---
 if st.session_state.demo and not st.session_state.auth:
     elapsed = time.time() - st.session_state.start_time
-    if elapsed > 300: # 5 minutos exactos
-        st.title("⌛ TIEMPO DE DEMO EXPIRADO")
-        st.markdown("<div class='vip-banner'>ADQUIERA SU ACCESO VIP PARA CONTINUAR OPERANDO EN TIEMPO REAL</div>", unsafe_allow_html=True)
-        if st.button("VOLVER AL MENÚ DE INICIO"):
+    if elapsed > 300:
+        st.title("⌛ TIEMPO EXPIRADO")
+        st.markdown("<div class='vip-banner'>ADQUIERA SU ACCESO VIP PARA CONTINUAR</div>", unsafe_allow_html=True)
+        if st.button("VOLVER"):
             st.session_state.demo = False
-            st.session_state.start_time = None
             st.rerun()
         st.stop()
 
-# --- 6. COMMAND CENTER (EL PRODUCTO) ---
+# --- 6. COMMAND CENTER (TODO EL CONTENIDO) ---
 if st.session_state.auth == True:
     st.markdown("<div class='vip-banner'>💎 ESTADO: ACCESO VIP TOTAL ACTIVADO | BIENVENIDO DYLAN GARCÍA</div>", unsafe_allow_html=True)
 
 st.title("🏛️ COMMAND CENTER LEGACY")
 
 if st.session_state.demo:
-    st.warning(f"⚠️ MODO DEMO ACTIVO: {int(300 - (time.time() - st.session_state.start_time))} segundos restantes")
+    st.warning(f"⚠️ MODO DEMO: {int(300 - (time.time() - st.session_state.start_time))}s restantes")
 
-# SIMULADOR DINÁMICO
+# SIMULADOR
 años = st.slider("PROYECCIÓN (AÑOS):", 1, 30, 10)
-ret = st.slider("RENTABILIDAD ESTIMADA ANUAL (%):", 5, 50, 15)
-capital_base = 12450000
-fut_usd = capital_base * ((1 + (ret/100))**años)
+ret = st.slider("RENTABILIDAD (%):", 5, 50, 15)
+fut_usd = 12450000 * ((1 + (ret/100))**años)
 
 st.write("---")
 m1, m2 = st.columns(2)
-m1.metric("VALOR PROYECTADO USD", f"${fut_usd:,.0f}")
-m2.metric("VALOR PROYECTADO ARS", f"${(fut_usd * 1500):,.0f}")
+m1.metric("VALOR USD", f"${fut_usd:,.0f}")
+m2.metric("VALOR ARS", f"${(fut_usd * 1500):,.0f}")
 
 st.write("---")
 c1, c2 = st.columns(2)
 with c1:
-    st.subheader("📊 DISTRIBUCIÓN DE ACTIVOS VIP")
-    # GRÁFICO ARREGLADO: Números cargados para evitar Script Error
+    st.subheader("📊 DISTRIBUCIÓN VIP")
+    # GRÁFICO CON NÚMEROS REALES CARGADOS
     df_assets = pd.DataFrame({
-        "Activo": ["Propiedades", "Stocks", "Crypto", "Arte"],
+        "Activo": ["RE", "Stocks", "Crypto", "Art"],
         "Valor": 
     })
     st.bar_chart(df_assets.set_index("Activo"))
 
 with c2:
-    st.subheader("🤖 ESTRATEGA IA VIP")
-    pregunta = st.text_input("CONSULTA TÉCNICA PARA LA IA:")
+    st.subheader("🤖 IA VIP")
+    pregunta = st.text_input("CONSULTA:")
     if pregunta:
-        with st.spinner('Procesando datos macroeconómicos...'):
+        with st.spinner('Analizando...'):
             time.sleep(1)
-            st.write(f"🏛️ **IA:** Dylan García, para la consulta '{pregunta}' la orden estratégica es **MANTENER POSICIONES Y REINVERTIR DIVIDENDOS**.")
+            st.write(f"🏛️ **IA:** Dylan García, la orden estratégica es MANTENER POSICIONES.")
 
-if st.sidebar.button("🔒 CERRAR SESIÓN"):
+if st.sidebar.button("🔒 CERRAR"):
     st.session_state.auth = False
     st.session_state.demo = False
     st.rerun()
