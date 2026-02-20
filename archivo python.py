@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import time
 
-# --- 1. SEGURIDAD DE ACCESO (EL SCANNER) ---
+# --- 1. SEGURIDAD DE ACCESO ---
 if 'autenticado' not in st.session_state:
     st.session_state.autenticado = False
 
@@ -13,7 +13,7 @@ if not st.session_state.autenticado:
     password = st.text_input("INGRESE LLAVE DE ENCRIPTACIÓN:", type="password")
     if st.button("DESBLOQUEAR TERMINAL"):
         if password == "LEGACY2026":
-            with st.status("Iniciando Protocolos de Seguridad...", expanded=True) as status:
+            with st.status("Iniciando Protocolos...", expanded=True) as status:
                 st.write("🧬 Escaneando Firma Digital...")
                 time.sleep(1)
                 st.write("🟢 Identidad Verificada: Dylan García.")
@@ -30,7 +30,7 @@ st.markdown("""
     <style>
     .stApp { background-color: #050505; }
     h1, h2, h3 { color: #d4af37 !important; font-family: 'Courier New'; text-align: center; letter-spacing: 2px; }
-    [data-testid="stMetricValue"] { color: #d4af37 !important; font-size: 2.5rem !important; font-weight: bold; }
+    [data-testid="stMetricValue"] { color: #d4af37 !important; font-size: 2.8rem !important; font-weight: bold; text-align: center; }
     .stMarkdown p { color: #888; font-family: 'Courier New'; text-align: center; }
     div.stButton > button { background-color: #1a1a1a; color: #d4af37; border: 1px solid #d4af37; border-radius: 0px; width: 100%; }
     </style>
@@ -49,12 +49,13 @@ t4.metric("RIESGO", "BAJO", "SÓLIDO")
 
 st.markdown("---")
 
-# --- 5. SECTOR BITCOIN PRO ---
-st.subheader("₿ BITCOIN CORE ASSET MONITOR")
-col_b1, col_b2, col_b3 = st.columns([1,2,1]) # Espacio a los costados
-with col_b2:
+# --- 5. SECTOR BITCOIN PRO (CENTRADO PERFECTO) ---
+# Usamos columnas laterales iguales para empujar el contenido al centro
+col_espacio_izq, col_central, col_espacio_der = st.columns([1, 1, 1]) 
+with col_central:
     st.image("https://img.icons8.com", width=160)
     st.metric("VALOR ACTUAL BTC/USD", "$98,450.00", "+2.5%")
+    st.write("RED: **BLOCKCHAIN MAINNET**")
 
 st.markdown("---")
 
@@ -67,11 +68,10 @@ with c1:
 
 with c2:
     st.subheader("📊 DISTRIBUCIÓN")
-    # GRÁFICO CORREGIDO (Aquí estaba el error)
     chart_data = pd.DataFrame({"Activo": ["Propiedades", "Acciones", "Cripto", "Arte"], "Valor": [60, 20, 10, 10]})
     st.bar_chart(chart_data.set_index("Activo"))
 
-# --- 7. IA ESTRATÉGICA ---
+# --- 7. IA Y CIERRE ---
 st.markdown("---")
 st.subheader("🤖 IA ESTRATÉGICA")
 pregunta = st.text_input("CONSULTA:")
