@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import time
 
-# --- 1. SEGURIDAD Y PANTALLA DE ENTRADA CON PRECIOS EN ORO ---
+# --- 1. SEGURIDAD Y LOGIN GIGANTE CON PRECIOS EN ORO ---
 if 'autenticado' not in st.session_state:
     st.session_state.autenticado = False
 if 'mensajes' not in st.session_state:
@@ -13,19 +13,11 @@ if not st.session_state.autenticado:
     st.markdown("""
         <style>
         .stApp { background-color: #000000; }
-        h1 { color: #d4af37 !important; text-align: center; font-family: 'serif'; font-size: 4rem !important; }
-        
+        h1 { color: #d4af37 !important; text-align: center; font-family: 'serif'; font-size: 4rem !important; margin-top: 50px; }
         .gold-price {
-            color: #d4af37;
-            font-size: 1.6rem;
-            text-align: center;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 5px;
-            font-family: 'serif';
+            color: #d4af37; font-size: 1.6rem; text-align: center; font-weight: bold;
+            text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px; font-family: 'serif';
         }
-        
         .info-box {
             color: #d4af37; font-size: 1.2rem; text-align: center; border: 1px solid #d4af37;
             padding: 20px; border-radius: 15px; background-color: rgba(212, 175, 55, 0.05);
@@ -39,7 +31,6 @@ if not st.session_state.autenticado:
     
     st.title("🏛️ LEGACY QUANTUM VAULT")
     
-    # SECCIÓN DE PRECIOS Y LOGIN
     col_l, col_c, col_r = st.columns([1, 1.5, 1])
     with col_c:
         st.markdown("<div class='gold-price'>🇦🇷 ARGENTINA: 2 MILLONES / MES</div>", unsafe_allow_html=True)
@@ -66,22 +57,13 @@ if not st.session_state.autenticado:
                 if mail:
                     st.session_state.mensajes.append({"perfil": perfil, "mail": mail, "hora": time.strftime('%H:%M')})
                     st.success("✅ SOLICITUD ENVIADA.")
-                else:
-                    st.warning("Ingrese su email.")
     with c_der: st.markdown("<div class='info-box'>📈 CRECIMIENTO<br><br>IA de predicción macroeconómica en tiempo real.</div>", unsafe_allow_html=True)
     st.stop()
 
 # --- 2. INTERIOR DE LA BÓVEDA ---
 st.set_page_config(page_title="LEGACY COMMAND", page_icon="🏛️", layout="wide")
-st.markdown("""
-    <style>
-    .stApp { background-color: #050505; border: 4px solid #d4af37; padding: 20px; }
-    h1, h2, h3 { color: #d4af37 !important; text-align: center; }
-    [data-testid="stMetricValue"] { color: #d4af37 !important; font-size: 2.5rem !important; font-weight: bold; }
-    </style>
-    """, unsafe_allow_html=True)
+st.markdown("<style>.stApp { background-color: #050505; border: 4px solid #d4af37; padding: 20px; } h1, h2, h3 { color: #d4af37 !important; text-align: center; } [data-testid='stMetricValue'] { color: #d4af37 !important; font-size: 2.5rem !important; font-weight: bold; }</style>", unsafe_allow_html=True)
 
-# SIDEBAR ADMIN
 st.sidebar.title("🛂 DASHBOARD")
 es_admin = st.sidebar.checkbox("🔓 MODO ADMIN (DYLAN)")
 idioma = st.sidebar.selectbox("Region:", ["🇦🇷 Argentina", "🇺🇸 USA"]) if not es_admin else "Admin"
@@ -104,16 +86,13 @@ else:
     st.title("🏛️ COMMAND CENTER")
     años = st.slider("AÑOS:", 1, 30, 10); ret = st.slider("RETORNO %:", 5, 50, 15)
     fut_usd = 12450000 * ((1 + (ret/100))**años)
-    
     col1, col2 = st.columns(2)
-    col1.metric("FORTUNA USD", f"${fut_usd:,.0f}")
-    col2.metric("FORTUNA ARS", f"${fut_usd * 1500:,.0f}")
-    
+    col1.metric("FORTUNA USD", f"${fut_usd:,.0f}"); col2.metric("FORTUNA ARS", f"${fut_usd * 1500:,.0f}")
     st.markdown("---")
     c1, c2 = st.columns(2)
     with c1:
         st.subheader("📊 DISTRIBUCIÓN")
-        # ARREGLADO: Valores del gráfico cerrados correctamente
+        # --- CORRECCIÓN FINAL DEL GRÁFICO ---
         df_f = pd.DataFrame({"Activo": ["RE", "Stocks", "Crypto", "Art"], "Valor":})
         st.bar_chart(df_f.set_index("Activo"))
     with c2:
