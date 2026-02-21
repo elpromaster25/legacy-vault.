@@ -12,8 +12,11 @@ st.markdown("""
     .stApp { background-color: #000; border: 5px solid #d4af37; padding: 20px; }
     h1, h2, h3, p, label, .stMetric { color: #d4af37 !important; text-align: center !important; }
     .gold-card { border: 1px solid #d4af37; padding: 20px; border-radius: 15px; background: rgba(212, 175, 55, 0.05); text-align: center; margin-bottom: 20px; }
-    .btn-paypal { background-color: #0070ba; color: white !important; padding: 14px; border-radius: 10px; font-weight: bold; text-decoration: none; display: block; text-align: center; margin-bottom: 10px; border: 1px solid #fff; font-size: 1.2rem; }
-    .btn-mp { background-color: #009ee3; color: white !important; padding: 14px; border-radius: 10px; font-weight: bold; text-decoration: none; display: block; text-align: center; margin-bottom: 10px; border: 1px solid #fff; }
+    
+    /* BOTONES DE ALTO IMPACTO */
+    .btn-paypal { background-color: #0070ba; color: #ffffff !important; padding: 14px; border-radius: 10px; font-weight: bold; text-decoration: none; display: block; text-align: center; margin-bottom: 10px; border: 1px solid #ffffff; }
+    .btn-mp { background-color: #009ee3; color: #ffffff !important; padding: 14px; border-radius: 10px; font-weight: bold; text-decoration: none; display: block; text-align: center; margin-bottom: 10px; border: 1px solid #ffffff; }
+    
     div.stButton > button { background-color: #1a1a1a !important; color: #d4af37 !important; border: 1px solid #d4af37 !important; width: 100%; font-weight: bold; height: 3.5em; }
     </style>
     """, unsafe_allow_html=True)
@@ -28,14 +31,15 @@ if not st.session_state.auth:
         
         if reg == "USA / GLOBAL":
             st.write("Subscription: **$12,000 USD**")
-            # FIX: WhatsApp para el de afuera también (es más seguro que el mail)
-            u_pp = "https://wa.me"
-            st.markdown(f'<a href="{u_pp}" target="_blank" class="btn-paypal">🔵 PAY WITH PAYPAL (DIRECT)</a>', unsafe_allow_html=True)
-            st.write("---")
+            # BOTÓN DE EMAIL PARA USA (PROFESIONAL)
+            u_mail = "mailto:dylanelpromaster25@://gmail.com."
+            st.markdown(f'<a href="{u_mail}" class="btn-paypal">🔵 REQUEST PAYPAL INVOICE (EMAIL)</a>', unsafe_allow_html=True)
         else:
             st.write("Suscripción: **$2.000.000 ARS**")
-            st.markdown(f'<a href="https://wa.me" class="btn-mp">💳 MERCADO PAGO / CUENTA DNI</a>', unsafe_allow_html=True)
+            # BOTÓN WHATSAPP PARA ARGENTINA
+            st.markdown(f'<a href="https://wa.me" class="btn-mp">💳 PAGAR CON MERCADO PAGO / DNI</a>', unsafe_allow_html=True)
         
+        st.write("---")
         emp_raw = st.text_input("FIRMA / COMPANY:").strip().upper()
         pw_in = st.text_input("MASTER KEY:", type="password")
         if st.button("🔓 UNLOCK VAULT"):
@@ -54,5 +58,5 @@ if st.button("🧬 SCAN"):
     with st.spinner("..."): time.sleep(1)
     st.success("VALUACIÓN: $42,500,000 USD")
 
-if st.sidebar.button("🔒 LOGOUT"):
+if st.sidebar.button("🔒 EXIT"):
     st.session_state.auth = False; st.rerun()
