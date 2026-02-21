@@ -1,75 +1,68 @@
 import streamlit as st
 import time
 
-# --- 1. LÓGICA DE SESIÓN ---
+# --- 1. CONFIGURACIÓN ---
 if 'auth' not in st.session_state: st.session_state.auth = False
+if 'payment_step' not in st.session_state: st.session_state.payment_step = None
+CEL_PAPA = "5491100000000" # <--- TU CELULAR ACÁ
 
-# --- 2. DISEÑO IMPERIAL (CSS) ---
-st.set_page_config(page_title="LEGACY | PREMIUM", layout="wide")
+# --- 2. DISEÑO IMPERIAL ---
+st.set_page_config(page_title="LEGACY | SECURE PAY", layout="wide")
 st.markdown("""
     <style>
     .stApp { background-color: #000000; border: 4px solid #d4af37; padding: 20px; }
     h1, h2, h3 { color: #d4af37 !important; text-align: center; }
     .gold-card { border: 1px solid #d4af37; padding: 15px; border-radius: 10px; background: rgba(212, 175, 55, 0.05); text-align: center; color: #d4af37; }
-    .payment-badge { background: #1a1a1a; border: 1px solid #d4af37; padding: 10px; border-radius: 8px; font-size: 0.8rem; margin: 5px; display: inline-block; width: 100%; }
+    .payment-option { background-color: #1a1a1a; color: #d4af37; border: 1px solid #d4af37; width: 100%; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; text-align: center; display: block; text-decoration: none; margin-bottom: 10px; }
+    .payment-option:hover { background-color: #d4af37; color: black; }
     div.stButton > button { background-color: #1a1a1a; color: #d4af37; border: 1px solid #d4af37; width: 100%; font-weight: bold; }
-    .custom-btn { background-color: #d4af37 !important; color: black !important; font-weight: bold !important; width: 100%; border-radius: 10px; height: 45px; }
     </style>
     """, unsafe_allow_html=True)
 
-# --- 3. PANTALLA DE ENTRADA (ESTRATEGIA DE COBRO) ---
+# --- 3. PANTALLA DE ENTRADA CON FILTRO ---
 if not st.session_state.auth:
     st.title("🏛️ LEGACY QUANTUM VAULT")
     col_l, col_c, col_r = st.columns([1, 1.5, 1])
     
     with col_c:
-        # REGIÓN / VAULT
-        v_sel = st.selectbox("📂 SELECT VAULT:", ["🇦🇷 ARGENTINA", "🇺🇸 USA"], key="v1")
-        
-        # --- SECCIÓN DE PAGOS ARRIBA DE LA CONTRA ---
+        v_sel = st.selectbox("📂 SELECT VAULT:", ["🇦🇷 ARGENTINA", "🇺🇸 USA"], key="v_sel")
         st.markdown("<div class='gold-card'>💎 ADQUIRIR TERMINAL CORPORATIVA</div>", unsafe_allow_html=True)
+        st.write("")
+
+        # PASO 1: ELEGIR EL MÉTODO (SIN CONTACTO TODAVÍA)
+        if st.session_state.payment_step is None:
+            if v_sel == "🇦🇷 ARGENTINA":
+                if st.button("💳 MERCADO PAGO"): st.session_state.payment_step = "MP"; st.rerun()
+                if st.button("🏦 CUENTA DNI"): st.session_state.payment_step = "DNI"; st.rerun()
+            else:
+                if st.button("🔵 PAYPAL / STRIPE"): st.session_state.payment_step = "USA"; st.rerun()
         
-        p1, p2 = st.columns(2)
-        if v_sel == "🇦🇷 ARGENTINA":
-            with p1: st.markdown("<div class='payment-badge'>💳 MERCADO PAGO</div>", unsafe_allow_html=True)
-            with p2: st.markdown("<div class='payment-badge'>🏦 CUENTA DNI</div>", unsafe_allow_html=True)
-            st.markdown("<h3 style='font-size:1.2rem;'>SUSCRIPCIÓN: $2.000.000 ARS</h3>", unsafe_allow_html=True)
+        # PASO 2: ELEGIR EL CANAL (SOLO SI TOCÓ EL MÉTODO)
         else:
-            with p1: st.markdown("<div class='payment-badge'>🔵 PAYPAL</div>", unsafe_allow_html=True)
-            with p2: st.markdown("<div class='payment-badge'>🛡️ STRIPE</div>", unsafe_allow_html=True)
-            st.markdown("<h3 style='font-size:1.2rem;'>SUBSCRIPTION: $12.000 USD</h3>", unsafe_allow_html=True)
-        
+            metodo = st.session_state.payment_step
+            st.info(f"Ha seleccionado: **{metodo}**. ¿Cómo desea recibir los datos de transferencia?")
+            c1, c2 = st.columns(2)
+            
+            # LINKS DE CONTACTO DINÁMICOS
+            msg_ws = f"https://wa.me{CEL_PAPA}?text=Hola,%20solicito%20datos%20de%20pago%20para%20{metodo}%20-%20Legacy%20Vault."
+            msg_ml = f"mailto:dylanelpromaster25@://gmail.com{metodo}"
+            
+            with c1: st.markdown(f'<a href="{msg_ws}" class="payment-option">🟢 WHATSAPP</a>', unsafe_allow_html=True)
+            with c2: st.markdown(f'<a href="{msg_ml}" class="payment-option">📩 EMAIL</a>', unsafe_allow_html=True)
+            
+            if st.button("⬅️ CAMBIAR MÉTODO"): st.session_state.payment_step = None; st.rerun()
+
         st.write("---")
-        
-        # IDENTIFICACIÓN Y LLAVE (GRATIS)
-        st.markdown("<p style='text-align:center; font-size:0.8rem;'>IDENTIFIQUE SU FIRMA PARA USAR SU LLAVE DE CORTESÍA</p>", unsafe_allow_html=True)
-        emp = st.text_input("FIRMA / COMPANY:", key="e1")
-        pw = st.text_input("MASTER KEY:", type="password", key="p1")
-        
-        if st.button("🔓 ACCEDER A BÓVEDA"):
+        # ACCESO CON LLAVE
+        emp = st.text_input("FIRMA / COMPANY:", key="e_fix")
+        pw = st.text_input("MASTER KEY:", type="password", key="p_fix")
+        if st.button("🔓 ACCEDER"):
             if pw == "LEGACY2026" and emp:
                 st.session_state.emp_final = emp
                 st.session_state.auth = True; st.rerun()
-            else: st.error("Firma y Llave obligatorias.")
-            
+            else: st.error("Identificación obligatoria.")
     st.stop()
 
-# --- 4. INTERIOR (COMMAND CENTER) ---
-emp = st.session_state.emp_final
-st.title(f"🏛️ TERMINAL: {emp.upper()}")
-
-st.write("---")
-# BOTÓN DE PERSONALIZACIÓN (EL NEGOCIO)
-st.markdown("<div class='gold-card'><b>¿DESEA UNA TERMINAL PERSONALIZADA?</b><br>Desarrollamos su Bóveda Privada con sus activos reales.</div>", unsafe_allow_html=True)
-asunto = f"CONSULTA%20TERMINAL%20-%20{emp}"
-mail_link = f"mailto:dylanelpromaster25@://gmail.com{asunto}"
-st.markdown(f'<a href="{mail_link}" target="_blank"><button class="custom-btn">📩 SOLICITAR DESARROLLO EXCLUSIVO (VIP)</button></a>', unsafe_allow_html=True)
-
-st.write("---")
-# ACTIVOS
-c1, c2, c3 = st.columns(3)
-with c1: st.metric("REAL ESTATE", "$85M")
-with c2: st.metric("YACHTS", "$12.5M")
-with c3: st.metric("JETS", "$24M")
-
+# --- 4. INTERIOR ---
+st.title(f"🏛️ TERMINAL: {st.session_state.emp_final.upper()}")
 if st.sidebar.button("🔒 SALIR"): st.session_state.auth = False; st.rerun()
