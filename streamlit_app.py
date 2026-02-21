@@ -13,10 +13,12 @@ if 'es_dylan' not in st.session_state: st.session_state.es_dylan = False
 st.set_page_config(page_title="LEGACY VAULT", layout="wide", initial_sidebar_state="collapsed")
 st.markdown("""
     <style>
-    /* ESTO MATA LA FLECHA DE LA IZQUIERDA PARA SIEMPRE */
+    /* ESTO ELIMINA LA FLECHA Y LA BARRA LATERAL PARA TODOS */
     [data-testid="stSidebar"], [data-testid="stSidebarNav"], .st-emotion-cache-16idsys, button[kind="headerNoPadding"] {
         display: none !important;
     }
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
     .stApp { background-color: #000; border: 2px solid #d4af37; }
     h1, h2, h3, p, label, .stMetric { color: #d4af37 !important; text-align: center !important; }
     .gold-card { border: 1px solid #d4af37; padding: 15px; border-radius: 10px; background: rgba(212, 175, 55, 0.05); text-align: center; margin-bottom: 10px; }
@@ -33,9 +35,9 @@ if not st.session_state.auth:
     with col_c:
         st.markdown("<div class='gold-card'>🔒 NODO PRIVADO</div>", unsafe_allow_html=True)
         if reg_sel == "USA / GLOBAL":
-            st.markdown(f'<a href="mailto:dylanelpromaster25@://gmail.com" class="btn-pay">🔵 PAY WITH PAYPAL (EMAIL)</a>', unsafe_allow_html=True)
+            st.markdown(f'<a href="mailto:dylanelpromaster25@gmail.com" class="btn-pay">🔵 PAY WITH PAYPAL (EMAIL)</a>', unsafe_allow_html=True)
         else:
-            st.markdown(f'<a href="mailto:dylanelpromaster25@://gmail.com" class="btn-pay">💳 PAGAR CON MERCADO PAGO (EMAIL)</a>', unsafe_allow_html=True)
+            st.markdown(f'<a href="mailto:dylanelpromaster25@gmail.com" class="btn-pay">💳 PAGO MERCADO PAGO (EMAIL)</a>', unsafe_allow_html=True)
         
         st.write("---")
         emp = st.text_input("COMPANY:").strip().upper()
@@ -53,7 +55,6 @@ if not st.session_state.auth:
                 st.session_state.reg.append(f"🟢 {emp} - {time.strftime('%H:%M')}")
                 st.session_state.auth = True; st.rerun()
             elif emp != "":
-                # SI NO ESTÁ EN LA LISTA, NO PASA AUNQUE TENGA LA CLAVE
                 st.error("🚫 ACCESO DENEGADO. FIRMA NO AUTORIZADA.")
                 st.session_state.reg.append(f"🔴 FALLO: {emp} - {time.strftime('%H:%M')}")
     st.stop()
@@ -68,10 +69,7 @@ with c3: st.metric("PRIVATE JETS", "$24,000,000")
 st.write("---")
 # IA ADVISOR
 st.subheader("🤖 IA STRATEGIC ADVISOR")
-pregunta = st.text_input("CONSULTA TÉCNICA:")
-if pregunta:
-    with st.spinner("..."):
-        time.sleep(1); st.success(f"Análisis completado para {st.session_state.emp_final}. Liquidez confirmada.")
+st.write(f"Análisis activo para {st.session_state.emp_final}. Liquidez confirmada.")
 
 # SCANNER
 st.write("---")
