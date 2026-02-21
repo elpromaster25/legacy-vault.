@@ -1,20 +1,22 @@
 import streamlit as st
 import time
 
-# --- 1. WHITELIST REAL (Los únicos autorizados) ---
+# --- 1. WHITELIST ÚNICA (Solo estos entran con la clave) ---
 VIP = ["EMAAR", "DAMAC", "NEOM", "GINEVRA", "REMAX", "SOTHEBYS", "THE AGENCY", "HINES", "JLL", "CARSO", "BARNES", "FEAU", "ZINGRAF", "GARCIN", "JUNOT", "KRETZ", "KNIGHT FRANK", "SAVILLS", "CBRE", "COLLIERS", "LEGACY", "DYLAN", "ADMIN", "TZIPINE"]
 
-# MEMORIA BLINDADA
+# MEMORIA DEL NODO
 if 'auth' not in st.session_state: st.session_state.auth = False
 if 'reg' not in st.session_state: st.session_state.reg = []
 if 'es_dylan' not in st.session_state: st.session_state.es_dylan = False
 
-# --- 2. DISEÑO SIN SIDEBAR (NO MÁS FLECHITA) ---
+# --- 2. DISEÑO IMPERIAL (SIN FLECHA / NO SIDEBAR) ---
 st.set_page_config(page_title="LEGACY VAULT", layout="wide", initial_sidebar_state="collapsed")
 st.markdown("""
     <style>
-    /* ELIMINA LA FLECHA Y EL MENU LATERAL POR COMPLETO */
-    [data-testid="stSidebar"], [data-testid="stSidebarNav"], .st-emotion-cache-16idsys { display: none !important; }
+    /* ESTO MATA LA FLECHA DE LA IZQUIERDA PARA SIEMPRE */
+    [data-testid="stSidebar"], [data-testid="stSidebarNav"], .st-emotion-cache-16idsys, button[kind="headerNoPadding"] {
+        display: none !important;
+    }
     .stApp { background-color: #000; border: 2px solid #d4af37; }
     h1, h2, h3, p, label, .stMetric { color: #d4af37 !important; text-align: center !important; }
     .gold-card { border: 1px solid #d4af37; padding: 15px; border-radius: 10px; background: rgba(212, 175, 55, 0.05); text-align: center; margin-bottom: 10px; }
@@ -23,7 +25,7 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# --- 3. LOGIN CON DOBLE CANDADO ---
+# --- 3. LOGIN CON DOBLE CANDADO (EMPRESA + CLAVE) ---
 if not st.session_state.auth:
     st.title("🏛️ LEGACY QUANTUM VAULT")
     reg_sel = st.selectbox("🌐 REGION:", ["USA / GLOBAL", "ARGENTINA"])
@@ -40,50 +42,51 @@ if not st.session_state.auth:
         pw = st.text_input("KEY:", type="password")
         
         if st.button("🔓 UNLOCK"):
-            # ENTRADA MAESTRA (DYLAN)
+            # ENTRADA MAESTRA (SOLO DYLAN)
             if emp == "DYLAN777" and pw == "LEGACY2026":
                 st.session_state.es_dylan = True
                 st.session_state.emp_final = "FOUNDER CONTROL"
                 st.session_state.auth = True; st.rerun()
-            # ENTRADA CLIENTES (VALIDA EMPRESA Y CLAVE)
+            # ENTRADA CLIENTES (VALORAMOS EMPRESA Y CLAVE)
             elif pw == "LEGACY2026" and emp in VIP:
                 st.session_state.emp_final = emp
                 st.session_state.reg.append(f"🟢 {emp} - {time.strftime('%H:%M')}")
                 st.session_state.auth = True; st.rerun()
             elif emp != "":
+                # SI NO ESTÁ EN LA LISTA, NO PASA AUNQUE TENGA LA CLAVE
                 st.error("🚫 ACCESO DENEGADO. FIRMA NO AUTORIZADA.")
-                st.session_state.reg.append(f"🔴 ERROR: {emp} - {time.strftime('%H:%M')}")
+                st.session_state.reg.append(f"🔴 FALLO: {emp} - {time.strftime('%H:%M')}")
     st.stop()
 
 # --- 4. INTERIOR DEL IMPERIO ---
 st.title(f"🏛️ TERMINAL: {st.session_state.emp_final}")
 c1, c2, c3 = st.columns(3)
-with c1: st.metric("REAL ESTATE", "$85M")
-with c2: st.metric("YACHTS", "$12.5M")
-with c3: st.metric("PRIVATE JETS", "$24M")
+with c1: st.metric("REAL ESTATE", "$85,000,000")
+with c2: st.metric("YACHTS", "$12,500,000")
+with c3: st.metric("PRIVATE JETS", "$24,000,000")
 
 st.write("---")
-# IA ADVISOR (RESTABLECIDA)
+# IA ADVISOR
 st.subheader("🤖 IA STRATEGIC ADVISOR")
-p = st.text_input("CONSULTA TÉCNICA:")
-if p:
-    with st.spinner("Analizando..."):
-        time.sleep(1); st.success(f"Análisis completado para {st.session_state.emp_final}. Liquidez Óptima.")
+pregunta = st.text_input("CONSULTA TÉCNICA:")
+if pregunta:
+    with st.spinner("..."):
+        time.sleep(1); st.success(f"Análisis completado para {st.session_state.emp_final}. Liquidez confirmada.")
 
-st.write("---")
 # SCANNER
+st.write("---")
 st.subheader("🧬 QUANTUM ASSET SCANNER")
 if st.button("🧬 INICIAR ESCANEO"):
-    with st.spinner("..."):
-        time.sleep(1.5); st.markdown(f"<div class='gold-card'><h2>VALUACIÓN: $42,500,000 USD</h2></div>", unsafe_allow_html=True)
+    with st.spinner("Escaneando..."):
+        time.sleep(1); st.markdown(f"<div class='gold-card'><h2>VALUACIÓN: $42,500,000 USD</h2></div>", unsafe_allow_html=True)
 
-# --- 5. EL RADAR FANTASMA (SOLO PARA DYLAN) ---
+# --- 5. EL RADAR INVISIBLE (SOLO PARA DYLAN) ---
 if st.session_state.es_dylan:
     st.write("---")
-    with st.expander("🕵️‍♂️ RADAR DE IMPACTOS (SECRET FOUNDER MODE)"):
-        for r in st.session_state.reg: st.info(r)
+    st.subheader("🕵️‍♂️ RADAR DE IMPACTOS (SECRET MODE)")
+    for r in st.session_state.reg: st.info(r)
 
-if st.button("🔒 LOGOUT"):
+if st.button("🔒 LOGOUT (CERRAR NODO)"):
     st.session_state.auth = False
     st.session_state.es_dylan = False
     st.rerun()
