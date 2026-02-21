@@ -1,104 +1,83 @@
 import streamlit as st
 import time
 
-# --- 1. BASE DE DATOS DE LOS 34 MISILES (WHITELIST) ---
-VIP = [
-    "EMAAR", "DAMAC", "NAKHEEL", "AZIZI", "NEOM", 
-    "GINEVRA", "REMAX", "SOTHEBYS", "NEST SEEKERS", "ALVEAR", 
-    "THE AGENCY", "HINES", "JLL", "DOUGLAS ELLIMAN", "FORTUNE", 
-    "CARSO", "ABILIA", "GICSA", "BE GRAND", "TERRA", 
-    "BARNES", "FEAU", "ZINGRAF", "GARCIN", "JUNOT", "KRETZ", 
-    "KNIGHT FRANK", "SAVILLS", "CBRE", "COLLIERS", 
-    "LEGACY", "DYLAN", "ADMIN", "TZIPINE", "USER", "GUEST"
-]
+# --- 1. WHITELIST DE ELITE ---
+VIP = ["EMAAR", "DAMAC", "NEOM", "GINEVRA", "REMAX", "SOTHEBYS", "THE AGENCY", "HINES", "JLL", "CARSO", "LEGACY", "DYLAN", "ADMIN", "TZIPINE"]
 
+# MEMORIA DEL NODO
 if 'auth' not in st.session_state: st.session_state.auth = False
 if 'reg' not in st.session_state: st.session_state.reg = []
+if 'is_admin' not in st.session_state: st.session_state.is_admin = False
 
-# --- 2. DISEÑO IMPERIAL (MÁXIMO CONTRASTE) ---
-st.set_page_config(page_title="LEGACY GOLD VAULT", layout="wide")
+# --- 2. DISEÑO IMPERIAL LIGHTSPEED ---
+st.set_page_config(page_title="LEGACY VAULT", layout="wide")
 st.markdown("""
     <style>
-    .stApp { background-color: #000000; border: 5px solid #d4af37; padding: 20px; }
+    .stApp { background-color: #000; border: 2px solid #d4af37; }
     h1, h2, h3, p, label, .stMetric { color: #d4af37 !important; text-align: center !important; }
-    .gold-card { border: 1px solid #d4af37; padding: 20px; border-radius: 15px; background: rgba(212, 175, 55, 0.05); text-align: center; margin-bottom: 20px; }
-    .ticker-wrap { width: 100%; overflow: hidden; border-bottom: 1px solid #d4af37; padding: 10px 0; margin-bottom: 30px; }
-    .ticker-move { display: inline-block; white-space: nowrap; padding-left: 100%; animation: marquee 30s linear infinite; color: #d4af37; font-weight: bold; }
-    @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
-    
-    /* BOTONES DE PAGO CON CONTRASTE */
-    .btn-paypal { background-color: #0070ba; color: #ffffff !important; padding: 14px; border-radius: 10px; font-weight: bold; text-decoration: none; display: block; text-align: center; margin-bottom: 10px; border: 1px solid #fff; }
-    .btn-mp { background-color: #009ee3; color: #ffffff !important; padding: 14px; border-radius: 10px; font-weight: bold; text-decoration: none; display: block; text-align: center; margin-bottom: 10px; border: 1px solid #fff; }
-    .btn-dni { background-color: #004d40; color: #ffffff !important; padding: 14px; border-radius: 10px; font-weight: bold; text-decoration: none; display: block; text-align: center; margin-bottom: 10px; border: 1px solid #fff; }
-    
-    div.stButton > button { background-color: #1a1a1a !important; color: #d4af37 !important; border: 1px solid #d4af37 !important; width: 100%; font-weight: bold; height: 3.5em; }
+    .gold-card { border: 1px solid #d4af37; padding: 15px; border-radius: 10px; background: rgba(212, 175, 55, 0.03); text-align: center; margin-bottom: 10px; }
+    .btn-pay { background-color: #1a1a1a; color: #fff !important; padding: 12px; border-radius: 8px; font-weight: bold; text-decoration: none; display: block; text-align: center; margin-bottom: 8px; border: 1px solid #d4af37; }
+    div.stButton > button { background-color: #d4af37 !important; color: #000 !important; width: 100%; font-weight: bold; border-radius: 5px; }
     </style>
     """, unsafe_allow_html=True)
 
-# --- 3. RADAR DE IMPACTO (SIDEBAR) ---
-with st.sidebar:
-    st.markdown("### 🛡️ CONTROL FUNDADOR")
-    with st.form("admin_panel"):
-        pin = st.text_input("ADMIN PIN:", type="password", key="p_adm")
-        check = st.form_submit_button("🛰️ SCAN NETWORK")
-        if check and pin == "DYLAN777":
-            st.success("BIENVENIDO DYLAN.")
-            if st.session_state.reg:
-                for r in st.session_state.reg: st.info(r)
-            else: st.warning("NODOS EN ESCUCHA...")
-        elif check: st.error("PIN INVÁLIDO")
-    if st.button("🔒 LOGOUT / SALIR"):
-        st.session_state.auth = False; st.rerun()
-
-# --- 4. ACCESO AL BÚNKER (USA/ARG) ---
+# --- 3. LOGIN BLINDADO (LA PUERTA) ---
 if not st.session_state.auth:
     st.title("🏛️ LEGACY QUANTUM VAULT")
-    reg_sel = st.selectbox("🌐 SELECT REGION / ELIJA REGIÓN:", ["USA / GLOBAL", "ARGENTINA"])
+    reg = st.selectbox("🌐 REGION:", ["USA / GLOBAL", "ARGENTINA"])
+    
     _, col_c, _ = st.columns([1, 1.5, 1])
     with col_c:
-        st.markdown("<div class='gold-card'>🔒 NODO PRIVADO AUTORIZADO</div>", unsafe_allow_html=True)
-        if reg_sel == "USA / GLOBAL":
-            st.write("Subscription: **$12,000 USD**")
-            st.markdown(f'<a href="mailto:dylanelpromaster25@://gmail.com" class="btn-paypal">🔵 PAY WITH PAYPAL (USD)</a>', unsafe_allow_html=True)
-        else:
-            st.write("Suscripción: **$2.000.000 ARS**")
-            # BOTONES DE ARGENTINA RESTAURADOS
-            st.markdown(f'<a href="https://wa.me" class="btn-mp">💳 PAGAR CON MERCADO PAGO</a>', unsafe_allow_html=True)
-            st.markdown(f'<a href="https://wa.me" class="btn-dni">🏦 PAGAR CON CUENTA DNI</a>', unsafe_allow_html=True)
+        st.markdown("<div class='gold-card'>🔒 NODO PRIVADO</div>", unsafe_allow_html=True)
         
+        # BOTONES DE EMAIL (DIRECTOS)
+        if reg == "USA / GLOBAL":
+            m_pp = "mailto:dylanelpromaster25@://gmail.com"
+            st.markdown(f'<a href="{m_pp}" class="btn-pay">🔵 REQUEST PAYPAL LINK (EMAIL)</a>', unsafe_allow_html=True)
+        else:
+            m_mp = "mailto:dylanelpromaster25@://gmail.com"
+            st.markdown(f'<a href="{m_mp}" class="btn-pay">💳 PAGAR CON MERCADO PAGO (EMAIL)</a>', unsafe_allow_html=True)
+
         st.write("---")
-        emp_raw = st.text_input("IDENTIFIQUE SU FIRMA / COMPANY:").strip().upper()
-        pw_in = st.text_input("MASTER KEY:", type="password")
-        if st.button("🔓 UNLOCK VAULT"):
-            if pw_in == "LEGACY2026" and emp_raw in VIP:
-                st.session_state.emp_final = emp_raw
-                st.session_state.reg.append(f"🟢 {emp_raw} - {time.strftime('%H:%M')}")
+        emp = st.text_input("COMPANY:").strip().upper()
+        pw = st.text_input("KEY:", type="password")
+        
+        if st.button("🔓 UNLOCK"):
+            # 🕵️‍♂️ TU ENTRADA SECRETA DE ADMIN (Invisble para el resto)
+            if emp == "DYLAN777" and pw == "LEGACY2026":
+                st.session_state.is_admin = True
+                st.session_state.emp_final = "FOUNDER CONTROL"
                 st.session_state.auth = True; st.rerun()
-            elif emp_raw != "":
-                st.error(f"🚫 FIRMA '{emp_raw}' NO RECONOCIDA.")
-                st.warning("⚠️ Contact support for VIP access: dylanelpromaster25@gmail.com")
-                st.session_state.reg.append(f"🔴 ERROR: {emp_raw} - {time.strftime('%H:%M')}")
+            # Entrada de Clientes
+            elif pw == "LEGACY2026" and emp in VIP:
+                st.session_state.emp_final = emp
+                st.session_state.reg.append(f"🟢 {emp} - {time.strftime('%H:%M')}")
+                st.session_state.auth = True; st.rerun()
+            elif emp != "":
+                st.error(f"🚫 FIRMA '{emp}' NO RECONOCIDA.")
+                st.warning("Support: dylanelpromaster25@gmail.com")
+                st.session_state.reg.append(f"🔴 ERROR: {emp} - {time.strftime('%H:%M')}")
     st.stop()
 
-# --- 5. INTERIOR TOTAL ---
-emp = st.session_state.emp_final
-st.title(f"🏛️ TERMINAL EXCLUSIVA: {emp}")
-st.markdown(f'<div class="ticker-wrap"><div class="ticker-move">🏦 MARKET LIVE | BTC: 96,840 | GOLD: 2,045 | NODE: {emp} 🏛️</div></div>', unsafe_allow_html=True)
+# --- 4. INTERIOR ---
+st.title(f"🏛️ TERMINAL: {st.session_state.emp_final}")
 
-# MÉTRICAS
-_, c1, c2, c3, _ = st.columns([0.1, 1, 1, 1, 0.1])
-with c1: st.metric("REAL ESTATE", "$85,000,000")
-with c2: st.metric("YACHTS", "$12,500,000")
-with c3: st.metric("PRIVATE JETS", "$24,000,000")
+# SI SOS VOS, APARECE EL RADAR. SI ES UN CLIENTE, NO VE NADA.
+if st.session_state.is_admin:
+    with st.expander("🕵️‍♂️ RADAR DE IMPACTOS (MODO FOUNDER)"):
+        for r in st.session_state.reg: st.info(r)
+
+c1, c2, c3 = st.columns(3)
+with c1: st.metric("REAL ESTATE", "$85M")
+with c2: st.metric("YACHTS", "$12.5M")
+with c3: st.metric("PRIVATE JETS", "$24M")
 
 st.write("---")
-# IA Y SCANNER
-st.subheader("🤖 IA STRATEGIC ADVISOR")
-st.info(f"Análisis activo para **{emp}**. Portafolio en estado SOLVENTE.")
+st.subheader("🧬 SCANNER")
+if st.button("🧬 SCAN"):
+    with st.spinner("..."): time.sleep(1); st.success("VALUACIÓN: $42,500,000 USD")
 
-st.subheader("🧬 QUANTUM ASSET SCANNER")
-act = st.text_area("LISTA DE ACTIVOS:", key="sc_in_final")
-if st.button("🧬 INICIAR ESCANEO"):
-    if act:
-        with st.spinner("Escaneando..."):
-            time.sleep(1.5); st.success("VALUACIÓN DETECTADA: $42,500,000 USD")
+if st.sidebar.button("🔒 LOGOUT"):
+    st.session_state.auth = False
+    st.session_state.is_admin = False
+    st.rerun()
