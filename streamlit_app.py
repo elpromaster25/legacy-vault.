@@ -1,33 +1,29 @@
 import streamlit as st
 import time
 
-# --- 1. WHITELIST ÚNICA (Solo estos entran con la clave) ---
-VIP = ["EMAAR", "DAMAC", "NEOM", "GINEVRA", "REMAX", "SOTHEBYS", "THE AGENCY", "HINES", "JLL", "CARSO", "BARNES", "FEAU", "ZINGRAF", "GARCIN", "JUNOT", "KRETZ", "KNIGHT FRANK", "SAVILLS", "CBRE", "COLLIERS", "LEGACY", "DYLAN", "ADMIN", "TZIPINE"]
+# --- 1. LISTA MAESTRA DE LOS 34 GIGANTES (WHITELIST) ---
+VIP = ["EMAAR", "DAMAC", "NAKHEEL", "AZIZI", "NEOM", "GINEVRA", "REMAX", "SOTHEBYS", "NEST SEEKERS", "ALVEAR", "THE AGENCY", "HINES", "JLL", "DOUGLAS ELLIMAN", "FORTUNE", "CARSO", "ABILIA", "GICSA", "BE GRAND", "TERRA", "BARNES", "FEAU", "ZINGRAF", "GARCIN", "JUNOT", "KRETZ", "KNIGHT FRANK", "SAVILLS", "CBRE", "COLLIERS", "LEGACY", "DYLAN", "ADMIN", "TZIPINE"]
 
-# MEMORIA DEL NODO
 if 'auth' not in st.session_state: st.session_state.auth = False
 if 'reg' not in st.session_state: st.session_state.reg = []
-if 'es_dylan' not in st.session_state: st.session_state.es_dylan = False
+if 'founder' not in st.session_state: st.session_state.founder = False
 
-# --- 2. DISEÑO IMPERIAL (SIN FLECHA / NO SIDEBAR) ---
+# --- 2. DISEÑO IMPERIAL (SIN FLECHA / ALTO CONTRASTE) ---
 st.set_page_config(page_title="LEGACY VAULT", layout="wide", initial_sidebar_state="collapsed")
 st.markdown("""
     <style>
-    /* ESTO ELIMINA LA FLECHA Y LA BARRA LATERAL PARA TODOS */
-    [data-testid="stSidebar"], [data-testid="stSidebarNav"], .st-emotion-cache-16idsys, button[kind="headerNoPadding"] {
-        display: none !important;
-    }
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
+    /* ESTO MATA LA FLECHA Y EL MENU PARA TODOS */
+    [data-testid="stSidebar"], [data-testid="stSidebarNav"], button[kind="headerNoPadding"] { display: none !important; }
     .stApp { background-color: #000; border: 2px solid #d4af37; }
     h1, h2, h3, p, label, .stMetric { color: #d4af37 !important; text-align: center !important; }
     .gold-card { border: 1px solid #d4af37; padding: 15px; border-radius: 10px; background: rgba(212, 175, 55, 0.05); text-align: center; margin-bottom: 10px; }
-    .btn-pay { background-color: #1a1a1a; color: #fff !important; padding: 12px; border-radius: 8px; font-weight: bold; text-decoration: none; display: block; text-align: center; margin-bottom: 8px; border: 1px solid #d4af37; }
+    .btn-pay { background-color: #1a1a1a; color: #ffffff !important; padding: 12px; border-radius: 8px; font-weight: bold; text-decoration: none; display: block; text-align: center; margin-bottom: 8px; border: 1px solid #d4af37; }
+    .btn-mp { background-color: #009ee3; color: #ffffff !important; }
     div.stButton > button { background-color: #d4af37 !important; color: #000 !important; width: 100%; font-weight: bold; }
     </style>
     """, unsafe_allow_html=True)
 
-# --- 3. LOGIN CON DOBLE CANDADO (EMPRESA + CLAVE) ---
+# --- 3. LOGIN CON DOBLE CANDADO ---
 if not st.session_state.auth:
     st.title("🏛️ LEGACY QUANTUM VAULT")
     reg_sel = st.selectbox("🌐 REGION:", ["USA / GLOBAL", "ARGENTINA"])
@@ -37,54 +33,29 @@ if not st.session_state.auth:
         if reg_sel == "USA / GLOBAL":
             st.markdown(f'<a href="mailto:dylanelpromaster25@gmail.com" class="btn-pay">🔵 PAY WITH PAYPAL (EMAIL)</a>', unsafe_allow_html=True)
         else:
-            st.markdown(f'<a href="mailto:dylanelpromaster25@gmail.com" class="btn-pay">💳 PAGO MERCADO PAGO (EMAIL)</a>', unsafe_allow_html=True)
-        
+            st.markdown(f'<a href="mailto:dylanelpromaster25@gmail.com" class="btn-pay" style="background:#009ee3;">💳 MERCADO PAGO / DNI (EMAIL)</a>', unsafe_allow_html=True)
         st.write("---")
         emp = st.text_input("COMPANY:").strip().upper()
         pw = st.text_input("KEY:", type="password")
-        
         if st.button("🔓 UNLOCK"):
-            # ENTRADA MAESTRA (SOLO DYLAN)
             if emp == "DYLAN777" and pw == "LEGACY2026":
-                st.session_state.es_dylan = True
-                st.session_state.emp_final = "FOUNDER CONTROL"
-                st.session_state.auth = True; st.rerun()
-            # ENTRADA CLIENTES (VALORAMOS EMPRESA Y CLAVE)
+                st.session_state.founder = True; st.session_state.emp_final = "FOUNDER CONTROL"; st.session_state.auth = True; st.rerun()
             elif pw == "LEGACY2026" and emp in VIP:
-                st.session_state.emp_final = emp
-                st.session_state.reg.append(f"🟢 {emp} - {time.strftime('%H:%M')}")
-                st.session_state.auth = True; st.rerun()
+                st.session_state.emp_final = emp; st.session_state.reg.append(f"🟢 {emp} - {time.strftime('%H:%M')}"); st.session_state.auth = True; st.rerun()
             elif emp != "":
-                st.error("🚫 ACCESO DENEGADO. FIRMA NO AUTORIZADA.")
-                st.session_state.reg.append(f"🔴 FALLO: {emp} - {time.strftime('%H:%M')}")
+                st.error("🚫 DENEGADO."); st.session_state.reg.append(f"🔴 ERROR: {emp} - {time.strftime('%H:%M')}")
     st.stop()
 
-# --- 4. INTERIOR DEL IMPERIO ---
+# --- 4. INTERIOR TOTAL ---
 st.title(f"🏛️ TERMINAL: {st.session_state.emp_final}")
-c1, c2, c3 = st.columns(3)
-with c1: st.metric("REAL ESTATE", "$85,000,000")
-with c2: st.metric("YACHTS", "$12,500,000")
-with c3: st.metric("PRIVATE JETS", "$24,000,000")
-
+if st.session_state.founder:
+    with st.expander("🕵️‍♂️ RADAR (SOLO DYLAN)"):
+        for r in st.session_state.reg: st.info(r)
+st.metric("REAL ESTATE", "$85,000,000")
 st.write("---")
-# IA ADVISOR
-st.subheader("🤖 IA STRATEGIC ADVISOR")
-st.write(f"Análisis activo para {st.session_state.emp_final}. Liquidez confirmada.")
+st.subheader("🧬 SCANNER")
+if st.button("🧬 SCAN"):
+    with st.spinner("..."): time.sleep(1); st.success("VALUACIÓN: $42,500,000 USD")
 
-# SCANNER
-st.write("---")
-st.subheader("🧬 QUANTUM ASSET SCANNER")
-if st.button("🧬 INICIAR ESCANEO"):
-    with st.spinner("Escaneando..."):
-        time.sleep(1); st.markdown(f"<div class='gold-card'><h2>VALUACIÓN: $42,500,000 USD</h2></div>", unsafe_allow_html=True)
-
-# --- 5. EL RADAR INVISIBLE (SOLO PARA DYLAN) ---
-if st.session_state.es_dylan:
-    st.write("---")
-    st.subheader("🕵️‍♂️ RADAR DE IMPACTOS (SECRET MODE)")
-    for r in st.session_state.reg: st.info(r)
-
-if st.button("🔒 LOGOUT (CERRAR NODO)"):
-    st.session_state.auth = False
-    st.session_state.es_dylan = False
-    st.rerun()
+if st.button("🔒 LOGOUT"):
+    st.session_state.auth = False; st.session_state.founder = False; st.rerun()
