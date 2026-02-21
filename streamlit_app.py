@@ -1,15 +1,15 @@
 import streamlit as st
 import time
 
-# --- 1. BASE DE DATOS DE LOS 34 MISILES (AUTORIZADOS) ---
+# --- 1. BASE DE DATOS DE LOS 34 MISILES (WHITELIST) ---
 VIP = [
-    "EMAAR", "DAMAC", "NAKHEEL", "AZIZI", "NEOM", # DUBAI / ARABIA
-    "GINEVRA", "REMAX", "SOTHEBYS", "NEST SEEKERS", "ALVEAR", # ARG / LATAM
-    "THE AGENCY", "HINES", "JLL", "DOUGLAS ELLIMAN", "FORTUNE", # USA
-    "CARSO", "ABILIA", "GICSA", "BE GRAND", "TERRA", # MEXICO
-    "BARNES", "FEAU", "ZINGRAF", "GARCIN", "JUNOT", "KRETZ", # FRANCIA
-    "KNIGHT FRANK", "SAVILLS", "CBRE", "COLLIERS", # LONDRES / GLOBAL
-    "LEGACY", "DYLAN", "ADMIN", "TZIPINE" # TUS CLAVES
+    "EMAAR", "DAMAC", "NAKHEEL", "AZIZI", "NEOM", 
+    "GINEVRA", "REMAX", "SOTHEBYS", "NEST SEEKERS", "ALVEAR", 
+    "THE AGENCY", "HINES", "JLL", "DOUGLAS ELLIMAN", "FORTUNE", 
+    "CARSO", "ABILIA", "GICSA", "BE GRAND", "TERRA", 
+    "BARNES", "FEAU", "ZINGRAF", "GARCIN", "JUNOT", "KRETZ", 
+    "KNIGHT FRANK", "SAVILLS", "CBRE", "COLLIERS", 
+    "LEGACY", "DYLAN", "ADMIN", "TZIPINE", "USER", "GUEST"
 ]
 
 if 'auth' not in st.session_state: st.session_state.auth = False
@@ -22,8 +22,6 @@ st.markdown("""
     .stApp { background-color: #000; border: 5px solid #d4af37; padding: 20px; }
     h1, h2, h3, p, label, .stMetric { color: #d4af37 !important; text-align: center !important; }
     .gold-card { border: 1px solid #d4af37; padding: 20px; border-radius: 15px; background: rgba(212, 175, 55, 0.05); text-align: center; margin-bottom: 20px; }
-    .btn-paypal { background-color: #0070ba; color: white !important; padding: 14px; border-radius: 10px; font-weight: bold; text-decoration: none; display: block; text-align: center; margin-bottom: 10px; border: 1px solid #fff; }
-    .btn-mp { background-color: #009ee3; color: white !important; padding: 14px; border-radius: 10px; font-weight: bold; text-decoration: none; display: block; text-align: center; margin-bottom: 10px; border: 1px solid #fff; }
     div.stButton > button { background-color: #1a1a1a !important; color: #d4af37 !important; border: 1px solid #d4af37 !important; width: 100%; font-weight: bold; height: 3.5em; }
     </style>
     """, unsafe_allow_html=True)
@@ -52,12 +50,12 @@ if not st.session_state.auth:
         st.markdown("<div class='gold-card'>🔒 NODO PRIVADO AUTORIZADO</div>", unsafe_allow_html=True)
         if reg_sel == "USA / GLOBAL":
             st.write("Subscription: **$12,000 USD**")
-            st.markdown(f'<a href="mailto:dylanelpromaster25@gmail.com" class="btn-paypal">🔵 PAY WITH PAYPAL (USD)</a>', unsafe_allow_html=True)
+            st.markdown(f'<a href="mailto:dylanelpromaster25@gmail.com" style="text-decoration:none;"><div style="background:#0070ba; color:white; padding:10px; border-radius:10px; text-align:center; font-weight:bold;">🔵 PAY WITH PAYPAL (USD)</div></a>', unsafe_allow_html=True)
         else:
             st.write("Suscripción: **$2.000.000 ARS**")
-            st.markdown(f'<a href="https://wa.me" class="btn-mp">💳 MERCADO PAGO / DNI</a>', unsafe_allow_html=True)
+            st.markdown(f'<a href="https://wa.me" style="text-decoration:none;"><div style="background:#009ee3; color:white; padding:10px; border-radius:10px; text-align:center; font-weight:bold;">💳 MERCADO PAGO / DNI</div></a>', unsafe_allow_html=True)
         st.write("---")
-        emp_raw = st.text_input("IDENTIFIQUE SU FIRMA / COMPANY:").strip().upper()
+        emp_raw = st.text_input("FIRMA / COMPANY:").strip().upper()
         pw_in = st.text_input("MASTER KEY:", type="password")
         if st.button("🔓 UNLOCK VAULT"):
             if pw_in == "LEGACY2026" and emp_raw in VIP:
@@ -65,13 +63,14 @@ if not st.session_state.auth:
                 st.session_state.reg.append(f"🟢 {emp_raw} - {time.strftime('%H:%M')}")
                 st.session_state.auth = True; st.rerun()
             elif emp_raw != "":
-                st.error("ACCESO DENEGADO")
+                st.error("DENEGADO")
                 st.session_state.reg.append(f"🔴 ERROR: {emp_raw} - {time.strftime('%H:%M')}")
     st.stop()
 
-# --- 5. INTERIOR TOTAL ---
+# --- 5. INTERIOR DEL IMPERIO ---
 st.title(f"🏛️ TERMINAL EXCLUSIVA: {st.session_state.emp_final}")
 st.metric("REAL ESTATE", "$85,000,000")
+st.write("---")
 st.subheader("🧬 QUANTUM ASSET SCANNER")
 if st.button("🧬 INICIAR ESCANEO"):
     with st.spinner("Escaneando..."):
