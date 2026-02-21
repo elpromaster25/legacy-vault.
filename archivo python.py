@@ -2,17 +2,15 @@ import streamlit as st
 import time
 
 # --- 1. BASE DE DATOS DE EMPRESAS AUTORIZADAS (WHITELIST) ---
-# El sistema ahora es inteligente: no importa si escriben con minúsculas.
 EMPRESAS_VIP = [
     "EMAAR", "DAMAC", "GINEVRA", "REMAX", "SOTHEBYS", "NEST SEEKERS", 
     "THE AGENCY", "HINES", "JLL", "CARSO", "ABILIA", "GICSA", "BE GRAND",
-    "DYLAN777", "ADMIN", "LEGACY", "LEGACY VAULT", "GUEST", "USER", "DYLAN"
+    "DYLAN777", "ADMIN", "LEGACY", "LEGACY VAULT", "DYLAN", "USER", "GUEST"
 ]
 
 # --- 2. LÓGICA DE SESIÓN ---
 if 'auth' not in st.session_state: st.session_state.auth = False
 if 'registros' not in st.session_state: st.session_state.registros = []
-if 'pago_step' not in st.session_state: st.session_state.pago_step = None
 
 # --- 3. DISEÑO IMPERIAL (CENTRADO Y DORADO) ---
 st.set_page_config(page_title="LEGACY GOLD VAULT", layout="wide")
@@ -35,12 +33,8 @@ if not st.session_state.auth:
     _, col_c, _ = st.columns([1, 1.5, 1])
     with col_c:
         st.markdown("<div class='gold-card'>🔒 ACCESO RESTRINGIDO A NODOS AUTORIZADOS</div>", unsafe_allow_html=True)
-        
-        # FIRMA CON LIMPIEZA AUTOMÁTICA
         emp_raw = st.text_input("IDENTIFIQUE SU FIRMA / COMPANY:", key="login_emp")
-        # El .strip() borra espacios locos y .upper() lo hace compatible con la lista
         emp_clean = emp_raw.strip().upper() 
-        
         pw_input = st.text_input("MASTER KEY:", type="password", key="login_pw")
         
         if st.button("🔓 VALIDAR CREDENCIALES"):
@@ -53,7 +47,7 @@ if not st.session_state.auth:
                 st.session_state.registros.append(f"🔴 FALLO: {emp_clean} - {time.strftime('%H:%M')}")
     st.stop()
 
-# --- 5. INTERIOR TOTAL (EL BÚNKER DE ORO) ---
+# --- 5. INTERIOR TOTAL (EL BÚNKER COMPLETO) ---
 emp = st.session_state.emp_final
 st.title(f"🏛️ TERMINAL EXCLUSIVA: {emp}")
 
@@ -62,9 +56,9 @@ st.markdown(f'<div class="ticker-wrap"><div class="ticker-move">🏦 LIVE MARKET
 
 # MÉTRICAS CENTRADAS
 _, c1, c2, c3, _ = st.columns([0.1, 1, 1, 1, 0.1])
-with c1: st.metric("REAL ESTATE", "$85M")
-with c2: st.metric("YACHTS", "$12.5M")
-with c3: st.metric("PRIVATE JETS", "$24M")
+with c1: st.metric("REAL ESTATE", "$85,000,000")
+with c2: st.metric("YACHTS", "$12,500,000")
+with c3: st.metric("PRIVATE JETS", "$24,000,000")
 
 st.write("---")
 
@@ -72,38 +66,39 @@ st.write("---")
 st.subheader(f"🤖 ESTRATEGA IA PARA {emp}")
 _, col_ia, _ = st.columns([0.5, 2, 0.5])
 with col_ia:
-    q = st.text_input("CONSULTA TÉCNICA:", key="q_ia")
+    q = st.text_input("CONSULTA TÉCNICA:", key="q_ia_final")
     if q:
         with st.spinner("Analizando..."):
             time.sleep(1)
-            st.markdown(f"<div class='gold-card'>🏛️ <b>IA ADVISOR:</b> Análisis completado para {emp}. Estado: SOLVENTE.</div>", unsafe_allow_html=True)
+            st.markdown(f"<div class='gold-card'>🏛️ <b>IA ADVISOR:</b> Análisis completado para {emp}. Estado: SOLVENTE. Recomienda diversificar en oro.</div>", unsafe_allow_html=True)
 
 st.write("---")
 
-# SCANNER
-st.subheader("🧬 SCANNER DE ACTIVOS")
+# SCANNER DE ACTIVOS (RESTAURADO)
+st.subheader("🧬 SCANNER DE ACTIVOS PATRIMONIALES")
 _, col_sc, _ = st.columns([0.5, 2, 0.5])
 with col_sc:
-    activos = st.text_area("LISTA DE ACTIVOS:", placeholder="Ej: 2 Ferraris...", key="sc_in")
-    if st.button("🧬 INICIAR ESCANEO"):
+    activos = st.text_area("LISTA DE ACTIVOS:", placeholder="Ej: 2 Ferraris, Mansión en Miami...", key="sc_in_final")
+    if st.button("🧬 INICIAR ESCANEO QUÁNTICO"):
         if activos:
-            with st.status("Escaneando...", expanded=True) as s:
-                time.sleep(1); s.update(label="Escaneo Finalizado ✅", state="complete")
-            st.markdown(f"<div class='gold-card'><h3>💎 VALUACIÓN DETECTADA</h3><h2 style='color:#d4af37;'>$42,500,000 USD</h2></div>", unsafe_allow_html=True)
+            with st.status("Escaneando activos...", expanded=True) as s:
+                time.sleep(1.5); s.update(label="Escaneo Finalizado ✅", state="complete")
+            st.markdown(f"<div class='gold-card'><h3>💎 VALUACIÓN DETECTADA</h3><p>Activos analizados: <b>{activos}</b></p><h2 style='color:#d4af37;'>$42,500,000 USD</h2></div>", unsafe_allow_html=True)
+        else: st.warning("Ingrese activos para el escaneo.")
 
 st.write("---")
 
-# RELOJES
+# RELOJES (SIMÉTRICOS)
 _, r1, r2, r3, _ = st.columns([0.1, 1, 1, 1, 0.1])
 with r1: st.markdown("<div class='gold-card'>🗽 NY: 11:50 PM</div>", unsafe_allow_html=True)
-with r2: st.markdown("<div class='gold-card'>🏢 BA: 05:40 AM</div>", unsafe_allow_html=True)
-with r3: st.markdown("<div class='gold-card'>🏰 LN: 08:40 AM</div>", unsafe_allow_html=True)
+with r2: st.markdown("<div class='gold-card'>🏢 BA: 05:41 AM</div>", unsafe_allow_html=True)
+with r3: st.markdown("<div class='gold-card'>🏰 LN: 08:41 AM</div>", unsafe_allow_html=True)
 
 # SIDEBAR ADMIN
-st.sidebar.markdown("### 🛡️ CONTROL")
-if st.sidebar.text_input("ADMIN PIN:", type="password") == "DYLAN777":
+st.sidebar.markdown("### 🛡️ RADAR")
+if st.sidebar.text_input("PIN ADMIN:", type="password") == "DYLAN777":
+    st.sidebar.success("BIENVENIDO DYLAN")
     for r in st.session_state.registros: st.sidebar.info(r)
 
 if st.sidebar.button("🔒 SALIR"):
-    st.session_state.auth = False
-    st.rerun()
+    st.session_state.auth = False; st.rerun()
