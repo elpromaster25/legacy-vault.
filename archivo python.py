@@ -4,37 +4,29 @@ import time
 # --- 1. LÓGICA ---
 if 'auth' not in st.session_state: st.session_state.auth = False
 
-# --- 2. DISEÑO IMPERIAL (ANIMACIÓN REPARADA) ---
+# --- 2. DISEÑO IMPERIAL (BORRANDO RASTROS) ---
 st.set_page_config(page_title="LEGACY GOLD VAULT", layout="wide")
 st.markdown("""
     <style>
     .stApp { background-color: #000000; border: 5px solid #d4af37; padding: 20px; }
     h1, h2, h3, p, label { color: #d4af37 !important; text-align: center !important; }
-    [data-testid="stMetric"] { display: flex; flex-direction: column; align-items: center !important; text-align: center !important; }
-    [data-testid="stMetricValue"] { color: #d4af37 !important; font-size: 2.8rem !important; text-align: center !important; }
-
-    /* EL TICKER INFINITO REAL */
-    .ticker-wrap { width: 100%; overflow: hidden; background: rgba(212, 175, 55, 0.05); border-bottom: 1px solid #d4af37; padding: 10px 0; margin-bottom: 30px; }
+    [data-testid="stMetricValue"] { color: #d4af37 !important; font-size: 2.8rem !important; text-align: center !important; width: 100%; }
     
+    .ticker-wrap { width: 100%; overflow: hidden; background: rgba(212, 175, 55, 0.05); border-bottom: 1px solid #d4af37; padding: 10px 0; margin-bottom: 30px; }
     .ticker-move {
         display: inline-block;
         white-space: nowrap;
-        padding-left: 100%; /* Empieza fuera a la derecha */
-        animation: marquee 30s linear infinite; /* 30 segundos de duración */
+        padding-left: 100%;
+        animation: marquee 35s linear infinite;
         color: #d4af37;
         font-size: 0.95rem;
         font-weight: bold;
         letter-spacing: 2px;
     }
-
-    @keyframes marquee {
-        0% { transform: translateX(0); }
-        100% { transform: translateX(-100%); } /* Se mueve todo su largo a la izquierda */
-    }
+    @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
     
     .gold-card { border: 1px solid #d4af37; padding: 20px; border-radius: 15px; background: rgba(212, 175, 55, 0.05); text-align: center; color: #d4af37; }
     div.stButton > button { background-color: #1a1a1a !important; color: #d4af37 !important; border: 1px solid #d4af37 !important; width: 100%; font-weight: bold; }
-    .stTextArea > div > div > textarea { background-color: #1a1a1a !important; color: #d4af37 !important; border: 1px solid #d4af37 !important; text-align: center; }
     </style>
     """, unsafe_allow_html=True)
 
@@ -52,15 +44,15 @@ if not st.session_state.auth:
             else: st.error("Datos requeridos.")
     st.stop()
 
-# --- 4. INTERIOR ---
+# --- 4. INTERIOR (IMPERIO GLOBAL) ---
 emp = st.session_state.emp_final
 st.title(f"🏛️ TERMINAL EXCLUSIVA: {emp}")
 
-# TICKER REPARADO (CON BUCLE INFINITO)
+# TICKER REPARADO (CON MÍSTICA GLOBAL)
 st.markdown(f"""
     <div class="ticker-wrap">
         <div class="ticker-move">
-            🏦 LIVE MARKET | USDT/ARS: 1.515 ▲ | BTC/USD: 96.840 ▼ | ETH/USD: 2.720 ▲ | GOLD/OZ: 2.045 ▲ | 🛡️ AES-256 ACTIVE | TERMINAL: {emp} 🏛️ | 🌐 CONEXIÓN SEGURA DESDE PLATANOS, BA 🏛️
+            🏦 LIVE MARKET | USDT/ARS: 1.515 ▲ | BTC/USD: 96.840 ▼ | ETH/USD: 2.720 ▲ | GOLD/OZ: 2.045 ▲ | 🛡️ AES-256 ACTIVE | 🌐 GLOBAL ENCRYPTION NODE: ACTIVE | 🏛️ LEGACY VAULT QUANTUM SYSTEM
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -72,8 +64,7 @@ with c2: st.metric("YACHTS", "$25M" if "GINEVRA" in emp else "$12.5M")
 with c3: st.metric("JETS", "$40M" if "GINEVRA" in emp else "$24M")
 
 st.write("---")
-
-# IA ADVISOR
+# IA
 st.subheader(f"🤖 ESTRATEGA IA PARA {emp}")
 _, col_ia, _ = st.columns([0.5, 2, 0.5])
 with col_ia:
@@ -81,23 +72,9 @@ with col_ia:
     if q:
         with st.spinner("Consultando..."):
             time.sleep(1)
-            st.markdown(f"<div class='gold-card'>🏛️ <b>IA ADVISOR:</b> Análisis completado para {emp}. Estado: SOLVENTE.</div>", unsafe_allow_html=True)
+            st.markdown(f"<div class='gold-card'>🏛️ <b>IA ADVISOR:</b> Director de {emp}, análisis completado. Recomendación: MANTENER POSICIONES.</div>", unsafe_allow_html=True)
 
 st.write("---")
-
-# SCANNER
-st.subheader("🧬 SCANNER DE ACTIVOS")
-_, col_sc, _ = st.columns([0.5, 2, 0.5])
-with col_sc:
-    activos = st.text_area("LISTA DE ACTIVOS:", placeholder="Ej: 2 Ferraris...", key="sc_i")
-    if st.button("🧬 INICIAR ESCANEO"):
-        if activos:
-            with st.status("Escaneando...", expanded=True) as s:
-                time.sleep(1); s.update(label="Escaneo Finalizado ✅", state="complete")
-            st.markdown(f"<div class='gold-card'><h3>💎 VALUACIÓN DETECTADA</h3><h2 style='color:#d4af37;'>$42,500,000 USD</h2></div>", unsafe_allow_html=True)
-
-st.write("---")
-
 # RELOJES
 r1, r2, r3 = st.columns(3)
 with r1: st.markdown("<div class='gold-card'>🗽 NY: 11:50 PM</div>", unsafe_allow_html=True)
