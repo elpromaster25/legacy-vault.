@@ -19,7 +19,7 @@ if 'reg' not in st.session_state: st.session_state.reg = []
 st.set_page_config(page_title="LEGACY GOLD VAULT", layout="wide")
 st.markdown("""
     <style>
-    .stApp { background-color: #000; border: 5px solid #d4af37; padding: 20px; }
+    .stApp { background-color: #000000; border: 5px solid #d4af37; padding: 20px; }
     h1, h2, h3, p, label, .stMetric { color: #d4af37 !important; text-align: center !important; }
     .gold-card { border: 1px solid #d4af37; padding: 20px; border-radius: 15px; background: rgba(212, 175, 55, 0.05); text-align: center; margin-bottom: 20px; }
     div.stButton > button { background-color: #1a1a1a !important; color: #d4af37 !important; border: 1px solid #d4af37 !important; width: 100%; font-weight: bold; height: 3.5em; }
@@ -41,7 +41,7 @@ with st.sidebar:
     if st.button("🔒 LOGOUT / SALIR"):
         st.session_state.auth = False; st.rerun()
 
-# --- 4. ACCESO AL BÚNKER ---
+# --- 4. ACCESO AL BÚNKER (USA/ARG) ---
 if not st.session_state.auth:
     st.title("🏛️ LEGACY QUANTUM VAULT")
     reg_sel = st.selectbox("🌐 SELECT REGION:", ["USA / GLOBAL", "ARGENTINA"])
@@ -55,19 +55,24 @@ if not st.session_state.auth:
             st.write("Suscripción: **$2.000.000 ARS**")
             st.markdown(f'<a href="https://wa.me" style="text-decoration:none;"><div style="background:#009ee3; color:white; padding:10px; border-radius:10px; text-align:center; font-weight:bold;">💳 MERCADO PAGO / DNI</div></a>', unsafe_allow_html=True)
         st.write("---")
-        emp_raw = st.text_input("FIRMA / COMPANY:").strip().upper()
+        
+        # LOGIN CON CAPTURA DE LEADS
+        emp_raw = st.text_input("IDENTIFIQUE SU FIRMA / COMPANY:").strip().upper()
         pw_in = st.text_input("MASTER KEY:", type="password")
+        
         if st.button("🔓 UNLOCK VAULT"):
             if pw_in == "LEGACY2026" and emp_raw in VIP:
                 st.session_state.emp_final = emp_raw
                 st.session_state.reg.append(f"🟢 {emp_raw} - {time.strftime('%H:%M')}")
                 st.session_state.auth = True; st.rerun()
             elif emp_raw != "":
-                st.error("DENEGADO")
+                # ACA ESTA TU CAMBIO DYLAN: EL ERROR CON SOPORTE
+                st.error(f"🚫 FIRMA '{emp_raw}' NO AUTORIZADA.")
+                st.warning("⚠️ Contact support for VIP access: dylanelpromaster25@gmail.com")
                 st.session_state.reg.append(f"🔴 ERROR: {emp_raw} - {time.strftime('%H:%M')}")
     st.stop()
 
-# --- 5. INTERIOR DEL IMPERIO ---
+# --- 5. INTERIOR TOTAL ---
 st.title(f"🏛️ TERMINAL EXCLUSIVA: {st.session_state.emp_final}")
 st.metric("REAL ESTATE", "$85,000,000")
 st.write("---")
