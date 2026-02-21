@@ -1,6 +1,6 @@
 import streamlit as st
 import time
-
+LEGACY REPAIR
 # --- 1. CONFIGURACIÓN ---
 st.set_page_config(page_title="LEGACY GOLD VAULT", layout="wide")
 
@@ -59,3 +59,4 @@ if st.button("🧬 SCAN"):
 if st.sidebar.button("🔒 EXIT"):
     st.session_state.auth = False
     st.rerun()
+
