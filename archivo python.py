@@ -4,20 +4,17 @@ import time
 # --- 1. LÓGICA DE SESIÓN ---
 if 'auth' not in st.session_state: st.session_state.auth = False
 
-# --- 2. DISEÑO IMPERIAL (CENTRADO FORZADO) ---
+# --- 2. DISEÑO IMPERIAL ---
 st.set_page_config(page_title="LEGACY GOLD VAULT", layout="wide")
 st.markdown("""
     <style>
     .stApp { background-color: #000000; border: 5px solid #d4af37; padding: 20px; }
     h1, h2, h3, p, label { color: #d4af37 !important; text-align: center !important; }
-    
-    /* FORZAR CENTRADO DE MÉTRICAS */
     [data-testid="stMetric"] { text-align: center !important; display: flex; flex-direction: column; align-items: center; }
     [data-testid="stMetricValue"] { color: #d4af37 !important; font-size: 2.8rem !important; }
-    
     .gold-card { border: 1px solid #d4af37; padding: 20px; border-radius: 15px; background: rgba(212, 175, 55, 0.05); text-align: center; color: #d4af37; }
-    div.stButton > button { background-color: #1a1a1a !important; color: #d4af37 !important; border: 1px solid #d4af37 !important; width: 100%; font-weight: bold; }
-    .stTextInput > div > div > input { background-color: #1a1a1a !important; color: #d4af37 !important; border: 1px solid #d4af37 !important; text-align: center; }
+    div.stButton > button { background-color: #1a1a1a !important; color: #d4af37 !important; border: 1px solid #d4af37 !important; width: 100%; font-weight: bold; height: 3em; }
+    .stTextArea > div > div > textarea { background-color: #1a1a1a !important; color: #d4af37 !important; border: 1px solid #d4af37 !important; text-align: center; }
     </style>
     """, unsafe_allow_html=True)
 
@@ -31,17 +28,16 @@ if not st.session_state.auth:
         if st.button("🔓 DESBLOQUEAR"):
             if pw == "LEGACY2026" and emp:
                 st.session_state.emp_final = emp.upper()
-                st.session_state.auth = True
-                st.rerun()
+                st.session_state.auth = True; st.rerun()
             else: st.error("Datos requeridos.")
     st.stop()
 
-# --- 4. INTERIOR (TODO RESTAURADO Y CENTRADO) ---
+# --- 4. INTERIOR ---
 emp = st.session_state.emp_final
 st.title(f"🏛️ TERMINAL EXCLUSIVA: {emp}")
 st.write("---")
 
-# MÉTRICAS (3 COLUMNAS SIMPLES)
+# MÉTRICAS
 c1, c2, c3 = st.columns(3)
 with c1: st.metric("REAL ESTATE", "$145M" if "GINEVRA" in emp else "$85M")
 with c2: st.metric("YACHTS", "$25M" if "GINEVRA" in emp else "$12.5M")
@@ -57,25 +53,45 @@ with col_ia:
     if pregunta:
         with st.spinner("Analizando..."):
             time.sleep(1)
-            st.markdown(f"<div class='gold-card'>🏛️ <b>IA ADVISOR:</b> Director de {emp}, análisis completado. Sugerimos <b>MANTENER POSICIONES</b>.</div>", unsafe_allow_html=True)
+            st.markdown(f"<div class='gold-card'>🏛️ <b>IA ADVISOR:</b> Análisis de '{pregunta}' completado para {emp}. Estado: SOLVENTE.</div>", unsafe_allow_html=True)
 
 st.write("---")
 
-# SCANNER QUÁNTICO
-st.subheader("🧬 SCANNER DE ACTIVOS")
+# SCANNER QUÁNTICO (REPARADO)
+st.subheader("🧬 SCANNER DE ACTIVOS PATRIMONIALES")
 _, col_sc, _ = st.columns([0.5, 2, 0.5])
 with col_sc:
-    st.text_area("LISTA DE PROPIEDADES:", key="sc_ia")
-    if st.button("ANALIZAR LISTA"): st.success("Escaneo finalizado.")
+    # Capturamos el texto en una variable
+    activos_input = st.text_area("LISTA DE PROPIEDADES, AUTOS O YATES:", placeholder="Ej: 2 Ferraris, 1 Mansión en Nordelta...", key="sc_input_99")
+    
+    # El botón ahora dispara una acción visible
+    if st.button("🧬 INICIAR ESCANEO QUÁNTICO"):
+        if activos_input:
+            with st.status("Escaneando activos de lujo...", expanded=True) as status:
+                st.write("🔍 Identificando modelos y tasaciones...")
+                time.sleep(1.2)
+                st.write("📈 Cruzando datos con mercados internacionales...")
+                time.sleep(1.2)
+                status.update(label="Escaneo Finalizado ✅", state="complete")
+            
+            # RESULTADO IMPACTANTE
+            st.markdown(f"""
+            <div class='gold-card'>
+            <h3>💎 VALUACIÓN DETECTADA</h3>
+            <p>Se han analizado los activos: <b>{activos_input}</b></p>
+            <h2 style='color:#d4af37;'>$42,500,000 USD</h2>
+            <p>Sugerencia de {emp}: Asegurar activos vía Mesa OTC.</p>
+            </div>
+            """, unsafe_allow_html=True)
+        else:
+            st.warning("⚠️ Por favor, ingrese los activos que desea escanear.")
 
 st.write("---")
 
 # RELOJES MUNDIALES
 r1, r2, r3 = st.columns(3)
-with r1: st.markdown("<div class='gold-card'>🗽 NY: 11:30 PM</div>", unsafe_allow_html=True)
-with r2: st.markdown("<div class='gold-card'>🏢 BA: 01:30 AM</div>", unsafe_allow_html=True)
-with r3: st.markdown("<div class='gold-card'>🏰 LN: 04:30 AM</div>", unsafe_allow_html=True)
+with r1: st.markdown("<div class='gold-card'>🗽 NY: 11:35 PM</div>", unsafe_allow_html=True)
+with r2: st.markdown("<div class='gold-card'>🏢 BA: 01:35 AM</div>", unsafe_allow_html=True)
+with r3: st.markdown("<div class='gold-card'>🏰 LN: 04:35 AM</div>", unsafe_allow_html=True)
 
-if st.sidebar.button("🔒 SALIR"):
-    st.session_state.auth = False
-    st.rerun()
+if st.sidebar.button("🔒 SALIR"): st.session_state.auth = False; st.rerun()
