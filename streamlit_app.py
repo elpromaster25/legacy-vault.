@@ -12,11 +12,8 @@ st.markdown("""
     .stApp { background-color: #000; border: 5px solid #d4af37; padding: 20px; }
     h1, h2, h3, p, label, .stMetric { color: #d4af37 !important; text-align: center !important; }
     .gold-card { border: 1px solid #d4af37; padding: 20px; border-radius: 15px; background: rgba(212, 175, 55, 0.05); text-align: center; margin-bottom: 20px; }
-    
-    /* BOTONES DE ALTO IMPACTO */
-    .btn-paypal { background-color: #0070ba; color: #ffffff !important; padding: 14px; border-radius: 10px; font-weight: bold; text-decoration: none; display: block; text-align: center; margin-bottom: 10px; border: 1px solid #ffffff; }
-    .btn-mp { background-color: #009ee3; color: #ffffff !important; padding: 14px; border-radius: 10px; font-weight: bold; text-decoration: none; display: block; text-align: center; margin-bottom: 10px; border: 1px solid #ffffff; }
-    
+    .btn-paypal { background-color: #0070ba; color: #fff !important; padding: 14px; border-radius: 10px; font-weight: bold; text-decoration: none; display: block; text-align: center; margin-bottom: 10px; border: 1px solid #fff; }
+    .btn-mp { background-color: #009ee3; color: #fff !important; padding: 14px; border-radius: 10px; font-weight: bold; text-decoration: none; display: block; text-align: center; margin-bottom: 10px; border: 1px solid #fff; }
     div.stButton > button { background-color: #1a1a1a !important; color: #d4af37 !important; border: 1px solid #d4af37 !important; width: 100%; font-weight: bold; height: 3.5em; }
     </style>
     """, unsafe_allow_html=True)
@@ -31,12 +28,18 @@ if not st.session_state.auth:
         
         if reg == "USA / GLOBAL":
             st.write("Subscription: **$12,000 USD**")
-            # BOTÓN DE EMAIL PARA USA (PROFESIONAL)
-            u_mail = "mailto:dylanelpromaster25@://gmail.com."
-            st.markdown(f'<a href="{u_mail}" class="btn-paypal">🔵 REQUEST PAYPAL INVOICE (EMAIL)</a>', unsafe_allow_html=True)
+            # TARJETA DE CONTACTO DIRECTO (ESTO NO FALLA NUNCA)
+            st.markdown("""
+                <div class='gold-card'>
+                <p style='margin:0;'>OFFICIAL PAYPAL DESK:</p>
+                <h3 style='margin:10px 0;'>dylanelpromaster25@gmail.com</h3>
+                <p style='font-size:0.8rem;'>Copy and send your request for Invoice</p>
+                </div>
+                """, unsafe_allow_html=True)
+            # BOTÓN DE RESPALDO POR WHATSAPP
+            st.markdown(f'<a href="https://wa.me" target="_blank" class="btn-paypal">🔵 CONTACT VIA WHATSAPP (VIP)</a>', unsafe_allow_html=True)
         else:
             st.write("Suscripción: **$2.000.000 ARS**")
-            # BOTÓN WHATSAPP PARA ARGENTINA
             st.markdown(f'<a href="https://wa.me" class="btn-mp">💳 PAGAR CON MERCADO PAGO / DNI</a>', unsafe_allow_html=True)
         
         st.write("---")
