@@ -2,10 +2,11 @@ import streamlit as st
 import time
 
 # --- 1. BASE DE DATOS DE EMPRESAS AUTORIZADAS (WHITELIST) ---
+# El sistema ahora es inteligente: no importa si escriben con minúsculas.
 EMPRESAS_VIP = [
     "EMAAR", "DAMAC", "GINEVRA", "REMAX", "SOTHEBYS", "NEST SEEKERS", 
     "THE AGENCY", "HINES", "JLL", "CARSO", "ABILIA", "GICSA", "BE GRAND",
-    "DYLAN777", "ADMIN", "LEGACY", "GUEST", "USER"
+    "DYLAN777", "ADMIN", "LEGACY", "LEGACY VAULT", "GUEST", "USER", "DYLAN"
 ]
 
 # --- 2. LÓGICA DE SESIÓN ---
@@ -28,37 +29,31 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# --- 4. PANTALLA DE ACCESO BLINDADA ---
+# --- 4. PANTALLA DE ACCESO (EL FILTRO INTELIGENTE) ---
 if not st.session_state.auth:
     st.title("🏛️ LEGACY QUANTUM VAULT")
     _, col_c, _ = st.columns([1, 1.5, 1])
     with col_c:
-        v_sel = st.selectbox("📂 SELECT REGION:", ["USA / GLOBAL", "ARGENTINA"], key="v_f")
         st.markdown("<div class='gold-card'>🔒 ACCESO RESTRINGIDO A NODOS AUTORIZADOS</div>", unsafe_allow_html=True)
         
-        # PAGOS
-        if st.session_state.pago_step is None:
-            if st.button("💎 ACQUIRE VIP ACCESS"): st.session_state.pago_step = "PAY"; st.rerun()
-        else:
-            u_ws = f"https://api.whatsapp.com"
-            st.markdown(f'<a href="{u_ws}" target="_blank" style="text-decoration:none;"><div style="background:#25d366; color:white; padding:10px; border-radius:10px; text-align:center; font-weight:bold;">🟢 CONTACT STRATEGIC DESK</div></a>', unsafe_allow_html=True)
-            if st.button("⬅️ BACK"): st.session_state.pago_step = None; st.rerun()
-
-        st.write("---")
-        emp_input = st.text_input("FIRMA / COMPANY:", key="login_emp").upper()
+        # FIRMA CON LIMPIEZA AUTOMÁTICA
+        emp_raw = st.text_input("IDENTIFIQUE SU FIRMA / COMPANY:", key="login_emp")
+        # El .strip() borra espacios locos y .upper() lo hace compatible con la lista
+        emp_clean = emp_raw.strip().upper() 
+        
         pw_input = st.text_input("MASTER KEY:", type="password", key="login_pw")
         
         if st.button("🔓 VALIDAR CREDENCIALES"):
-            if pw_input == "LEGACY2026" and emp_input in EMPRESAS_VIP:
-                st.session_state.emp_final = emp_input
-                st.session_state.registros.append(f"🟢 {emp_input} - {time.strftime('%H:%M')}")
+            if pw_input == "LEGACY2026" and emp_clean in EMPRESAS_VIP:
+                st.session_state.emp_final = emp_clean
+                st.session_state.registros.append(f"🟢 {emp_clean} - {time.strftime('%H:%M')}")
                 st.session_state.auth = True; st.rerun()
-            elif emp_input != "":
-                st.error("🚫 FIRMA NO RECONOCIDA.")
-                st.session_state.registros.append(f"🔴 FALLO: {emp_input} - {time.strftime('%H:%M')}")
+            elif emp_clean != "":
+                st.error(f"🚫 FIRMA '{emp_clean}' NO RECONOCIDA.")
+                st.session_state.registros.append(f"🔴 FALLO: {emp_clean} - {time.strftime('%H:%M')}")
     st.stop()
 
-# --- 5. INTERIOR TOTAL (RESTAURADO) ---
+# --- 5. INTERIOR TOTAL (EL BÚNKER DE ORO) ---
 emp = st.session_state.emp_final
 st.title(f"🏛️ TERMINAL EXCLUSIVA: {emp}")
 
@@ -81,7 +76,7 @@ with col_ia:
     if q:
         with st.spinner("Analizando..."):
             time.sleep(1)
-            st.markdown(f"<div class='gold-card'>🏛️ <b>IA ADVISOR:</b> Análisis completado. Estado: SOLVENTE.</div>", unsafe_allow_html=True)
+            st.markdown(f"<div class='gold-card'>🏛️ <b>IA ADVISOR:</b> Análisis completado para {emp}. Estado: SOLVENTE.</div>", unsafe_allow_html=True)
 
 st.write("---")
 
