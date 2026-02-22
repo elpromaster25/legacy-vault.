@@ -4,10 +4,11 @@ import time
 # --- 1. CONFIGURACIÓN ---
 st.set_page_config(page_title="LEGACY VAULT", layout="wide", initial_sidebar_state="collapsed")
 
-# --- 2. MEMORIA ---
+# --- 2. MEMORIA DE SESIÓN ---
 if 'auth' not in st.session_state: st.session_state.auth = False
 if 'demo_mode' not in st.session_state: st.session_state.demo_mode = False
 if 'demo_start' not in st.session_state: st.session_state.demo_start = 0
+if 'demo_used' not in st.session_state: st.session_state.demo_used = False # Bloqueo de re-entrada
 
 # --- 3. DISEÑO IMPERIAL ---
 st.markdown("""
@@ -15,7 +16,7 @@ st.markdown("""
     [data-testid='collapsedControl'], [data-testid='stSidebar'] { display: none !important; }
     .stApp { background-color: #000; border: 4px solid #d4af37; padding: 10px; }
     h1, h2, h3, p, label, .stMetric { color: #d4af37 !important; text-align: center !important; }
-    .timer-text { color: #ff4b4b !important; font-weight: bold; font-size: 1.5rem; text-align: center; margin-bottom: 5px; }
+    .timer-text { color: #ff4b4b !important; font-weight: bold; font-size: 1.5rem; text-align: center; }
     .ticker-wrap { width: 100%; overflow: hidden; border-bottom: 1px solid #d4af37; padding: 5px 0; margin-bottom: 15px; }
     .ticker-move { display: inline-block; white-space: nowrap; padding-left: 100%; animation: marquee 30s linear infinite; color: #d4af37; font-weight: bold; }
     @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
@@ -24,11 +25,12 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# --- 4. ACCESO ---
+# --- 4. ACCESO PRINCIPAL (LIMPIO) ---
 if not st.session_state.auth:
     st.title("🏛️ LEGACY QUANTUM VAULT")
     reg = st.selectbox("🌐 REGION:", ["USA / GLOBAL", "ARGENTINA"])
     _, col_c, _ = st.columns([1, 1.5, 1])
+    
     with col_c:
         st.write("---")
         ws = "https://wa.me"
@@ -36,46 +38,52 @@ if not st.session_state.auth:
             st.write("Subscription: **$12,000 USD**")
             st.markdown(f'<a href="{ws}PAYPAL" class="ws-link">🔵 PAY WITH PAYPAL (WSP)</a>', unsafe_allow_html=True)
             st.write("---")
-            emp = st.text_input("COMPANY:").strip().upper()
-            pw = st.text_input("KEY:", type="password")
+            emp = st.text_input("COMPANY / FIRMA:").strip().upper()
+            pw = st.text_input("KEY / MASTER PW:", type="password")
             if st.button("🔓 UNLOCK"):
                 if pw == "LEGACY2026": st.session_state.auth = True; st.session_state.emp_final = emp; st.rerun()
                 else: st.error("DENIED")
-            st.write("---")
-            st.write("💡 *If you want to use the 5 min DEMO, please enter your company name above.*")
-            if st.button("⚡ START 5 MIN DEMO"):
-                if emp: st.session_state.auth = True; st.session_state.demo_mode = True; st.session_state.demo_start = time.time(); st.session_state.emp_final = f"DEMO_{emp}"; st.rerun()
-                else: st.warning("Enter company name.")
+            
+            # BOTÓN DEMO SOLO SI NO SE USÓ
+            if not st.session_state.demo_used:
+                st.write("---")
+                st.write("💡 *Enter company name above for 5 min access.*")
+                if st.button("⚡ START 5 MIN DEMO"):
+                    if emp:
+                        st.session_state.auth = True; st.session_state.demo_mode = True
+                        st.session_state.demo_used = True; st.session_state.demo_start = time.time()
+                        st.session_state.emp_final = f"DEMO_{emp}"; st.rerun()
+                    else: st.warning("Enter company name.")
         else:
             st.write("Suscripción: **$2.000.000 ARS**")
             st.markdown(f'<a href="{ws}MP" class="ws-link" style="color:#009ee3!important;">💳 MERCADO PAGO (WSP)</a>', unsafe_allow_html=True)
             st.markdown(f'<a href="{ws}DNI" class="ws-link" style="color:#004d40!important;">🏦 CUENTA DNI (WSP)</a>', unsafe_allow_html=True)
             st.write("---")
-            emp = st.text_input("EMPRESA:").strip().upper()
-            pw = st.text_input("CLAVE:", type="password")
+            emp = st.text_input("EMPRESA / FIRMA:").strip().upper()
+            pw = st.text_input("CLAVE MAESTRA:", type="password")
             if st.button("🔓 ACCEDER"):
                 if pw == "LEGACY2026": st.session_state.auth = True; st.session_state.emp_final = emp; st.rerun()
                 else: st.error("DENEGADO")
-            st.write("---")
-            st.write("💡 *Si querés usar la demo de 5 min, poné el nombre de tu empresa arriba.*")
-            if st.button("⚡ INICIAR DEMO 5 MIN"):
-                if emp: st.session_state.auth = True; st.session_state.demo_mode = True; st.session_state.demo_start = time.time(); st.session_state.emp_final = f"DEMO_{emp}"; st.rerun()
-                else: st.warning("Poné el nombre de tu empresa.")
+            
+            # BOTÓN DEMO SOLO SI NO SE USÓ
+            if not st.session_state.demo_used:
+                st.write("---")
+                st.write("💡 *Poné el nombre de tu empresa arriba para probar.*")
+                if st.button("⚡ INICIAR DEMO 5 MIN"):
+                    if emp:
+                        st.session_state.auth = True; st.session_state.demo_mode = True
+                        st.session_state.demo_used = True; st.session_state.demo_start = time.time()
+                        st.session_state.emp_final = f"DEMO_{emp}"; st.rerun()
+                    else: st.warning("Poné el nombre de tu empresa.")
     st.stop()
 
-# --- 5. INTERIOR CON MOTOR DE TIEMPO ---
+# --- 5. INTERIOR (BÓVEDA) ---
 if st.session_state.demo_mode:
     remaining = max(0, 300 - int(time.time() - st.session_state.demo_start))
     if remaining <= 0:
         st.session_state.auth = False; st.session_state.demo_mode = False; st.rerun()
-    
     mins, secs = divmod(remaining, 60)
-    col_out, col_timer = st.columns([1, 2])
-    with col_out:
-        if st.button("🔒 EXIT DEMO"):
-            st.session_state.auth = False; st.session_state.demo_mode = False; st.rerun()
-    with col_timer:
-        st.markdown(f"<p class='timer-text'>⏳ SESSION TIME: {mins:02d}:{secs:02d}</p>", unsafe_allow_html=True)
+    st.markdown(f"<p class='timer-text'>⏳ DEMO SESSION: {mins:02d}:{secs:02d}</p>", unsafe_allow_html=True)
 
 st.markdown(f'<div class="ticker-wrap"><div class="ticker-move">🏦 MARKET LIVE | BTC: 96,840 | GOLD: 2,045 | NODE: {st.session_state.emp_final} | AES-256 ACTIVE 🏛️</div></div>',unsafe_allow_html=True)
 
@@ -86,18 +94,17 @@ with c3: st.metric("PRIVATE JETS", "$24,000,000")
 
 st.write("---")
 st.subheader("🧬 QUANTUM ASSET SCANNER")
-act = st.text_area("LISTA DE ACTIVOS (FERRARIS, PROPIEDADES, ETC):", key="sc_f_boss")
+act = st.text_area("LISTA DE ACTIVOS:", key="sc_v1")
 if st.button("🧬 SCAN"):
-    if act:
-        with st.spinner("..."): time.sleep(1); st.success("VALUATION: $42,500,000 USD")
+    if act: st.success("VALUATION: $42,500,000 USD")
 
 st.write("---")
 st.subheader("🤖 IA STRATEGIC ADVISOR")
-p_ia = st.text_input("CONSULTA TÉCNICA:", key="ia_f_boss")
-if p_ia:
-    st.info(f"ADVISOR: Analysis for {st.session_state.emp_final} complete. Status: OPTIMAL.")
+if st.text_input("CONSULTA:", key="ia_v1"): st.info("ANALYSIS COMPLETE.")
 
-# EL MOTOR QUE HACE QUE EL TIEMPO BAJE SOLO CADA SEGUNDO
+if st.button("🔒 EXIT / SALIR"):
+    st.session_state.auth = False; st.session_state.demo_mode = False; st.rerun()
+
+# MOTOR DEL RELOJ (SOLO EN DEMO)
 if st.session_state.demo_mode:
-    time.sleep(1)
-    st.rerun()
+    time.sleep(1); st.rerun()
