@@ -8,7 +8,7 @@ if 'auth' not in st.session_state: st.session_state.auth = False
 if 'reg' not in st.session_state: st.session_state.reg = []
 if 'founder' not in st.session_state: st.session_state.founder = False
 
-# --- 2. DISEÑO IMPERIAL (SIN FLECHA + BOTONES VISIBLES) ---
+# --- 2. DISEÑO IMPERIAL (SIN FLECHA + BOTONES QUE SÍ ABREN EL MAIL) ---
 st.set_page_config(page_title="LEGACY VAULT", layout="wide", initial_sidebar_state="collapsed")
 st.markdown("""
     <style>
@@ -16,8 +16,24 @@ st.markdown("""
     .stApp { background-color: #000; border: 2px solid #d4af37; padding: 20px; }
     h1, h2, h3, p, label, .stMetric { color: #d4af37 !important; text-align: center !important; }
     .gold-card { border: 1px solid #d4af37; padding: 15px; border-radius: 10px; background: rgba(212, 175, 55, 0.05); text-align: center; margin-bottom: 10px; }
-    .btn-pay { background-color: #1a1a1a; color: #ffffff !important; padding: 14px; border-radius: 10px; font-weight: bold; text-decoration: none; display: block; text-align: center; margin-bottom: 10px; border: 1px solid #d4af37; }
-    .btn-demo { background-color: #d4af37; color: #000 !important; padding: 14px; border-radius: 10px; font-weight: bold; text-decoration: none; display: block; text-align: center; margin-bottom: 15px; }
+    
+    /* ESTO HACE QUE EL ENLACE SE VEA COMO UN BOTÓN REAL */
+    .btn-final { 
+        display: block !important; 
+        width: 100% !important; 
+        padding: 15px !important; 
+        margin-bottom: 10px !important; 
+        text-align: center !important; 
+        border-radius: 10px !important; 
+        font-weight: bold !important; 
+        text-decoration: none !important; 
+        border: 1px solid #d4af37 !important;
+        font-size: 1.1rem !important;
+    }
+    .paypal-btn { background-color: #0070ba !important; color: white !important; }
+    .mp-btn { background-color: #009ee3 !important; color: white !important; border-color: #fff !important; }
+    .demo-btn { background-color: #d4af37 !important; color: black !important; }
+
     div.stButton > button { background-color: #d4af37 !important; color: #000 !important; width: 100% !important; font-weight: bold !important; height: 3.5em !important; border-radius: 8px !important; }
     </style>
     """, unsafe_allow_html=True)
@@ -30,17 +46,17 @@ if not st.session_state.auth:
     with col_c:
         st.markdown("<div class='gold-card'>🔒 ACCESO AUTORIZADO</div>", unsafe_allow_html=True)
         
-        # BOTÓN DEMO (NUEVO)
-        st.markdown(f'<a href="mailto:dylanelpromaster25@://gmail.com." class="btn-demo">⚡ SOLICITAR DEMO (5 MIN)</a>', unsafe_allow_html=True)
+        # ⚡ BOTÓN DEMO (HTML PURO)
+        st.markdown(f'<a href="mailto:dylanelpromaster25@://gmail.com" class="btn-final demo-btn">⚡ SOLICITAR DEMO (5 MIN)</a>', unsafe_allow_html=True)
         
         if reg_sel == "USA / GLOBAL":
             st.write("Subscription: **$12,000 USD**")
-            m_pp = "mailto:dylanelpromaster25@://gmail.com."
-            st.markdown(f'<a href="{m_pp}" class="btn-pay">🔵 PAY WITH PAYPAL (EMAIL)</a>', unsafe_allow_html=True)
+            # 🔵 BOTÓN PAYPAL (HTML PURO)
+            st.markdown(f'<a href="mailto:dylanelpromaster25@://gmail.com" class="btn-final paypal-btn">🔵 PAY WITH PAYPAL (EMAIL)</a>', unsafe_allow_html=True)
         else:
             st.write("Suscripción: **$2.000.000 ARS**")
-            m_mp = "mailto:dylanelpromaster25@://gmail.com."
-            st.markdown(f'<a href="{m_mp}" class="btn-pay" style="background:#009ee3; border-color:#fff;">💳 PAGAR CON MERCADO PAGO</a>', unsafe_allow_html=True)
+            # 💳 BOTÓN MERCADO PAGO (HTML PURO)
+            st.markdown(f'<a href="mailto:dylanelpromaster25@://gmail.com" class="btn-final mp-btn">💳 PAGAR CON MERCADO PAGO</a>', unsafe_allow_html=True)
         
         st.write("---")
         emp = st.text_input("COMPANY:").strip().upper()
@@ -55,10 +71,9 @@ if not st.session_state.auth:
 
 # --- 4. INTERIOR ---
 st.title(f"🏛️ TERMINAL: {st.session_state.emp_final}")
-st.metric("REAL ESTATE ASSETS", "$85,000,000")
 if st.session_state.founder:
     with st.expander("🕵️‍♂️ RADAR"):
         for r in st.session_state.reg: st.info(r)
-st.write("---")
+st.metric("REAL ESTATE ASSETS", "$85,000,000")
 if st.button("🧬 SCANNER"): st.success("VALUACIÓN: $42,500,000 USD")
 if st.button("🔒 LOGOUT"): st.session_state.auth = False; st.session_state.founder = False; st.rerun()
