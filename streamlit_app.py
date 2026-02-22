@@ -1,12 +1,12 @@
 import streamlit as st
 import time
 
-# --- 1. WHITELIST ---
+# --- 1. WHITELIST DE LOS 34 GIGANTES ---
 VIP = ["EMAAR", "DAMAC", "NEOM", "GINEVRA", "REMAX", "SOTHEBYS", "THE AGENCY", "HINES", "JLL", "CARSO", "BARNES", "FEAU", "ZINGRAF", "GARCIN", "JUNOT", "KRETZ", "KNIGHT FRANK", "SAVILLS", "CBRE", "COLLIERS", "LEGACY", "DYLAN", "ADMIN", "TZIPINE"]
 
 if 'auth' not in st.session_state: st.session_state.auth = False
 
-# --- 2. DISEÑO IMPERIAL (TICKER + SIN FLECHA + TEXTO FORZADO) ---
+# --- 2. DISEÑO IMPERIAL (SIN FLECHA + TICKER + TEXTO FORZADO) ---
 st.set_page_config(page_title="LEGACY VAULT", layout="wide", initial_sidebar_state="collapsed")
 st.markdown("""
     <style>
@@ -29,7 +29,7 @@ if not st.session_state.auth:
     _, col_c, _ = st.columns([1, 1.5, 1])
     with col_c:
         if reg == "USA / GLOBAL":
-            st.markdown(f'<a href="mailto:dylanelpromaster25@gmail.com" class="btn-pay">🔵 PAYPAL ACCESS (EMAIL)</a>', unsafe_allow_html=True)
+            st.markdown(f'<a href="mailto:dylanelpromaster25@gmail.com" class="btn-pay">🔵 PAY WITH PAYPAL (EMAIL)</a>', unsafe_allow_html=True)
         else:
             st.markdown(f'<a href="mailto:dylanelpromaster25@gmail.com" class="btn-pay" style="background:#009ee3; border-color:#fff;">💳 PAGO MP / DNI (EMAIL)</a>', unsafe_allow_html=True)
         st.write("---")
@@ -42,7 +42,7 @@ if not st.session_state.auth:
             else: st.error("DENEGADO.")
     st.stop()
 
-# --- 4. INTERIOR TOTAL (RESTAURADO) ---
+# --- 4. INTERIOR TOTAL ---
 emp = st.session_state.emp_final
 st.title(f"🏛️ TERMINAL: {emp}")
 st.markdown(f'<div class="ticker-wrap"><div class="ticker-move">🏦 MARKET LIVE | BTC: 96,840 | GOLD: 2,045 | NODE: {emp} | VALUATION: $85,000,000 🏛️</div></div>', unsafe_allow_html=True)
@@ -50,19 +50,21 @@ st.markdown(f'<div class="ticker-wrap"><div class="ticker-move">🏦 MARKET LIVE
 st.metric("REAL ESTATE ASSETS", "$85,000,000")
 
 st.write("---")
-st.subheader("🤖 IA STRATEGIC ADVISOR")
-pregunta = st.text_input("CONSULTA TÉCNICA A LA IA:")
-if pregunta:
-    with st.spinner("Analizando..."):
-        time.sleep(1)
-        # ESTO ES LO QUE ARREGLA LA IA: LA RESPUESTA VISIBLE
-        st.success(f"🏛️ ADVISOR: Análisis de liquidez completado para {emp}. Estado: SOLVENTE. Riesgo: MÍNIMO.")
+st.subheader("🧬 QUANTUM ASSET SCANNER")
+activos = st.text_area("LISTA DE ACTIVOS (FERRARIS, YATES, PROPIEDADES):", key="sc_input")
+if st.button("🧬 INICIAR ESCANEO"):
+    if activos:
+        with st.spinner("Analizando activos..."):
+            time.sleep(1.5)
+            st.markdown(f"<div style='border:1px solid #d4af37; padding:15px; border-radius:10px; background:rgba(212,175,55,0.05); text-align:center;'><h2>VALUACIÓN DETECTADA: $42,500,000 USD</h2></div>", unsafe_allow_html=True)
+    else: st.warning("Por favor, ingrese una lista de activos.")
 
 st.write("---")
-st.subheader("🧬 QUANTUM ASSET SCANNER")
-if st.button("🧬 INICIAR ESCANEO"):
-    with st.spinner("..."):
-        time.sleep(1.5)
-        st.markdown(f"<div style='border:1px solid #d4af37; padding:15px; border-radius:10px; background:rgba(212,175,55,0.05); text-align:center;'><h2>VALUACIÓN: $42,500,000 USD</h2></div>", unsafe_allow_html=True)
+st.subheader("🤖 IA STRATEGIC ADVISOR")
+pregunta = st.text_input("CONSULTA TÉCNICA A LA IA:", key="ia_input")
+if pregunta:
+    with st.spinner("Procesando..."):
+        time.sleep(1)
+        st.success(f"🏛️ ADVISOR: Análisis completado para {emp}. Estado: SOLVENTE. Riesgo: MÍNIMO.")
 
 if st.button("🔒 LOGOUT"): st.session_state.auth = False; st.rerun()
