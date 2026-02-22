@@ -4,7 +4,7 @@ VIP=["EMAAR","DAMAC","NEOM","GINEVRA","REMAX","SOTHEBYS","THE AGENCY","HINES","J
 if 'auth' not in st.session_state: st.session_state.auth=False
 if 'reg' not in st.session_state: st.session_state.reg=[]
 st.set_page_config(page_title="LEGACY VAULT",layout="wide",initial_sidebar_state="collapsed")
-st.markdown("<style>[data-testid='collapsedControl'],[data-testid='stSidebar']{display:none!important;}.stApp{background-color:#000;border:4px solid #d4af37;padding:10px;}h1,h2,h3,p,label,.stMetric{color:#d4af37!important;text-align:center!important;}div.stButton>button{background:none!important;border:none!important;color:#d4af37!important;font-weight:bold!important;font-size:1.5rem!important;text-transform:uppercase;cursor:pointer;}.ws-link{display:block;color:#d4af37!important;font-weight:bold;text-decoration:none;text-align:center;margin-bottom:15px;font-size:1.2rem;}</style>",unsafe_allow_html=True)
+st.markdown("<style>[data-testid='collapsedControl'],[data-testid='stSidebar']{display:none!important;}.stApp{background-color:#000;border:4px solid #d4af37;padding:10px;}h1,h2,h3,p,label,.stMetric{color:#d4af37!important;text-align:center!important;}.ticker-wrap{width:100%;overflow:hidden;border-bottom:1px solid #d4af37;padding:10px 0;margin-bottom:20px;}.ticker-move{display:inline-block;white-space:nowrap;padding-left:100%;animation:marquee 30s linear infinite;color:#d4af37;font-weight:bold;}@keyframes marquee{0%{transform:translateX(0);}100%{transform:translateX(-100%);}}.ws-link{display:block;color:#d4af37!important;font-weight:bold;text-decoration:none;text-align:center;margin-bottom:15px;font-size:1.2rem;}div.stButton>button{background:none!important;border:none!important;color:#d4af37!important;font-weight:bold!important;font-size:1.5rem!important;text-transform:uppercase;cursor:pointer;}</style>",unsafe_allow_html=True)
 if not st.session_state.auth:
     st.title("🏛️ LEGACY QUANTUM VAULT")
     reg_sel=st.selectbox("🌐 REGION:",["USA / GLOBAL","ARGENTINA"])
@@ -30,17 +30,23 @@ if not st.session_state.auth:
             else:st.error("🚫 DENEGADO")
     st.stop()
 st.title(f"🏛️ TERMINAL: {st.session_state.emp_final}")
+st.markdown(f'<div class="ticker-wrap"><div class="ticker-move">🏦 MARKET LIVE | BTC: 96,840 | GOLD: 2,045 | NODE: {st.session_state.emp_final} | VALUATION: $85,000,000 🏛️</div></div>',unsafe_allow_html=True)
 if st.session_state.emp_final=="DYLAN777":
     with st.expander("🕵️‍♂️ RADAR"):
         for r in st.session_state.reg:st.info(r)
 st.metric("REAL ESTATE ASSETS","$85,000,000")
 st.write("---")
 st.subheader("🧬 QUANTUM ASSET SCANNER")
-act=st.text_area("LISTA DE ACTIVOS:",key="sc_gold")
+act=st.text_area("LISTA DE ACTIVOS (FERRARIS, YATES, ETC):",key="sc_final")
 if st.button("🧬 SCAN"):
     if act:
         with st.spinner("..."):time.sleep(1)
         st.success("VALUACIÓN: $42,500,000 USD")
+st.write("---")
+st.subheader("🤖 IA STRATEGIC ADVISOR")
+p_ia=st.text_input("CONSULTA TÉCNICA:",key="ia_final")
+if p_ia:
+    st.info(f"ADVISOR: Análisis para {st.session_state.emp_final} completado. Estado: ÓPTIMO.")
 if st.button("🔒 LOGOUT"):
     st.session_state.auth=False
     st.rerun()
