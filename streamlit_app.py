@@ -1,7 +1,7 @@
 import streamlit as st
 import time
 
-# --- 1. MEMORIA DE SESIÓN ---
+# --- 1. MEMORIA Y CONFIGURACIÓN ---
 VIP=["EMAAR","DAMAC","NEOM","GINEVRA","REMAX","SOTHEBYS","THE AGENCY","HINES","JLL","CARSO","BARNES","FEAU","ZINGRAF","GARCIN","JUNOT","KRETZ","KNIGHT FRANK","SAVILLS","CBRE","COLLIERS","LEGACY","DYLAN","ADMIN","TZIPINE","DEMO","DYLAN777"]
 if 'auth' not in st.session_state: st.session_state.auth=False
 if 'demo_mode' not in st.session_state: st.session_state.demo_mode=False
@@ -9,11 +9,10 @@ if 'demo_start' not in st.session_state: st.session_state.demo_start=0
 if 'demo_used' not in st.session_state: st.session_state.demo_used=False
 if 'inbox' not in st.session_state: st.session_state.inbox=[] 
 
-# --- 2. DISEÑO IMPERIAL ---
 st.set_page_config(page_title="LEGACY VAULT",layout="wide",initial_sidebar_state="collapsed")
 st.markdown("""<style>[data-testid='collapsedControl'],[data-testid='stSidebar']{display:none!important;}.stApp{background-color:#000;border:4px solid #d4af37;padding:10px;}h1,h2,h3,p,label,.stMetric{color:#d4af37!important;text-align:center!important;}.timer-text{color:#ff4b4b!important;font-weight:bold;font-size:1.5rem;text-align:center;}.ticker-wrap{width:100%;overflow:hidden;border-bottom:1px solid #d4af37;padding:5px 0;margin-bottom:15px;}.ticker-move{display:inline-block;white-space:nowrap;padding-left:100%;animation:marquee 30s linear infinite;color:#d4af37;font-weight:bold;}@keyframes marquee{0%{transform:translateX(0);}100%{transform:translateX(-100%);}}div.stButton > button{background:none!important;border:none!important;color:#d4af37!important;font-weight:bold!important;font-size:1.3rem!important;text-transform:uppercase;}</style>""",unsafe_allow_html=True)
 
-# --- 3. PANTALLA PÚBLICA (LOGIN + BUZÓN + PRECIOS MENSUALES) ---
+# --- 2. ACCESO ---
 if not st.session_state.auth:
     st.title("🏛️ LEGACY QUANTUM VAULT")
     reg_sel=st.selectbox("🌐 REGION:",["USA / GLOBAL","ARGENTINA"])
@@ -51,14 +50,14 @@ if not st.session_state.auth:
                 else: st.warning("Enter company name.")
     st.stop()
 
-# --- 4. INTERIOR (IMPERIO RESTAURADO) ---
+# --- 3. INTERIOR ---
 if st.session_state.demo_mode:
     rem=max(0,300-int(time.time()-st.session_state.demo_start))
     if rem<=0: st.session_state.auth=False; st.session_state.demo_mode=False; st.rerun()
     m,s=divmod(rem,60); st.markdown(f"<p class='timer-text'>⏳ SESSION: {m:02d}:{s:02d}</p>",unsafe_allow_html=True)
 
 st.title(f"🏛️ WELCOME: {st.session_state.emp_final}")
-st.markdown(f'<div class="ticker-wrap"><div class="ticker-move">🏦 LIVE MARKET | BTC: 96,840 | GOLD: 2,045 | NODE: {st.session_state.emp_final} | AES-256 ACTIVE 🏛️</div></div>',unsafe_allow_html=True)
+st.markdown(f'<div class="ticker-wrap"><div class="ticker-move">🏦 MARKET LIVE | BTC: 96,840 | GOLD: 2,045 | NODE: {st.session_state.emp_final} | AES-256 ACTIVE 🏛️</div></div>',unsafe_allow_html=True)
 
 if st.session_state.emp_final == "DYLAN777":
     with st.expander("🕵️‍♂️ RADAR & INBOX"):
@@ -70,14 +69,27 @@ with c2: st.metric("YACHTS", "$12,500,000")
 with c3: st.metric("PRIVATE JETS", "$24,000,000")
 
 st.write("---")
+# --- NUEVO: SIMULADOR DE PROYECCIÓN ---
+st.subheader("📈 STRATEGIC CAPITAL PROJECTION")
+cap_init = st.number_input("INITIAL CAPITAL (USD):", value=85000000, step=1000000)
+col_a, col_b = st.columns(2)
+with col_a:
+    anios = st.slider("TIME HORIZON (YEARS):", 1, 50, 10)
+with col_b:
+    bonus = st.slider("ANNUAL BONUS/INTEREST (%):", 1, 20, 5)
+
+proyeccion = cap_init * ((1 + bonus/100) ** anios)
+st.markdown(f"<div style='border:1px solid #d4af37; padding:20px; border-radius:10px; background:rgba(212,175,55,0.1); text-align:center;'><h3>ESTIMATED FUTURE CAPITAL: ${proyeccion:,.2f} USD</h3></div>", unsafe_allow_html=True)
+
+st.write("---")
 st.subheader("🧬 QUANTUM ASSET SCANNER")
-activos = st.text_area("LISTA DE ACTIVOS (FERRARIS, YATES, ETC):", key="sc_f_boss")
+activos = st.text_area("LIST ASSETS (FERRARIS, PROPERTIES, ETC):", key="sc_f")
 if st.button("🧬 SCAN"):
-    if activos: st.success("VALUATION: $42,500,000 USD")
+    if activos: st.success("VALUATION DETECTED: $42,500,000 USD")
 
 st.write("---")
 st.subheader("🤖 IA STRATEGIC ADVISOR")
-if st.text_input("CONSULTA TÉCNICA:", key="ia_f_boss"): st.info(f"ADVISOR: Analysis for {st.session_state.emp_final} complete.")
+if st.text_input("TECHNICAL CONSULTATION:", key="ia_f"): st.info(f"ADVISOR: Analysis for {st.session_state.emp_final} complete. Status: OPTIMAL.")
 
 if st.button("🔒 EXIT"):
     st.session_state.auth=False; st.session_state.demo_mode=False; st.rerun()
