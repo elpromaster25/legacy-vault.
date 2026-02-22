@@ -4,6 +4,7 @@ import time
 # --- 1. BASE DE DATOS DE LOS 34 GIGANTES ---
 VIP = ["EMAAR", "DAMAC", "NEOM", "GINEVRA", "REMAX", "SOTHEBYS", "THE AGENCY", "HINES", "JLL", "CARSO", "BARNES", "FEAU", "ZINGRAF", "GARCIN", "JUNOT", "KRETZ", "KNIGHT FRANK", "SAVILLS", "CBRE", "COLLIERS", "LEGACY", "DYLAN", "ADMIN", "TZIPINE"]
 
+# MEMORIA DEL NODO
 if 'auth' not in st.session_state: st.session_state.auth = False
 if 'reg' not in st.session_state: st.session_state.reg = []
 if 'founder' not in st.session_state: st.session_state.founder = False
@@ -14,6 +15,7 @@ st.markdown("""
     <style>
     /* FORMA SEGURA DE BORRAR LA FLECHA SIN BORRAR BOTONES */
     [data-testid="collapsedControl"] { display: none !important; }
+    [data-testid="stSidebar"] { display: none !important; }
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     
@@ -71,5 +73,5 @@ with c1: st.metric("REAL ESTATE", "$85,000,000")
 with c2: st.metric("YACHTS", "$12,500,000")
 with c3: st.metric("PRIVATE JETS", "$24,000,000")
 
-if st.sidebar.button("🔒 LOGOUT"): # Lo dejo por si las dudas, pero no se va a ver
+if st.button("🔒 LOGOUT"):
     st.session_state.auth = False; st.session_state.founder = False; st.rerun()
