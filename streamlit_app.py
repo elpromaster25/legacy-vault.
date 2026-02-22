@@ -1,13 +1,19 @@
 import streamlit as st
 import time
+
+# --- 1. MEMORIA DE SESIÓN ---
 VIP=["EMAAR","DAMAC","NEOM","GINEVRA","REMAX","SOTHEBYS","THE AGENCY","HINES","JLL","CARSO","BARNES","FEAU","ZINGRAF","GARCIN","JUNOT","KRETZ","KNIGHT FRANK","SAVILLS","CBRE","COLLIERS","LEGACY","DYLAN","ADMIN","TZIPINE","DEMO","DYLAN777"]
 if 'auth' not in st.session_state: st.session_state.auth=False
 if 'demo_mode' not in st.session_state: st.session_state.demo_mode=False
 if 'demo_start' not in st.session_state: st.session_state.demo_start=0
 if 'demo_used' not in st.session_state: st.session_state.demo_used=False
 if 'inbox' not in st.session_state: st.session_state.inbox=[] 
+
+# --- 2. DISEÑO IMPERIAL ---
 st.set_page_config(page_title="LEGACY VAULT",layout="wide",initial_sidebar_state="collapsed")
-st.markdown("<style>[data-testid='collapsedControl'],[data-testid='stSidebar']{display:none!important;}.stApp{background-color:#000;border:4px solid #d4af37;padding:10px;}h1,h2,h3,p,label,.stMetric{color:#d4af37!important;text-align:center!important;}.timer-text{color:#ff4b4b!important;font-weight:bold;font-size:1.5rem;text-align:center;}.ticker-wrap{width:100%;overflow:hidden;border-bottom:1px solid #d4af37;padding:5px 0;margin-bottom:15px;}.ticker-move{display:inline-block;white-space:nowrap;padding-left:100%;animation:marquee 30s linear infinite;color:#d4af37;font-weight:bold;}@keyframes marquee{0%{transform:translateX(0);}100%{transform:translateX(-100%);}}div.stButton > button{background:none!important;border:none!important;color:#d4af37!important;font-weight:bold!important;font-size:1.3rem!important;text-transform:uppercase;}</style>",unsafe_allow_html=True)
+st.markdown("""<style>[data-testid='collapsedControl'],[data-testid='stSidebar']{display:none!important;}.stApp{background-color:#000;border:4px solid #d4af37;padding:10px;}h1,h2,h3,p,label,.stMetric{color:#d4af37!important;text-align:center!important;}.timer-text{color:#ff4b4b!important;font-weight:bold;font-size:1.5rem;text-align:center;}.ticker-wrap{width:100%;overflow:hidden;border-bottom:1px solid #d4af37;padding:5px 0;margin-bottom:15px;}.ticker-move{display:inline-block;white-space:nowrap;padding-left:100%;animation:marquee 30s linear infinite;color:#d4af37;font-weight:bold;}@keyframes marquee{0%{transform:translateX(0);}100%{transform:translateX(-100%);}}div.stButton > button{background:none!important;border:none!important;color:#d4af37!important;font-weight:bold!important;font-size:1.3rem!important;text-transform:uppercase;}</style>""",unsafe_allow_html=True)
+
+# --- 3. PANTALLA PÚBLICA (LOGIN + BUZÓN + PRECIOS MENSUALES) ---
 if not st.session_state.auth:
     st.title("🏛️ LEGACY QUANTUM VAULT")
     reg_sel=st.selectbox("🌐 REGION:",["USA / GLOBAL","ARGENTINA"])
@@ -23,16 +29,16 @@ if not st.session_state.auth:
                 st.success("SENT / ENVIADO")
         st.write("---")
         if reg_sel=="USA / GLOBAL":
-            st.write("Subscription: **$12,000 USD / MONTH**") # EL CAMBIO MAESTRO
-            emp=st.text_input("COMPANY / FIRMA:").strip().upper()
-            pw=st.text_input("KEY / CLAVE:",type="password")
-            if st.button("🔓 UNLOCK / ACCEDER"):
+            st.write("Subscription: **$12,000 USD / MONTH**")
+            emp=st.text_input("COMPANY:").strip().upper()
+            pw=st.text_input("KEY:",type="password")
+            if st.button("🔓 UNLOCK"):
                 if pw=="LEGACY2026" and (emp in VIP or emp=="DYLAN777"):
                     st.session_state.auth=True; st.session_state.emp_final=emp; st.rerun()
                 else: st.error("DENIED")
         else:
-            st.write("Suscripción: **$2.000.000 ARS / MES**") # EL CAMBIO LOCAL
-            emp=st.text_input("EMPRESA / FIRMA:").strip().upper()
+            st.write("Suscripción: **$2.000.000 ARS / MES**")
+            emp=st.text_input("EMPRESA:").strip().upper()
             pw=st.text_input("CLAVE:",type="password")
             if st.button("🔓 ACCEDER"):
                 if pw=="LEGACY2026" and (emp in VIP or emp=="DYLAN777"):
@@ -44,23 +50,36 @@ if not st.session_state.auth:
                 if emp: st.session_state.auth=True; st.session_state.demo_mode=True; st.session_state.demo_used=True; st.session_state.demo_start=time.time(); st.session_state.emp_final=f"DEMO_{emp}"; st.rerun()
                 else: st.warning("Enter company name.")
     st.stop()
+
+# --- 4. INTERIOR (IMPERIO RESTAURADO) ---
 if st.session_state.demo_mode:
     rem=max(0,300-int(time.time()-st.session_state.demo_start))
     if rem<=0: st.session_state.auth=False; st.session_state.demo_mode=False; st.rerun()
     m,s=divmod(rem,60); st.markdown(f"<p class='timer-text'>⏳ SESSION: {m:02d}:{s:02d}</p>",unsafe_allow_html=True)
+
 st.title(f"🏛️ WELCOME: {st.session_state.emp_final}")
-st.markdown(f'<div class="ticker-wrap"><div class="ticker-move">🏦 LIVE | BTC: 96,840 | GOLD: 2,045 | NODE: {st.session_state.emp_final} | AES-256 ACTIVE 🏛️</div></div>',unsafe_allow_html=True)
+st.markdown(f'<div class="ticker-wrap"><div class="ticker-move">🏦 LIVE MARKET | BTC: 96,840 | GOLD: 2,045 | NODE: {st.session_state.emp_final} | AES-256 ACTIVE 🏛️</div></div>',unsafe_allow_html=True)
+
 if st.session_state.emp_final == "DYLAN777":
     with st.expander("🕵️‍♂️ RADAR & INBOX"):
         for msg in st.session_state.inbox: st.info(msg)
+
 c1,c2,c3=st.columns(3)
 with c1: st.metric("REAL ESTATE", "$85,000,000")
 with c2: st.metric("YACHTS", "$12,500,000")
 with c3: st.metric("PRIVATE JETS", "$24,000,000")
+
 st.write("---")
-act=st.text_area("LISTA DE ACTIVOS:", key="sc_restore")
+st.subheader("🧬 QUANTUM ASSET SCANNER")
+activos = st.text_area("LISTA DE ACTIVOS (FERRARIS, YATES, ETC):", key="sc_f_boss")
 if st.button("🧬 SCAN"):
     if activos: st.success("VALUATION: $42,500,000 USD")
+
+st.write("---")
+st.subheader("🤖 IA STRATEGIC ADVISOR")
+if st.text_input("CONSULTA TÉCNICA:", key="ia_f_boss"): st.info(f"ADVISOR: Analysis for {st.session_state.emp_final} complete.")
+
 if st.button("🔒 EXIT"):
     st.session_state.auth=False; st.session_state.demo_mode=False; st.rerun()
+
 if st.session_state.demo_mode: time.sleep(1); st.rerun()
