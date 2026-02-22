@@ -4,10 +4,10 @@ VIP=["EMAAR","DAMAC","NEOM","GINEVRA","REMAX","SOTHEBYS","THE AGENCY","HINES","J
 if 'auth' not in st.session_state: st.session_state.auth=False
 if 'reg' not in st.session_state: st.session_state.reg=[]
 st.set_page_config(page_title="LEGACY VAULT",layout="wide",initial_sidebar_state="collapsed")
-st.markdown("<style>[data-testid='collapsedControl'],[data-testid='stSidebar']{display:none!important;}.stApp{background-color:#000;border:4px solid #d4af37;padding:10px;}h1,h2,h3,p,label,.stMetric{color:#d4af37!important;text-align:center!important;}.ticker-wrap{width:100%;overflow:hidden;border-bottom:1px solid #d4af37;padding:10px 0;margin-bottom:20px;}.ticker-move{display:inline-block;white-space:nowrap;padding-left:100%;animation:marquee 30s linear infinite;color:#d4af37;font-weight:bold;}@keyframes marquee{0%{transform:translateX(0);}100%{transform:translateX(-100%);}}.ws-link{display:block;color:#d4af37!important;font-weight:bold;text-decoration:none;text-align:center;margin-bottom:15px;font-size:1.2rem;}div.stButton > button{background:none!important;border:none!important;color:#d4af37!important;font-weight:bold!important;font-size:1.5rem!important;text-transform:uppercase;cursor:pointer;}</style>",unsafe_allow_html=True)
+st.markdown("<style>[data-testid='collapsedControl'],[data-testid='stSidebar']{display:none!important;}.stApp{background-color:#000;border:4px solid #d4af37;padding:10px;}h1,h2,h3,p,label,.stMetric{color:#d4af37!important;text-align:center!important;}.ticker-wrap{width:100%;overflow:hidden;border-bottom:1px solid #d4af37;padding:10px 0;margin-bottom:20px;}.ticker-move{display:inline-block;white-space:nowrap;padding-left:100%;animation:marquee 30s linear infinite;color:#d4af37;font-weight:bold;}@keyframes marquee{0%{transform:translateX(0);}100%{transform:translateX(-100%);}}.ws-link{display:block;color:#d4af37!important;font-weight:bold;text-decoration:none;text-align:center;margin-bottom:15px;font-size:1.2rem;}div.stButton > button{background:none!important;border:none!important;color:#d4af37!important;font-weight:bold!important;font-size:1.5rem!important;text-transform:uppercase;cursor:pointer;}.mail-link{display:block;color:#ffffff!important;font-size:0.9rem;text-align:center;text-decoration:none;margin-top:10px;opacity:0.7;}</style>",unsafe_allow_html=True)
 if not st.session_state.auth:
     st.title("🏛️ LEGACY QUANTUM VAULT")
-    reg_sel=st.selectbox("🌐 REGION:",["USA / GLOBAL","ARGENTINA"])
+    reg_sel=st.selectbox("🌐 SELECT REGION:",["USA / GLOBAL","ARGENTINA"])
     _,col_c,_=st.columns([1,1.5,1])
     with col_c:
         st.write("---")
@@ -18,6 +18,8 @@ if not st.session_state.auth:
         else:
             st.markdown(f'<a href="{ws}MP" class="ws-link">💳 MERCADO PAGO (WSP)</a>',unsafe_allow_html=True)
             st.markdown(f'<a href="{ws}DNI" class="ws-link">🏦 CUENTA DNI (WSP)</a>',unsafe_allow_html=True)
+        # CONFIGURACIÓN DE CORREO (EL RESPALDO)
+        st.markdown('<a href="mailto:dylanelpromaster25@://gmail.com" class="mail-link">✉️ ALTERNATIVE: dylanelpromaster25@gmail.com</a>', unsafe_allow_html=True)
         st.write("---")
         emp=st.text_input("COMPANY:").strip().upper()
         pw=st.text_input("KEY:",type="password")
