@@ -1,7 +1,7 @@
-import streamlit st
+import streamlit as st
 import time
 
-# --- 1. WHITELIST DE LOS 34 GIGANTES ---
+# --- 1. BASE DE DATOS DE LOS 34 GIGANTES ---
 VIP = ["EMAAR", "DAMAC", "NEOM", "GINEVRA", "REMAX", "SOTHEBYS", "THE AGENCY", "HINES", "JLL", "CARSO", "BARNES", "FEAU", "ZINGRAF", "GARCIN", "JUNOT", "KRETZ", "KNIGHT FRANK", "SAVILLS", "CBRE", "COLLIERS", "LEGACY", "DYLAN", "ADMIN", "TZIPINE"]
 
 if 'auth' not in st.session_state: st.session_state.auth = False
@@ -48,7 +48,7 @@ if not st.session_state.auth:
                 st.session_state.reg.append(f"🔴 ERROR: {emp} - {time.strftime('%H:%M')}")
     st.stop()
 
-# --- 4. INTERIOR (RESTAURADO AL 100%) ---
+# --- 4. INTERIOR TOTAL ---
 emp = st.session_state.emp_final
 st.title(f"🏛️ TERMINAL: {emp}")
 st.markdown(f'<div class="ticker-wrap"><div class="ticker-move">🏦 MARKET LIVE | BTC: 96,840 | GOLD: 2,045 | NODE: {emp} 🏛️</div></div>', unsafe_allow_html=True)
@@ -57,27 +57,30 @@ if emp == "DYLAN777":
     with st.expander("🕵️‍♂️ RADAR (SOLO FOUNDER)"):
         for r in st.session_state.reg: st.info(r)
 
+# MÉTRICAS
 c1, c2, c3 = st.columns(3)
 with c1: st.metric("REAL ESTATE", "$85,000,000")
 with c2: st.metric("YACHTS", "$12,500,000")
 with c3: st.metric("PRIVATE JETS", "$24,000,000")
 
 st.write("---")
+# IA
 st.subheader("🤖 IA STRATEGIC ADVISOR")
 q = st.text_input("CONSULTA A LA IA:")
 if q:
     with st.spinner("Analizando..."): time.sleep(1); st.success(f"Análisis completado para {emp}. Estado: ÓPTIMO.")
 
+# SCANNER
 st.write("---")
 st.subheader("🧬 QUANTUM ASSET SCANNER")
-act = st.text_area("LISTA DE ACTIVOS:", key="sc_final")
+act = st.text_area("LISTA DE ACTIVOS:", key="sc_final_boss")
 if st.button("🧬 INICIAR ESCANEO"):
     if act:
         with st.spinner("Escaneando..."): time.sleep(1.5); st.markdown(f"<div class='gold-card'><h2>VALUACIÓN: $42,500,000 USD</h2></div>", unsafe_allow_html=True)
 
 # RELOJES
 st.write("---")
-_, r1, r2, r3, _ = st.columns(5)
+r1, r2, r3 = st.columns(3)
 with r1: st.write("🗽 NY: 07:30 PM")
 with r2: st.write("🏢 BA: 09:30 PM")
 with r3: st.write("🏰 LN: 12:30 AM")
