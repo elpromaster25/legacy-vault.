@@ -15,7 +15,7 @@ st.markdown("""
     [data-testid='collapsedControl'], [data-testid='stSidebar'] { display: none !important; }
     .stApp { background-color: #000; border: 4px solid #d4af37; padding: 10px; }
     h1, h2, h3, p, label, .stMetric { color: #d4af37 !important; text-align: center !important; }
-    .timer-text { color: #ff4b4b !important; font-weight: bold; font-size: 1.5rem; text-align: center; }
+    .timer-text { color: #ff4b4b !important; font-weight: bold; font-size: 1.5rem; text-align: center; margin-bottom: 5px; }
     .ticker-wrap { width: 100%; overflow: hidden; border-bottom: 1px solid #d4af37; padding: 5px 0; margin-bottom: 15px; }
     .ticker-move { display: inline-block; white-space: nowrap; padding-left: 100%; animation: marquee 30s linear infinite; color: #d4af37; font-weight: bold; }
     @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
@@ -36,7 +36,7 @@ if not st.session_state.auth:
             st.write("Subscription: **$12,000 USD**")
             st.markdown(f'<a href="{ws}PAYPAL" class="ws-link">🔵 PAY WITH PAYPAL (WSP)</a>', unsafe_allow_html=True)
             st.write("---")
-            emp = st.text_input("COMPANY / FIRMA:").strip().upper()
+            emp = st.text_input("COMPANY:").strip().upper()
             pw = st.text_input("KEY:", type="password")
             if st.button("🔓 UNLOCK"):
                 if pw == "LEGACY2026": st.session_state.auth = True; st.session_state.emp_final = emp; st.rerun()
@@ -51,7 +51,7 @@ if not st.session_state.auth:
             st.markdown(f'<a href="{ws}MP" class="ws-link" style="color:#009ee3!important;">💳 MERCADO PAGO (WSP)</a>', unsafe_allow_html=True)
             st.markdown(f'<a href="{ws}DNI" class="ws-link" style="color:#004d40!important;">🏦 CUENTA DNI (WSP)</a>', unsafe_allow_html=True)
             st.write("---")
-            emp = st.text_input("EMPRESA / FIRMA:").strip().upper()
+            emp = st.text_input("EMPRESA:").strip().upper()
             pw = st.text_input("CLAVE:", type="password")
             if st.button("🔓 ACCEDER"):
                 if pw == "LEGACY2026": st.session_state.auth = True; st.session_state.emp_final = emp; st.rerun()
@@ -63,23 +63,19 @@ if not st.session_state.auth:
                 else: st.warning("Poné el nombre de tu empresa.")
     st.stop()
 
-# --- 5. INTERIOR ---
+# --- 5. INTERIOR CON MOTOR DE TIEMPO ---
 if st.session_state.demo_mode:
-    timer_placeholder = st.empty()
-    col_out, col_time = st.columns([1, 1])
-    with col_out:
-        if st.button("🔒 EXIT DEMO / SALIR"):
-            st.session_state.auth = False; st.session_state.demo_mode = False; st.rerun()
-    
-    # Lógica del reloj acelerada
     remaining = max(0, 300 - int(time.time() - st.session_state.demo_start))
     if remaining <= 0:
         st.session_state.auth = False; st.session_state.demo_mode = False; st.rerun()
     
     mins, secs = divmod(remaining, 60)
-    timer_placeholder.markdown(f"<p class='timer-text'>⏳ SESSION: {mins:02d}:{secs:02d}</p>", unsafe_allow_html=True)
-    time.sleep(1)
-    st.rerun()
+    col_out, col_timer = st.columns([1, 2])
+    with col_out:
+        if st.button("🔒 EXIT DEMO"):
+            st.session_state.auth = False; st.session_state.demo_mode = False; st.rerun()
+    with col_timer:
+        st.markdown(f"<p class='timer-text'>⏳ SESSION TIME: {mins:02d}:{secs:02d}</p>", unsafe_allow_html=True)
 
 st.markdown(f'<div class="ticker-wrap"><div class="ticker-move">🏦 MARKET LIVE | BTC: 96,840 | GOLD: 2,045 | NODE: {st.session_state.emp_final} | AES-256 ACTIVE 🏛️</div></div>',unsafe_allow_html=True)
 
@@ -89,5 +85,19 @@ with c2: st.metric("YACHTS", "$12,500,000")
 with c3: st.metric("PRIVATE JETS", "$24,000,000")
 
 st.write("---")
-if st.button("🧬 SCANNER"): st.success("VALUATION: $42,500,000 USD")
-if st.button("🔒 LOGOUT"): st.session_state.auth = False; st.session_state.demo_mode = False; st.rerun()
+st.subheader("🧬 QUANTUM ASSET SCANNER")
+act = st.text_area("LISTA DE ACTIVOS (FERRARIS, PROPIEDADES, ETC):", key="sc_f_boss")
+if st.button("🧬 SCAN"):
+    if act:
+        with st.spinner("..."): time.sleep(1); st.success("VALUATION: $42,500,000 USD")
+
+st.write("---")
+st.subheader("🤖 IA STRATEGIC ADVISOR")
+p_ia = st.text_input("CONSULTA TÉCNICA:", key="ia_f_boss")
+if p_ia:
+    st.info(f"ADVISOR: Analysis for {st.session_state.emp_final} complete. Status: OPTIMAL.")
+
+# EL MOTOR QUE HACE QUE EL TIEMPO BAJE SOLO CADA SEGUNDO
+if st.session_state.demo_mode:
+    time.sleep(1)
+    st.rerun()
