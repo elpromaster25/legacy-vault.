@@ -1,25 +1,32 @@
 import streamlit as st
 import time
 
-# --- 1. RADAR GLOBAL (INBOX QUE NO MUERE) ---
-if 'inbox' not in st.session_state:
-    st.session_state.inbox = []
+# --- 1. RADAR ETERNO (ESTO SOBREVIVE A LAS PESTAÑAS) ---
+@st.cache_resource
+def get_global_radar():
+    return [] # ESTA LISTA ES EL SERVIDOR REAL
+
+radar_global = get_global_radar()
+
+# --- 2. REGISTRO DE ENTRADAS (RADAR PASIVO) ---
+def register_hit(name):
+    timestamp = time.strftime('%H:%M:%S')
+    log = f"📡 SIGNAL: {name} entered the Vault at {timestamp}"
+    if log not in radar_global:
+        radar_global.append(log)
 
 VIP=["EMAAR","DAMAC","NEOM","GINEVRA","REMAX","SOTHEBYS","THE AGENCY","HINES","JLL","CARSO","BARNES","FEAU","ZINGRAF","GARCIN","JUNOT","KRETZ","KNIGHT FRANK","SAVILLS","CBRE","COLLIERS","LEGACY","DYLAN","ADMIN","TZIPINE","DEMO","DYLAN777"]
 
 if 'auth' not in st.session_state: st.session_state.auth = False
 
-# --- 2. DISEÑO IMPERIAL & BLINDAJE AGRESIVO (CHAU BARRAS) ---
+# --- 3. DISEÑO IMPERIAL & BLINDAJE TOTAL ---
 st.set_page_config(page_title="LEGACY VAULT", layout="wide", initial_sidebar_state="collapsed")
 
 st.markdown("""
     <style>
-    /* OCULTAR TODO: BARRA SUPERIOR, LATERAL, BOTONES Y FOOTER */
     header, [data-testid="stSidebar"], [data-testid="collapsedControl"], .stDeployButton, #MainMenu, footer {
-        visibility: hidden;
-        display: none !important;
+        visibility: hidden; display: none !important;
     }
-    /* AJUSTE DE PANTALLA COMPLETA */
     .block-container {padding: 1rem 2rem !important;}
     .stApp {background-color: #000; border: 4px solid #d4af37; padding: 10px;}
     h1, h2, h3, p, label, .stMetric {color: #d4af37!important; text-align: center!important;}
@@ -30,7 +37,7 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# --- 3. PANTALLA PÚBLICA (LOGIN + MENSAJERÍA REPARADA) ---
+# --- 4. PANTALLA PÚBLICA (CAPTURA DE DATOS) ---
 if not st.session_state.auth:
     st.title("🏛️ LEGACY QUANTUM VAULT")
     reg_sel = st.selectbox("🌐 REGION:", ["USA / GLOBAL", "ARGENTINA"])
@@ -38,52 +45,41 @@ if not st.session_state.auth:
     with col_c:
         st.write("---")
         st.subheader("📩 SECURE MESSAGE LINE")
-        m_name = st.text_input("NAME / NOMBRE:", key="public_name_input")
-        m_text = st.text_area("MESSAGE / MENSAJE:", key="public_msg_input")
-        
+        m_name = st.text_input("NAME / NOMBRE:", key="pub_n")
+        m_text = st.text_area("MESSAGE / MENSAJE:", key="pub_m")
         if st.button("📨 SEND / ENVIAR"):
             if m_name and m_text:
-                # GUARDADO EN EL RADAR (FUNCIONA CON CUALQUIER NOMBRE)
-                st.session_state.inbox.append(f"📩 {m_name}: {m_text} ({time.strftime('%H:%M')})")
+                msg = f"📩 MESSAGE from {m_name}: {m_text} ({time.strftime('%H:%M')})"
+                radar_global.append(msg) # SE GUARDA EN EL SERVIDOR
                 st.success("SENT / ENVIADO")
-                time.sleep(1)
-                st.rerun()
-            else: st.error("Complete fields / Complete campos")
+                time.sleep(1); st.rerun()
         
         st.write("---")
-        if reg_sel == "USA / GLOBAL":
-            st.write("Subscription: **$12,000 USD / MONTH**")
-            emp = st.text_input("COMPANY:").strip().upper()
-            pw = st.text_input("KEY:", type="password")
-            if st.button("🔓 UNLOCK"):
-                if pw == "LEGACY2026" and (emp in VIP or emp == "DYLAN777"):
-                    st.session_state.auth = True; st.session_state.emp_final = emp; st.rerun()
-                else: st.error("DENIED")
-        else:
-            st.write("Suscripción: **$2.000.000 ARS / MES**")
-            emp = st.text_input("EMPRESA:").strip().upper()
-            pw = st.text_input("CLAVE:", type="password")
-            if st.button("🔓 ACCEDER"):
-                if pw == "LEGACY2026" and (emp in VIP or emp == "DYLAN777"):
-                    st.session_state.auth = True; st.session_state.emp_final = emp; st.rerun()
-                else: st.error("DENEGADO")
+        emp = st.text_input("COMPANY / EMPRESA:").strip().upper()
+        pw = st.text_input("KEY / CLAVE:", type="password")
+        if st.button("🔓 UNLOCK / ACCEDER"):
+            if pw == "LEGACY2026" and (emp in VIP or emp == "DYLAN777"):
+                register_hit(emp) # LOG DE ENTRADA
+                st.session_state.auth = True; st.session_state.emp_final = emp; st.rerun()
+            else: st.error("DENIED")
     st.stop()
 
-# --- 4. INTERIOR (BÚNKER RESTAURADO 100%) ---
+# --- 5. INTERIOR (RADAR ADMIN TOTAL) ---
 st.title(f"🏛️ WELCOME: {st.session_state.emp_final}")
-st.markdown(f'<div class="ticker-wrap"><div class="ticker-move">🏦 MARKET LIVE | BTC: 96,840 | GOLD: 2,045 | NODE: {st.session_state.emp_final} | AES-256 ACTIVE 🏛️</div></div>', unsafe_allow_html=True)
+st.markdown(f'<div class="ticker-wrap"><div class="ticker-move">🏦 LIVE MARKET | BTC: 96,840 | GOLD: 2,045 | NODE: {st.session_state.emp_final} | SECURE CHANNEL ACTIVE 🏛️</div></div>', unsafe_allow_html=True)
 
-# RADAR ADMIN (DYLAN777)
+# RADAR DE DYLAN777 (DETECTA QUIÉN ENTRÓ Y QUÉ DIJERON)
 if st.session_state.emp_final == "DYLAN777":
-    with st.expander("🕵️‍♂️ RADAR ADMIN & INBOX", expanded=True):
-        if not st.session_state.inbox:
-            st.write("SIN SEÑALES / NO SIGNALS")
+    with st.expander("🕵️‍♂️ QUANTUM RADAR (LIVE SIGNALS)", expanded=True):
+        if not radar_global:
+            st.write("SILENCE IN THE VAULT")
         else:
-            for m in st.session_state.inbox:
-                st.info(m)
-        if st.button("🗑️ CLEAR RADAR"):
-            st.session_state.inbox = []; st.rerun()
+            for signal in reversed(radar_global): # ÚLTIMOS PRIMERO
+                st.info(signal)
+        if st.button("🗑️ RESET RADAR"):
+            radar_global.clear(); st.rerun()
 
+# CONTENIDO IMPERIAL RESTAURADO
 c1, c2, c3 = st.columns(3)
 with c1: st.metric("REAL ESTATE", "$85,000,000")
 with c2: st.metric("YACHTS", "$12,500,000")
@@ -99,14 +95,11 @@ st.success(f"FUTURE VALUATION: ${(cap_init * ((1 + bonus/100) ** anios)):,.2f} U
 
 st.write("---")
 st.subheader("🧬 QUANTUM ASSET SCANNER")
-activos = st.text_area("LIST ASSETS:", key="scan_box")
-if st.button("🧬 SCAN"):
-    if activos: st.success("VALUATION DETECTED: $42,500,000 USD")
+if st.button("🧬 SCAN ASSETS"): st.success("SCANNING COMPLETE: $42,500,000 USD DETECTED")
 
 st.write("---")
 st.subheader("🤖 IA STRATEGIC ADVISOR")
-if st.text_input("CONSULTA:", key="ia_box"): 
-    st.info(f"ADVISOR: Analysis for {st.session_state.emp_final} complete.")
+if st.text_input("CONSULTA:", key="ia_box"): st.info("ANALYSIS COMPLETE.")
 
 if st.button("🔒 EXIT"):
     st.session_state.auth = False; st.rerun()
