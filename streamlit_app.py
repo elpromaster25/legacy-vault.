@@ -1,14 +1,14 @@
 import streamlit as st
 import time
 
-# --- 1. RADAR ETERNO (ESTO SOBREVIVE A LAS PESTAÑAS) ---
+# --- 1. RADAR ETERNO (MEMORIA DEL SERVIDOR) ---
 @st.cache_resource
 def get_global_radar():
-    return [] # ESTA LISTA ES EL SERVIDOR REAL
+    return [] 
 
 radar_global = get_global_radar()
 
-# --- 2. REGISTRO DE ENTRADAS (RADAR PASIVO) ---
+# --- 2. REGISTRO DE ENTRADAS ---
 def register_hit(name):
     timestamp = time.strftime('%H:%M:%S')
     log = f"📡 SIGNAL: {name} entered the Vault at {timestamp}"
@@ -18,8 +18,9 @@ def register_hit(name):
 VIP=["EMAAR","DAMAC","NEOM","GINEVRA","REMAX","SOTHEBYS","THE AGENCY","HINES","JLL","CARSO","BARNES","FEAU","ZINGRAF","GARCIN","JUNOT","KRETZ","KNIGHT FRANK","SAVILLS","CBRE","COLLIERS","LEGACY","DYLAN","ADMIN","TZIPINE","DEMO","DYLAN777"]
 
 if 'auth' not in st.session_state: st.session_state.auth = False
+if 'demo_mode' not in st.session_state: st.session_state.demo_mode = False
 
-# --- 3. DISEÑO IMPERIAL & BLINDAJE TOTAL ---
+# --- 3. DISEÑO IMPERIAL & BLINDAJE TOTAL (SIDEBAR HIDDEN) ---
 st.set_page_config(page_title="LEGACY VAULT", layout="wide", initial_sidebar_state="collapsed")
 
 st.markdown("""
@@ -33,12 +34,12 @@ st.markdown("""
     .ticker-wrap {width: 100%; overflow: hidden; border-bottom: 1px solid #d4af37; padding: 5px 0; margin-bottom: 15px;}
     .ticker-move {display: inline-block; white-space: nowrap; padding-left: 100%; animation: marquee 30s linear infinite; color: #d4af37; font-weight: bold;}
     @keyframes marquee {0% {transform: translateX(0);} 100% {transform: translateX(-100%);}}
-    div.stButton > button {background: none!important; border: none!important; color: #d4af37!important; font-weight: bold!important; font-size: 1.3rem!important; text-transform: uppercase;}
+    div.stButton > button {background: none!important; border: none!important; color: #d4af37!important; font-weight: bold!important; font-size: 1.2rem!important; text-transform: uppercase;}
     </style>
     """, unsafe_allow_html=True)
 
-# --- 4. PANTALLA PÚBLICA (CAPTURA DE DATOS) ---
-if not st.session_state.auth:
+# --- 4. PANTALLA PÚBLICA (LOGIN + DEMO INTEGRADA) ---
+if not st.session_state.auth and not st.session_state.demo_mode:
     st.title("🏛️ LEGACY QUANTUM VAULT")
     reg_sel = st.selectbox("🌐 REGION:", ["USA / GLOBAL", "ARGENTINA"])
     _, col_c, _ = st.columns([1, 1.5, 1])
@@ -50,36 +51,52 @@ if not st.session_state.auth:
         if st.button("📨 SEND / ENVIAR"):
             if m_name and m_text:
                 msg = f"📩 MESSAGE from {m_name}: {m_text} ({time.strftime('%H:%M')})"
-                radar_global.append(msg) # SE GUARDA EN EL SERVIDOR
+                radar_global.append(msg)
                 st.success("SENT / ENVIADO")
                 time.sleep(1); st.rerun()
         
         st.write("---")
+        st.subheader("🔑 ACCESS CONTROL")
         emp = st.text_input("COMPANY / EMPRESA:").strip().upper()
         pw = st.text_input("KEY / CLAVE:", type="password")
-        if st.button("🔓 UNLOCK / ACCEDER"):
-            if pw == "LEGACY2026" and (emp in VIP or emp == "DYLAN777"):
-                register_hit(emp) # LOG DE ENTRADA
-                st.session_state.auth = True; st.session_state.emp_final = emp; st.rerun()
-            else: st.error("DENIED")
+        
+        col_btn1, col_btn2 = st.columns(2)
+        with col_btn1:
+            if st.button("🔓 UNLOCK"):
+                if pw == "LEGACY2026" and (emp in VIP or emp == "DYLAN777"):
+                    register_hit(emp)
+                    st.session_state.auth = True; st.session_state.emp_final = emp; st.rerun()
+                else: st.error("DENIED")
+        with col_btn2:
+            if st.button("⏱️ START DEMO"):
+                register_hit("GUEST_DEMO")
+                st.session_state.demo_mode = True; st.session_state.start_time = time.time(); st.rerun()
+                
     st.stop()
 
-# --- 5. INTERIOR (RADAR ADMIN TOTAL) ---
-st.title(f"🏛️ WELCOME: {st.session_state.emp_final}")
-st.markdown(f'<div class="ticker-wrap"><div class="ticker-move">🏦 LIVE MARKET | BTC: 96,840 | GOLD: 2,045 | NODE: {st.session_state.emp_final} | SECURE CHANNEL ACTIVE 🏛️</div></div>', unsafe_allow_html=True)
+# --- 5. INTERIOR (BÚNKER + RELOJ DE DEMO) ---
+emp_display = "GUEST (DEMO)" if st.session_state.demo_mode else st.session_state.emp_final
+st.title(f"🏛️ VAULT NODE: {emp_display}")
 
-# RADAR DE DYLAN777 (DETECTA QUIÉN ENTRÓ Y QUÉ DIJERON)
-if st.session_state.emp_final == "DYLAN777":
+# LÓGICA DE TIEMPO PARA DEMO
+if st.session_state.demo_mode:
+    elapsed = time.time() - st.session_state.start_time
+    remaining = max(0, int(300 - elapsed))
+    st.warning(f"⏳ DEMO ACCESS EXPIRES IN: {remaining} SECONDS")
+    if remaining <= 0:
+        st.session_state.demo_mode = False; st.error("DEMO EXPIRED"); time.sleep(2); st.rerun()
+
+st.markdown(f'<div class="ticker-wrap"><div class="ticker-move">🏦 MARKET LIVE | BTC: 96,840 | GOLD: 2,045 | NODE: {emp_display} | AES-256 ACTIVE 🏛️</div></div>', unsafe_allow_html=True)
+
+# RADAR ADMIN (SOLO DYLAN777)
+if not st.session_state.demo_mode and st.session_state.emp_final == "DYLAN777":
     with st.expander("🕵️‍♂️ QUANTUM RADAR (LIVE SIGNALS)", expanded=True):
-        if not radar_global:
-            st.write("SILENCE IN THE VAULT")
+        if not radar_global: st.write("SILENCE")
         else:
-            for signal in reversed(radar_global): # ÚLTIMOS PRIMERO
-                st.info(signal)
-        if st.button("🗑️ RESET RADAR"):
-            radar_global.clear(); st.rerun()
+            for signal in reversed(radar_global): st.info(signal)
+        if st.button("🗑️ RESET"): radar_global.clear(); st.rerun()
 
-# CONTENIDO IMPERIAL RESTAURADO
+# CONTENIDO DEL BÚNKER
 c1, c2, c3 = st.columns(3)
 with c1: st.metric("REAL ESTATE", "$85,000,000")
 with c2: st.metric("YACHTS", "$12,500,000")
@@ -101,5 +118,5 @@ st.write("---")
 st.subheader("🤖 IA STRATEGIC ADVISOR")
 if st.text_input("CONSULTA:", key="ia_box"): st.info("ANALYSIS COMPLETE.")
 
-if st.button("🔒 EXIT"):
-    st.session_state.auth = False; st.rerun()
+if st.button("🔒 EXIT VAULT"):
+    st.session_state.auth = False; st.session_state.demo_mode = False; st.rerun()
