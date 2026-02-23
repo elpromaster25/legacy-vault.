@@ -62,26 +62,8 @@ if not st.session_state.auth and not st.session_state.demo_mode:
                 st.session_state.start_t = time.time(); st.rerun()
     st.stop()
 
-# --- 4. BÚNKER ACTIVO (REPARACIÓN LÍNEA 68) ---
-if st.session_state.demo_mode:
-    # SI NO EXISTE EL TIEMPO, LO CREAMOS PARA EVITAR EL ERROR
-    if 'start_t' not in st.session_state:
-        st.session_state.start_t = time.time()
-        
-    elapsed = time.time() - st.session_state.start_t
-    rem = max(0, int(300 - elapsed))
-    
-    if rem <= 0:
-        st.session_state.demo_mode = False; st.rerun()
-    
-    st.warning(f"⏳ DEMO EXPIRES IN: {rem} SECONDS")
-    
-    # AUTO-REFRESH PARA EL RELOJ
-    if rem > 0:
-        time.sleep(1)
-        st.rerun()
-
-emp_now = "GUEST" if st.session_state.demo_mode else st.session_state.emp_final
+# --- 4. INTERIOR DEL BÚNKER (DIBUJO PRIMERO) ---
+emp_now = "GUEST (DEMO)" if st.session_state.demo_mode else st.session_state.emp_final
 st.title(f"🏛️ VAULT NODE: {emp_now}")
 
 # RADAR DYLAN777
@@ -93,7 +75,6 @@ if not st.session_state.demo_mode and st.session_state.emp_final == "DYLAN777":
         if st.button("🗑️ RESET RADAR"):
             radar_global.clear(); st.rerun()
 
-# CONTENIDO DEL BÚNKER
 st.markdown(f'<div class="ticker-wrap"><div class="ticker-move">🏦 MARKET LIVE | BTC: 98,200 | GOLD: 2,120 | NODE: {emp_now} | AES-256 ACTIVE 🏛️</div></div>', unsafe_allow_html=True)
 
 c1, c2, c3 = st.columns(3)
@@ -107,6 +88,21 @@ cap = st.number_input("INITIAL:", value=85000000)
 a = st.slider("YEARS:", 1, 50, 10)
 b = st.slider("BONUS %:", 1, 20, 5)
 st.success(f"FUTURE VALUATION: ${(cap * ((1 + b/100) ** a)):,.2f} USD")
+
+# --- 5. LÓGICA DE TIEMPO (AL FINAL PARA NO TRABAR EL DIBUJO) ---
+if st.session_state.demo_mode:
+    if 'start_t' not in st.session_state: st.session_state.start_t = time.time()
+    elapsed = time.time() - st.session_state.start_t
+    rem = max(0, int(300 - elapsed))
+    
+    st.write("---")
+    st.warning(f"⏳ DEMO EXPIRES IN: {rem} SECONDS")
+    
+    if rem <= 0:
+        st.session_state.demo_mode = False; st.rerun()
+    else:
+        time.sleep(1)
+        st.rerun()
 
 if st.button("🔒 EXIT VAULT"):
     st.session_state.auth = False; st.session_state.demo_mode = False; st.rerun()
