@@ -1,7 +1,7 @@
 import streamlit as st
 import time
 
-# --- 1. RADAR ETERNO (MEMORIA GLOBAL) ---
+# --- 1. RADAR ETERNO (MEMORIA DEL SERVIDOR) ---
 @st.cache_resource
 def get_global_radar():
     return [] 
@@ -62,7 +62,7 @@ if not st.session_state.auth and not st.session_state.demo_mode:
                 st.session_state.start_t = time.time(); st.rerun()
     st.stop()
 
-# --- 4. INTERIOR DEL BÚNKER (DIBUJO PRIMERO) ---
+# --- 4. INTERIOR DEL BÚNKER (ARREGLADO) ---
 emp_now = "GUEST (DEMO)" if st.session_state.demo_mode else st.session_state.emp_final
 st.title(f"🏛️ VAULT NODE: {emp_now}")
 
@@ -83,21 +83,31 @@ with c2: st.metric("YACHTS", "$12,500,000")
 with c3: st.metric("JETS", "$24,000,000")
 
 st.write("---")
+# SIMULADOR
 st.subheader("📈 STRATEGIC CAPITAL PROJECTION")
 cap = st.number_input("INITIAL:", value=85000000)
 a = st.slider("YEARS:", 1, 50, 10)
 b = st.slider("BONUS %:", 1, 20, 5)
 st.success(f"FUTURE VALUATION: ${(cap * ((1 + b/100) ** a)):,.2f} USD")
 
-# --- 5. LÓGICA DE TIEMPO (AL FINAL PARA NO TRABAR EL DIBUJO) ---
+st.write("---")
+# SCANNER DE FERRARIS (VUELVE LA ARTILLERÍA)
+st.subheader("🧬 QUANTUM ASSET SCANNER")
+st.text_area("LIST ASSETS (FERRARIS, PROPERTIES, ETC):", key="scan_box")
+if st.button("🧬 SCAN"): st.success("VALUATION DETECTED: $42,500,000 USD")
+
+st.write("---")
+# IA ADVISOR (VUELVE EL CEREBRO)
+st.subheader("🤖 IA STRATEGIC ADVISOR")
+if st.text_input("TECHNICAL CONSULTATION:", key="ia_box"): st.info("ANALYSIS COMPLETE.")
+
+# --- 5. LÓGICA DE TIEMPO (RELOJ ATÓMICO FINAL) ---
 if st.session_state.demo_mode:
     if 'start_t' not in st.session_state: st.session_state.start_t = time.time()
     elapsed = time.time() - st.session_state.start_t
     rem = max(0, int(300 - elapsed))
-    
     st.write("---")
     st.warning(f"⏳ DEMO EXPIRES IN: {rem} SECONDS")
-    
     if rem <= 0:
         st.session_state.demo_mode = False; st.rerun()
     else:
