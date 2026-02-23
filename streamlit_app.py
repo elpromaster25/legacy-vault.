@@ -15,8 +15,10 @@ def register_hit(name):
 
 VIP=["EMAAR","DAMAC","NEOM","GINEVRA","REMAX","SOTHEBYS","THE AGENCY","HINES","JLL","CARSO","BARNES","FEAU","ZINGRAF","GARCIN","JUNOT","KRETZ","KNIGHT FRANK","SAVILLS","CBRE","COLLIERS","LEGACY","DYLAN","ADMIN","TZIPINE","DEMO","DYLAN777"]
 
+# INICIALIZACIÓN DE VARIABLES (REGLA DE UNA SOLA VEZ)
 if 'auth' not in st.session_state: st.session_state.auth = False
 if 'demo_mode' not in st.session_state: st.session_state.demo_mode = False
+if 'demo_used' not in st.session_state: st.session_state.demo_used = False # EL CERROJO
 
 # --- 2. DISEÑO IMPERIAL & BLINDAJE (SIN BARRAS) ---
 st.set_page_config(page_title="LEGACY VAULT", layout="wide", initial_sidebar_state="collapsed")
@@ -58,11 +60,17 @@ if not st.session_state.auth and not st.session_state.demo_mode:
                 else: st.error("DENIED")
         with c_b:
             if st.button("⏱️ DEMO"):
-                register_hit("GUEST_DEMO"); st.session_state.demo_mode = True
-                st.session_state.start_t = time.time(); st.rerun()
+                if st.session_state.demo_used:
+                    st.error("DEMO ALREADY USED. CONTACT ADMIN FOR FULL KEY.")
+                else:
+                    register_hit("GUEST_DEMO")
+                    st.session_state.demo_mode = True
+                    st.session_state.demo_used = True # SE QUEMA EL CARTUCHO
+                    st.session_state.start_t = time.time()
+                    st.rerun()
     st.stop()
 
-# --- 4. INTERIOR DEL BÚNKER (ARREGLADO) ---
+# --- 4. INTERIOR DEL BÚNKER ---
 emp_now = "GUEST (DEMO)" if st.session_state.demo_mode else st.session_state.emp_final
 st.title(f"🏛️ VAULT NODE: {emp_now}")
 
@@ -83,7 +91,6 @@ with c2: st.metric("YACHTS", "$12,500,000")
 with c3: st.metric("JETS", "$24,000,000")
 
 st.write("---")
-# SIMULADOR
 st.subheader("📈 STRATEGIC CAPITAL PROJECTION")
 cap = st.number_input("INITIAL:", value=85000000)
 a = st.slider("YEARS:", 1, 50, 10)
@@ -91,20 +98,17 @@ b = st.slider("BONUS %:", 1, 20, 5)
 st.success(f"FUTURE VALUATION: ${(cap * ((1 + b/100) ** a)):,.2f} USD")
 
 st.write("---")
-# SCANNER DE FERRARIS (VUELVE LA ARTILLERÍA)
 st.subheader("🧬 QUANTUM ASSET SCANNER")
 st.text_area("LIST ASSETS (FERRARIS, PROPERTIES, ETC):", key="scan_box")
 if st.button("🧬 SCAN"): st.success("VALUATION DETECTED: $42,500,000 USD")
 
 st.write("---")
-# IA ADVISOR (VUELVE EL CEREBRO)
 st.subheader("🤖 IA STRATEGIC ADVISOR")
 if st.text_input("TECHNICAL CONSULTATION:", key="ia_box"): st.info("ANALYSIS COMPLETE.")
 
-# --- 5. LÓGICA DE TIEMPO (RELOJ ATÓMICO FINAL) ---
+# --- 5. LÓGICA DE TIEMPO ---
 if st.session_state.demo_mode:
-    if 'start_t' not in st.session_state: st.session_state.start_t = time.time()
-    elapsed = time.time() - st.session_state.start_t
+    elapsed = time.time() - st.session_state.get('start_t', time.time())
     rem = max(0, int(300 - elapsed))
     st.write("---")
     st.warning(f"⏳ DEMO EXPIRES IN: {rem} SECONDS")
