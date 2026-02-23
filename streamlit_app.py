@@ -1,7 +1,7 @@
 import streamlit as st
 import time
 
-# --- 1. RADAR ETERNO (MEMORIA DEL SERVIDOR) ---
+# --- 1. RADAR ETERNO (MEMORIA GLOBAL) ---
 @st.cache_resource
 def get_global_radar():
     return [] 
@@ -18,7 +18,7 @@ VIP=["EMAAR","DAMAC","NEOM","GINEVRA","REMAX","SOTHEBYS","THE AGENCY","HINES","J
 if 'auth' not in st.session_state: st.session_state.auth = False
 if 'demo_mode' not in st.session_state: st.session_state.demo_mode = False
 
-# --- 2. DISEÑO IMPERIAL & BLINDAJE TOTAL (CHAU BARRAS) ---
+# --- 2. DISEÑO IMPERIAL & BLINDAJE (SIN BARRAS) ---
 st.set_page_config(page_title="LEGACY VAULT", layout="wide", initial_sidebar_state="collapsed")
 
 st.markdown("""
@@ -62,15 +62,21 @@ if not st.session_state.auth and not st.session_state.demo_mode:
                 st.session_state.start_t = time.time(); st.rerun()
     st.stop()
 
-# --- 4. BÚNKER ACTIVO ---
-# RELOJ ATÓMICO DINÁMICO
+# --- 4. BÚNKER ACTIVO (REPARACIÓN LÍNEA 68) ---
 if st.session_state.demo_mode:
+    # SI NO EXISTE EL TIEMPO, LO CREAMOS PARA EVITAR EL ERROR
+    if 'start_t' not in st.session_state:
+        st.session_state.start_t = time.time()
+        
     elapsed = time.time() - st.session_state.start_t
     rem = max(0, int(300 - elapsed))
+    
     if rem <= 0:
         st.session_state.demo_mode = False; st.rerun()
+    
     st.warning(f"⏳ DEMO EXPIRES IN: {rem} SECONDS")
-    # AUTO-REFRESH SIN BUCLE INFINITO TRABADO
+    
+    # AUTO-REFRESH PARA EL RELOJ
     if rem > 0:
         time.sleep(1)
         st.rerun()
@@ -78,7 +84,7 @@ if st.session_state.demo_mode:
 emp_now = "GUEST" if st.session_state.demo_mode else st.session_state.emp_final
 st.title(f"🏛️ VAULT NODE: {emp_now}")
 
-# RADAR DYLAN777 (FIXED EXPANDER NAME)
+# RADAR DYLAN777
 if not st.session_state.demo_mode and st.session_state.emp_final == "DYLAN777":
     with st.expander("🕵️‍♂️ QUANTUM RADAR (LIVE SIGNALS)", expanded=True):
         if not radar_global: st.write("SILENCE")
