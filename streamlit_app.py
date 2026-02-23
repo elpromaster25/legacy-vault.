@@ -18,7 +18,7 @@ VIP=["EMAAR","DAMAC","NEOM","GINEVRA","REMAX","SOTHEBYS","THE AGENCY","HINES","J
 if 'auth' not in st.session_state: st.session_state.auth = False
 if 'demo_mode' not in st.session_state: st.session_state.demo_mode = False
 
-# --- 2. DISEÑO IMPERIAL & BLINDAJE TOTAL ---
+# --- 2. DISEÑO IMPERIAL & BLINDAJE TOTAL (CHAU BARRAS) ---
 st.set_page_config(page_title="LEGACY VAULT", layout="wide", initial_sidebar_state="collapsed")
 
 st.markdown("""
@@ -48,8 +48,8 @@ if not st.session_state.auth and not st.session_state.demo_mode:
                 radar_global.append(f"📩 {m_n}: {m_t} ({time.strftime('%H:%M')})")
                 st.success("SENT"); time.sleep(1); st.rerun()
         st.write("---")
-        emp = st.text_input("COMPANY:").strip().upper()
-        pw = st.text_input("KEY:", type="password")
+        emp = st.text_input("COMPANY / USER:").strip().upper()
+        pw = st.text_input("KEY / PASS:", type="password")
         c_a, c_b = st.columns(2)
         with c_a:
             if st.button("🔓 UNLOCK"):
@@ -63,39 +63,44 @@ if not st.session_state.auth and not st.session_state.demo_mode:
     st.stop()
 
 # --- 4. BÚNKER ACTIVO ---
-# RELOJ ATÓMICO (HACE QUE EL TIEMPO SE MUEVA)
+# RELOJ ATÓMICO DINÁMICO
 if st.session_state.demo_mode:
-    placeholder = st.empty() # ESPACIO DINÁMICO PARA EL RELOJ
     elapsed = time.time() - st.session_state.start_t
     rem = max(0, int(300 - elapsed))
     if rem <= 0:
         st.session_state.demo_mode = False; st.rerun()
-    placeholder.warning(f"⏳ DEMO EXPIRES IN: {rem} SECONDS")
-    # AUTO-REFRESH CADA 1 SEG (EL TRUCO MAESTRO)
-    time.sleep(1)
-    st.rerun()
+    st.warning(f"⏳ DEMO EXPIRES IN: {rem} SECONDS")
+    # AUTO-REFRESH SIN BUCLE INFINITO TRABADO
+    if rem > 0:
+        time.sleep(1)
+        st.rerun()
 
 emp_now = "GUEST" if st.session_state.demo_mode else st.session_state.emp_final
 st.title(f"🏛️ VAULT NODE: {emp_now}")
 
-# RADAR DYLAN777
+# RADAR DYLAN777 (FIXED EXPANDER NAME)
 if not st.session_state.demo_mode and st.session_state.emp_final == "DYLAN777":
-    with st.expandar("🕵️‍♂️ RADAR", expanded=True):
-        for s in reversed(radar_global): st.info(s)
-        if st.button("🗑️ RESET"): radar_global.clear(); st.rerun()
+    with st.expander("🕵️‍♂️ QUANTUM RADAR (LIVE SIGNALS)", expanded=True):
+        if not radar_global: st.write("SILENCE")
+        else:
+            for s in reversed(radar_global): st.info(s)
+        if st.button("🗑️ RESET RADAR"):
+            radar_global.clear(); st.rerun()
 
-# MÉTRICAS Y SIMULADOR
+# CONTENIDO DEL BÚNKER
+st.markdown(f'<div class="ticker-wrap"><div class="ticker-move">🏦 MARKET LIVE | BTC: 98,200 | GOLD: 2,120 | NODE: {emp_now} | AES-256 ACTIVE 🏛️</div></div>', unsafe_allow_html=True)
+
 c1, c2, c3 = st.columns(3)
 with c1: st.metric("REAL ESTATE", "$85,000,000")
 with c2: st.metric("YACHTS", "$12,500,000")
 with c3: st.metric("JETS", "$24,000,000")
 
 st.write("---")
-st.subheader("📈 CAPITAL PROJECTION")
+st.subheader("📈 STRATEGIC CAPITAL PROJECTION")
 cap = st.number_input("INITIAL:", value=85000000)
 a = st.slider("YEARS:", 1, 50, 10)
 b = st.slider("BONUS %:", 1, 20, 5)
-st.success(f"FUTURE: ${(cap * ((1 + b/100) ** a)):,.2f} USD")
+st.success(f"FUTURE VALUATION: ${(cap * ((1 + b/100) ** a)):,.2f} USD")
 
-if st.button("🔒 EXIT"):
+if st.button("🔒 EXIT VAULT"):
     st.session_state.auth = False; st.session_state.demo_mode = False; st.rerun()
